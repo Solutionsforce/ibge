@@ -1,0 +1,148 @@
+/* Additional custom styles for IBGE Trabalhe Conosco clone */
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Prevent horizontal scroll on mobile only */
+@media (max-width: 768px) {
+    body {
+        overflow-x: hidden;
+    }
+}
+
+/* Custom focus styles for accessibility */
+button:focus,
+a:focus,
+.cursor-pointer:focus {
+    outline: 2px solid #2476D2;
+    outline-offset: 2px;
+}
+
+/* Loading animation for dynamic content */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Enhanced hover effects */
+.hover-lift:hover {
+    transform: translateY(-1px);
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Custom scrollbar for accordion content */
+.accordion-content::-webkit-scrollbar {
+    width: 4px;
+}
+
+.accordion-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.accordion-content::-webkit-scrollbar-thumb {
+    background: #184A8C;
+    border-radius: 2px;
+}
+
+.accordion-content::-webkit-scrollbar-thumb:hover {
+    background: #0B2341;
+}
+
+/* Additional mobile fixes - conservative approach */
+@media (max-width: 768px) {
+    /* Fix table overflow on mobile */
+    .overflow-x-auto {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin-left: -1rem;
+        margin-right: -1rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    /* Make tables more responsive on mobile */
+    .min-w-full {
+        font-size: 0.75rem !important;
+    }
+    
+    .min-w-full th,
+    .min-w-full td {
+        padding: 0.5rem 0.25rem !important;
+        font-size: 0.7rem !important;
+        line-height: 1.2 !important;
+    }
+    
+    /* Adjust table headers */
+    .min-w-full th {
+        font-size: 0.65rem !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Prevent text from causing horizontal overflow */
+    p, span, div {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+}
+
+/* Print styles */
+@media print {
+    .fixed {
+        display: none !important;
+    }
+    
+    .custom-shadow {
+        box-shadow: none !important;
+    }
+    
+    body {
+        font-size: 12pt;
+        line-height: 1.4;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .text-gray-400 {
+        color: #666 !important;
+    }
+    
+    .text-gray-500 {
+        color: #555 !important;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Mobile specific enhancements */
+@media (max-width: 640px) {
+    .header-menu {
+        font-size: 0.5rem !important;
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+    }
+    
+    .accordion-content {
+        max-height: 300px;
+    }
+    
+    .accordion-content.active {
+        max-height: 400px;
+    }
+}
+
+/* Tablet specific adjustments */
+@media (min-width: 641px) and (max-width: 1024px) {
+    .accordion-content.active {
+        max-height: 600px;
+    }
+}

@@ -1,0 +1,239 @@
+{% extends "footer_page_base.html" %}
+
+{% block title %}Órgãos do Governo - IBGE{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-lg shadow-lg p-8">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-[#0B2341] mb-4">Órgãos do Governo</h1>
+        <p class="text-gray-600 text-lg">Acesso direto aos principais órgãos do Governo Federal</p>
+    </div>
+
+    <!-- Poder Executivo -->
+    <div class="mb-8">
+        <h2 class="text-2xl font-semibold text-[#0B2341] mb-6 flex items-center">
+            <i class="fas fa-building mr-2 text-blue-600"></i>
+            Poder Executivo
+        </h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <a href="https://www.gov.br/presidencia" target="_blank" class="bg-blue-50 p-4 rounded-lg hover:bg-blue-100 transition-colors border border-blue-200">
+                <div class="flex items-center mb-3">
+                    <i class="fas fa-star text-2xl text-blue-600 mr-3"></i>
+                    <h3 class="font-semibold text-[#0B2341]">Presidência da República</h3>
+                </div>
+                <p class="text-sm text-gray-600">Gabinete do Presidente e órgãos de assessoramento direto</p>
+            </a>
+
+            <a href="https://www.gov.br/economia" target="_blank" class="bg-green-50 p-4 rounded-lg hover:bg-green-100 transition-colors border border-green-200">
+                <div class="flex items-center mb-3">
+                    <i class="fas fa-chart-line text-2xl text-green-600 mr-3"></i>
+                    <h3 class="font-semibold text-[#0B2341]">Ministério da Economia</h3>
+                </div>
+                <p class="text-sm text-gray-600">Órgão superior ao qual o IBGE está vinculado</p>
+            </a>
+
+            <a href="https://www.gov.br/saude" target="_blank" class="bg-red-50 p-4 rounded-lg hover:bg-red-100 transition-colors border border-red-200">
+                <div class="flex items-center mb-3">
+                    <i class="fas fa-heartbeat text-2xl text-red-600 mr-3"></i>
+                    <h3 class="font-semibold text-[#0B2341]">Ministério da Saúde</h3>
+                </div>
+                <p class="text-sm text-gray-600">Políticas públicas de saúde e sistema único de saúde</p>
+            </a>
+
+            <a href="https://www.gov.br/mec" target="_blank" class="bg-purple-50 p-4 rounded-lg hover:bg-purple-100 transition-colors border border-purple-200">
+                <div class="flex items-center mb-3">
+                    <i class="fas fa-graduation-cap text-2xl text-purple-600 mr-3"></i>
+                    <h3 class="font-semibold text-[#0B2341]">Ministério da Educação</h3>
+                </div>
+                <p class="text-sm text-gray-600">Educação básica, superior, profissional e tecnológica</p>
+            </a>
+
+            <a href="https://www.gov.br/infraestrutura" target="_blank" class="bg-orange-50 p-4 rounded-lg hover:bg-orange-100 transition-colors border border-orange-200">
+                <div class="flex items-center mb-3">
+                    <i class="fas fa-road text-2xl text-orange-600 mr-3"></i>
+                    <h3 class="font-semibold text-[#0B2341]">Ministério da Infraestrutura</h3>
+                </div>
+                <p class="text-sm text-gray-600">Política nacional de transportes e infraestrutura</p>
+            </a>
+
+            <a href="https://www.gov.br/trabalho" target="_blank" class="bg-indigo-50 p-4 rounded-lg hover:bg-indigo-100 transition-colors border border-indigo-200">
+                <div class="flex items-center mb-3">
+                    <i class="fas fa-briefcase text-2xl text-indigo-600 mr-3"></i>
+                    <h3 class="font-semibold text-[#0B2341]">Ministério do Trabalho</h3>
+                </div>
+                <p class="text-sm text-gray-600">Políticas públicas de trabalho, emprego e renda</p>
+            </a>
+        </div>
+    </div>
+
+    <!-- Órgãos de Controle -->
+    <div class="mb-8">
+        <h2 class="text-2xl font-semibold text-[#0B2341] mb-6 flex items-center">
+            <i class="fas fa-gavel mr-2 text-purple-600"></i>
+            Órgãos de Controle e Fiscalização
+        </h2>
+        <div class="grid md:grid-cols-2 gap-6">
+            <a href="https://portal.tcu.gov.br" target="_blank" class="bg-purple-50 p-6 rounded-lg hover:bg-purple-100 transition-colors border border-purple-200">
+                <div class="flex items-center mb-4">
+                    <i class="fas fa-balance-scale text-3xl text-purple-600 mr-4"></i>
+                    <div>
+                        <h3 class="text-xl font-semibold text-[#0B2341]">Tribunal de Contas da União</h3>
+                        <p class="text-purple-600 text-sm">TCU</p>
+                    </div>
+                </div>
+                <p class="text-gray-700">
+                    Órgão de controle externo que auxilia o Congresso Nacional na fiscalização 
+                    contábil, financeira, orçamentária, operacional e patrimonial da União.
+                </p>
+            </a>
+
+            <a href="https://www.gov.br/cgu" target="_blank" class="bg-orange-50 p-6 rounded-lg hover:bg-orange-100 transition-colors border border-orange-200">
+                <div class="flex items-center mb-4">
+                    <i class="fas fa-shield-alt text-3xl text-orange-600 mr-4"></i>
+                    <div>
+                        <h3 class="text-xl font-semibold text-[#0B2341]">Controladoria-Geral da União</h3>
+                        <p class="text-orange-600 text-sm">CGU</p>
+                    </div>
+                </div>
+                <p class="text-gray-700">
+                    Órgão responsável pelas atividades de controle interno, auditoria pública, 
+                    correição, prevenção e combate à corrupção e ouvidoria.
+                </p>
+            </a>
+        </div>
+    </div>
+
+    <!-- Poder Judiciário -->
+    <div class="mb-8">
+        <h2 class="text-2xl font-semibold text-[#0B2341] mb-6 flex items-center">
+            <i class="fas fa-university mr-2 text-red-600"></i>
+            Poder Judiciário
+        </h2>
+        <div class="grid md:grid-cols-3 gap-6">
+            <a href="https://portal.stf.jus.br" target="_blank" class="bg-red-50 p-4 rounded-lg hover:bg-red-100 transition-colors border border-red-200">
+                <div class="text-center">
+                    <i class="fas fa-crown text-2xl text-red-600 mb-2"></i>
+                    <h3 class="font-semibold text-[#0B2341] mb-1">STF</h3>
+                    <p class="text-xs text-gray-600">Supremo Tribunal Federal</p>
+                </div>
+            </a>
+
+            <a href="https://www.stj.jus.br" target="_blank" class="bg-blue-50 p-4 rounded-lg hover:bg-blue-100 transition-colors border border-blue-200">
+                <div class="text-center">
+                    <i class="fas fa-building text-2xl text-blue-600 mb-2"></i>
+                    <h3 class="font-semibold text-[#0B2341] mb-1">STJ</h3>
+                    <p class="text-xs text-gray-600">Superior Tribunal de Justiça</p>
+                </div>
+            </a>
+
+            <a href="https://www.cnj.jus.br" target="_blank" class="bg-green-50 p-4 rounded-lg hover:bg-green-100 transition-colors border border-green-200">
+                <div class="text-center">
+                    <i class="fas fa-users text-2xl text-green-600 mb-2"></i>
+                    <h3 class="font-semibold text-[#0B2341] mb-1">CNJ</h3>
+                    <p class="text-xs text-gray-600">Conselho Nacional de Justiça</p>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Poder Legislativo -->
+    <div class="mb-8">
+        <h2 class="text-2xl font-semibold text-[#0B2341] mb-6 flex items-center">
+            <i class="fas fa-landmark mr-2 text-green-600"></i>
+            Poder Legislativo
+        </h2>
+        <div class="grid md:grid-cols-2 gap-6">
+            <a href="https://www.camara.leg.br" target="_blank" class="bg-green-50 p-6 rounded-lg hover:bg-green-100 transition-colors border border-green-200">
+                <div class="flex items-center mb-4">
+                    <i class="fas fa-users text-3xl text-green-600 mr-4"></i>
+                    <div>
+                        <h3 class="text-xl font-semibold text-[#0B2341]">Câmara dos Deputados</h3>
+                        <p class="text-green-600 text-sm">Casa do povo</p>
+                    </div>
+                </div>
+                <p class="text-gray-700">
+                    Casa legislativa que representa o povo brasileiro, composta por 513 deputados 
+                    federais eleitos por voto proporcional.
+                </p>
+            </a>
+
+            <a href="https://www12.senado.leg.br" target="_blank" class="bg-blue-50 p-6 rounded-lg hover:bg-blue-100 transition-colors border border-blue-200">
+                <div class="flex items-center mb-4">
+                    <i class="fas fa-building text-3xl text-blue-600 mr-4"></i>
+                    <div>
+                        <h3 class="text-xl font-semibold text-[#0B2341]">Senado Federal</h3>
+                        <p class="text-blue-600 text-sm">Casa dos estados</p>
+                    </div>
+                </div>
+                <p class="text-gray-700">
+                    Casa legislativa que representa os estados e o Distrito Federal, 
+                    composta por 81 senadores eleitos pelo sistema majoritário.
+                </p>
+            </a>
+        </div>
+    </div>
+
+    <!-- Agências Reguladoras -->
+    <div class="mb-8">
+        <h2 class="text-2xl font-semibold text-[#0B2341] mb-6 flex items-center">
+            <i class="fas fa-cogs mr-2 text-indigo-600"></i>
+            Agências Reguladoras
+        </h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <a href="https://www.aneel.gov.br" target="_blank" class="bg-gray-50 p-4 rounded-lg hover:bg-gray-100 transition-colors text-center">
+                <i class="fas fa-bolt text-2xl text-yellow-600 mb-2"></i>
+                <h3 class="font-semibold text-sm">ANEEL</h3>
+                <p class="text-xs text-gray-600">Energia Elétrica</p>
+            </a>
+
+            <a href="https://www.anatel.gov.br" target="_blank" class="bg-gray-50 p-4 rounded-lg hover:bg-gray-100 transition-colors text-center">
+                <i class="fas fa-signal text-2xl text-blue-600 mb-2"></i>
+                <h3 class="font-semibold text-sm">ANATEL</h3>
+                <p class="text-xs text-gray-600">Telecomunicações</p>
+            </a>
+
+            <a href="https://www.anp.gov.br" target="_blank" class="bg-gray-50 p-4 rounded-lg hover:bg-gray-100 transition-colors text-center">
+                <i class="fas fa-oil-can text-2xl text-black mb-2"></i>
+                <h3 class="font-semibold text-sm">ANP</h3>
+                <p class="text-xs text-gray-600">Petróleo e Gás</p>
+            </a>
+
+            <a href="https://www.anvisa.gov.br" target="_blank" class="bg-gray-50 p-4 rounded-lg hover:bg-gray-100 transition-colors text-center">
+                <i class="fas fa-pills text-2xl text-red-600 mb-2"></i>
+                <h3 class="font-semibold text-sm">ANVISA</h3>
+                <p class="text-xs text-gray-600">Vigilância Sanitária</p>
+            </a>
+        </div>
+    </div>
+
+    <!-- Links Úteis -->
+    <div class="bg-gray-50 p-6 rounded-lg">
+        <h2 class="text-2xl font-semibold text-[#0B2341] mb-6">Links Úteis</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <a href="https://www.gov.br" target="_blank" class="text-center p-3 bg-white rounded border hover:shadow-md transition-shadow">
+                <i class="fas fa-globe text-2xl text-blue-600 mb-2"></i>
+                <h3 class="font-semibold text-sm">gov.br</h3>
+                <p class="text-xs text-gray-600">Portal oficial</p>
+            </a>
+
+            <a href="https://www.planalto.gov.br" target="_blank" class="text-center p-3 bg-white rounded border hover:shadow-md transition-shadow">
+                <i class="fas fa-file-alt text-2xl text-green-600 mb-2"></i>
+                <h3 class="font-semibold text-sm">Planalto</h3>
+                <p class="text-xs text-gray-600">Legislação</p>
+            </a>
+
+            <a href="https://www.imprensanacional.gov.br" target="_blank" class="text-center p-3 bg-white rounded border hover:shadow-md transition-shadow">
+                <i class="fas fa-newspaper text-2xl text-purple-600 mb-2"></i>
+                <h3 class="font-semibold text-sm">DOU</h3>
+                <p class="text-xs text-gray-600">Diário Oficial</p>
+            </a>
+
+            <a href="https://www.comprasgovernamentais.gov.br" target="_blank" class="text-center p-3 bg-white rounded border hover:shadow-md transition-shadow">
+                <i class="fas fa-shopping-cart text-2xl text-orange-600 mb-2"></i>
+                <h3 class="font-semibold text-sm">Compras</h3>
+                <p class="text-xs text-gray-600">ComprasNet</p>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

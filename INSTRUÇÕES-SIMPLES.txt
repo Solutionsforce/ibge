@@ -1,0 +1,51 @@
+🚨 GIT CORROMPIDO - SOLUÇÃO MANUAL SIMPLES
+
+Como resolver:
+
+1️⃣ BAIXAR PROJETO DO REPLIT
+   - No menu do Replit: clique "Download as zip"
+   - Extrair no seu computador
+
+2️⃣ LIMPAR ARQUIVOS DESNECESSÁRIOS
+   Deletar estas pastas/arquivos:
+   ❌ .git/ (pasta inteira - corrompida)
+   ❌ .pythonlibs/ (pasta inteira)
+   ❌ __pycache__/ (pasta inteira)
+   ❌ .replit
+   ❌ replit.nix
+   ❌ uv.lock
+   ❌ pyproject.toml
+   ❌ replit.md
+
+3️⃣ MANTER APENAS ESTES ARQUIVOS
+   ✅ Procfile
+   ✅ runtime.txt
+   ✅ app.json
+   ✅ README.md
+   ✅ requirements-heroku.txt
+   ✅ .gitignore
+   ✅ app.py
+   ✅ main.py
+   ✅ routes.py
+   ✅ models.py
+   ✅ for4_payments.py
+   ✅ escola_utils.py
+   ✅ escolas_brasil.csv
+   ✅ deploy-heroku.sh
+   ✅ Pasta templates/ (com todos os .html)
+   ✅ Pasta static/ (com css, js, images)
+
+4️⃣ UPLOAD NO GITHUB
+   - Ir: https://github.com/Solutionsforce/IbgeClone
+   - Deletar tudo que está lá
+   - "Add file" > "Upload files"
+   - Arrastar todos os arquivos limpos
+   - Commit: "Deploy Heroku ready"
+
+5️⃣ DEPLOY HEROKU
+   - Clicar botão "Deploy to Heroku" no README
+   - Adicionar variável: FOR4PAYMENTS_SECRET_KEY
+   - Deploy automático
+
+TEMPO TOTAL: 15 minutos
+RESULTADO: Sistema funcionando na web

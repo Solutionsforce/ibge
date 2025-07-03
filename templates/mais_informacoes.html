@@ -1,0 +1,132 @@
+{% extends "footer_page_base.html" %}
+
+{% block title %}Mais Informações - IBGE{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-lg shadow-lg p-8">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-[#0B2341] mb-4">Mais Informações</h1>
+        <p class="text-gray-600 text-lg">Conheça melhor o Instituto Brasileiro de Geografia e Estatística</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-8">
+        <!-- História do IBGE -->
+        <div class="bg-gray-50 p-6 rounded-lg">
+            <h2 class="text-xl font-semibold text-[#0B2341] mb-4 flex items-center">
+                <i class="fas fa-history mr-2 text-blue-600"></i>
+                História do IBGE
+            </h2>
+            <p class="text-gray-700 mb-4">
+                Criado em 1936, o IBGE é o principal provedor de dados e informações do País, 
+                que atendem às necessidades dos mais diversos segmentos da sociedade civil, 
+                bem como dos órgãos das esferas governamentais federal, estadual e municipal.
+            </p>
+            <ul class="text-gray-600 space-y-2">
+                <li>• Fundado em 29 de maio de 1936</li>
+                <li>• Vinculado ao Ministério da Economia</li>
+                <li>• Presente em todo território nacional</li>
+                <li>• Mais de 80 anos de tradição</li>
+            </ul>
+        </div>
+
+        <!-- Missão e Visão -->
+        <div class="bg-gray-50 p-6 rounded-lg">
+            <h2 class="text-xl font-semibold text-[#0B2341] mb-4 flex items-center">
+                <i class="fas fa-bullseye mr-2 text-green-600"></i>
+                Missão e Visão
+            </h2>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-gray-800">Missão</h3>
+                    <p class="text-gray-700 text-sm">
+                        Retratar o Brasil com informações necessárias ao conhecimento de sua 
+                        realidade e ao exercício da cidadania.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-800">Visão</h3>
+                    <p class="text-gray-700 text-sm">
+                        Ser reconhecida como instituição de excelência na produção e 
+                        disseminação de informações estatísticas, geocientíficas e cartográficas.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Principais Atividades -->
+        <div class="bg-gray-50 p-6 rounded-lg">
+            <h2 class="text-xl font-semibold text-[#0B2341] mb-4 flex items-center">
+                <i class="fas fa-chart-line mr-2 text-purple-600"></i>
+                Principais Atividades
+            </h2>
+            <ul class="text-gray-700 space-y-2">
+                <li class="flex items-start">
+                    <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                    Censo Demográfico e outros censos
+                </li>
+                <li class="flex items-start">
+                    <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                    Pesquisas socioeconômicas
+                </li>
+                <li class="flex items-start">
+                    <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                    Mapeamento e cartografia nacional
+                </li>
+                <li class="flex items-start">
+                    <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                    Estudos geodésicos e geográficos
+                </li>
+                <li class="flex items-start">
+                    <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                    Sistema de Contas Nacionais
+                </li>
+            </ul>
+        </div>
+
+        <!-- Estrutura Organizacional -->
+        <div class="bg-gray-50 p-6 rounded-lg">
+            <h2 class="text-xl font-semibold text-[#0B2341] mb-4 flex items-center">
+                <i class="fas fa-sitemap mr-2 text-orange-600"></i>
+                Estrutura Organizacional
+            </h2>
+            <div class="space-y-3">
+                <div class="border-l-4 border-blue-500 pl-3">
+                    <h3 class="font-semibold text-gray-800">Sede - Rio de Janeiro</h3>
+                    <p class="text-gray-600 text-sm">Administração central e diretorias</p>
+                </div>
+                <div class="border-l-4 border-green-500 pl-3">
+                    <h3 class="font-semibold text-gray-800">27 Unidades Estaduais</h3>
+                    <p class="text-gray-600 text-sm">Uma em cada estado e no Distrito Federal</p>
+                </div>
+                <div class="border-l-4 border-purple-500 pl-3">
+                    <h3 class="font-semibold text-gray-800">Agências de Coleta</h3>
+                    <p class="text-gray-600 text-sm">Distribuídas por todo o país</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Números do IBGE -->
+    <div class="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg">
+        <h2 class="text-2xl font-semibold text-[#0B2341] mb-6 text-center">O IBGE em Números</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div>
+                <div class="text-3xl font-bold text-blue-600">27</div>
+                <div class="text-gray-600 text-sm">Unidades Estaduais</div>
+            </div>
+            <div>
+                <div class="text-3xl font-bold text-green-600">500+</div>
+                <div class="text-gray-600 text-sm">Agências de Coleta</div>
+            </div>
+            <div>
+                <div class="text-3xl font-bold text-purple-600">25.000+</div>
+                <div class="text-gray-600 text-sm">Colaboradores</div>
+            </div>
+            <div>
+                <div class="text-3xl font-bold text-orange-600">80+</div>
+                <div class="text-gray-600 text-sm">Anos de História</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

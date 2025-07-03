@@ -1,0 +1,131 @@
+{% extends "footer_page_base.html" %}
+
+{% block title %}Atendimento - IBGE{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-lg shadow-lg p-8">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-[#0B2341] mb-4">Atendimento ao Cidadão</h1>
+        <p class="text-gray-600 text-lg">Canais de comunicação e suporte do IBGE</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-8">
+        <!-- Central de Atendimento -->
+        <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+            <h2 class="text-xl font-semibold text-[#0B2341] mb-4 flex items-center">
+                <i class="fas fa-phone mr-2 text-blue-600"></i>
+                Central de Atendimento
+            </h2>
+            <div class="space-y-4">
+                <div class="flex items-center">
+                    <i class="fas fa-phone-alt text-blue-500 mr-3"></i>
+                    <div>
+                        <p class="font-semibold">0800 721 8181</p>
+                        <p class="text-sm text-gray-600">Ligação gratuita</p>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <i class="fas fa-clock text-blue-500 mr-3"></i>
+                    <div>
+                        <p class="font-semibold">Segunda a sexta-feira</p>
+                        <p class="text-sm text-gray-600">9h às 17h</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fale Conosco -->
+        <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-500">
+            <h2 class="text-xl font-semibold text-[#0B2341] mb-4 flex items-center">
+                <i class="fas fa-envelope mr-2 text-green-600"></i>
+                Fale Conosco
+            </h2>
+            <div class="space-y-3">
+                <p class="text-gray-700">Envie suas dúvidas, sugestões ou reclamações através do nosso formulário online.</p>
+                <div class="bg-white p-3 rounded border">
+                    <p class="font-semibold text-sm">Email Institucional</p>
+                    <p class="text-blue-600">ibge@ibge.gov.br</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ouvidoria -->
+        <div class="bg-orange-50 p-6 rounded-lg border-l-4 border-orange-500">
+            <h2 class="text-xl font-semibold text-[#0B2341] mb-4 flex items-center">
+                <i class="fas fa-bullhorn mr-2 text-orange-600"></i>
+                Ouvidoria
+            </h2>
+            <div class="space-y-3">
+                <p class="text-gray-700">Canal para manifestações sobre os serviços prestados pelo IBGE.</p>
+                <div class="space-y-2">
+                    <div class="flex items-center">
+                        <i class="fas fa-phone text-orange-500 mr-2"></i>
+                        <span class="text-sm">0800 218 1234</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-envelope text-orange-500 mr-2"></i>
+                        <span class="text-sm">ouvidoria@ibge.gov.br</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Atendimento Presencial -->
+        <div class="bg-purple-50 p-6 rounded-lg border-l-4 border-purple-500">
+            <h2 class="text-xl font-semibold text-[#0B2341] mb-4 flex items-center">
+                <i class="fas fa-map-marker-alt mr-2 text-purple-600"></i>
+                Atendimento Presencial
+            </h2>
+            <div class="space-y-3">
+                <p class="text-gray-700">Visite uma de nossas unidades em todo o Brasil.</p>
+                <div class="bg-white p-3 rounded border">
+                    <p class="font-semibold text-sm">Sede - Rio de Janeiro</p>
+                    <p class="text-gray-600 text-sm">Av. Franklin Roosevelt, 166</p>
+                    <p class="text-gray-600 text-sm">Centro - Rio de Janeiro/RJ</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Serviços Online -->
+    <div class="mt-8">
+        <h2 class="text-2xl font-semibold text-[#0B2341] mb-6">Serviços Online</h2>
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="bg-gray-50 p-4 rounded-lg text-center">
+                <i class="fas fa-chart-bar text-3xl text-blue-600 mb-3"></i>
+                <h3 class="font-semibold mb-2">SIDRA</h3>
+                <p class="text-sm text-gray-600">Sistema IBGE de Recuperação Automática</p>
+            </div>
+            <div class="bg-gray-50 p-4 rounded-lg text-center">
+                <i class="fas fa-map text-3xl text-green-600 mb-3"></i>
+                <h3 class="font-semibold mb-2">Mapas</h3>
+                <p class="text-sm text-gray-600">Mapas interativos e downloads</p>
+            </div>
+            <div class="bg-gray-50 p-4 rounded-lg text-center">
+                <i class="fas fa-download text-3xl text-purple-600 mb-3"></i>
+                <h3 class="font-semibold mb-2">Downloads</h3>
+                <p class="text-sm text-gray-600">Bases de dados e publicações</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="mt-8 bg-gray-50 p-6 rounded-lg">
+        <h2 class="text-2xl font-semibold text-[#0B2341] mb-6">Perguntas Frequentes</h2>
+        <div class="space-y-4">
+            <div class="border-b border-gray-200 pb-4">
+                <h3 class="font-semibold text-gray-800 mb-2">Como posso obter dados do Censo?</h3>
+                <p class="text-gray-600 text-sm">Acesse o SIDRA ou entre em contato com nossa Central de Atendimento para orientações específicas.</p>
+            </div>
+            <div class="border-b border-gray-200 pb-4">
+                <h3 class="font-semibold text-gray-800 mb-2">Como participar de pesquisas do IBGE?</h3>
+                <p class="text-gray-600 text-sm">As pesquisas são realizadas por amostragem. Se sua residência for selecionada, um entrevistador entrará em contato.</p>
+            </div>
+            <div>
+                <h3 class="font-semibold text-gray-800 mb-2">Como verificar a autenticidade de um pesquisador?</h3>
+                <p class="text-gray-600 text-sm">Todo pesquisador possui crachá oficial e pode ser verificado através do telefone 0800 721 8181.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,45 @@
+PLANO B - ÚLTIMO RECURSO
+
+Se o download do Replit não funcionar, você pode:
+
+1️⃣ COPIAR ARQUIVOS INDIVIDUALMENTE
+   - Abrir cada arquivo importante aqui no Replit
+   - Copiar o conteúdo (Ctrl+A, Ctrl+C)
+   - Criar arquivo novo no GitHub
+   - Colar o conteúdo
+
+2️⃣ ARQUIVOS CRÍTICOS PARA COPIAR (nesta ordem):
+
+   📄 Procfile
+   📄 runtime.txt  
+   📄 app.json
+   📄 README.md
+   📄 requirements-heroku.txt
+   📄 .gitignore
+   
+   📄 app.py
+   📄 main.py
+   📄 routes.py
+   📄 models.py
+   📄 for4_payments.py
+   📄 escola_utils.py
+   
+   📄 templates/base.html
+   📄 templates/index.html
+   📄 templates/checkout.html
+   📄 templates/confirmacao_dados.html
+   📄 (... todos os outros .html)
+   
+   📄 static/css/style.css
+   📄 static/js/main.js
+
+3️⃣ NO GITHUB:
+   - "Add file" → "Create new file"
+   - Nome: Procfile (sem extensão)
+   - Colar conteúdo
+   - Commit
+   - Repetir para cada arquivo
+
+ESTE MÉTODO É LENTO MAS 100% GARANTIDO!
+
+Resultado: Sistema funcionando no Heroku em 30-45 minutos

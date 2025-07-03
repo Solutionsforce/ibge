@@ -1,0 +1,227 @@
+{% extends "footer_page_base.html" %}
+
+{% block title %}Privacidade - IBGE{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-lg shadow-lg p-8">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-[#0B2341] mb-4">Política de Privacidade</h1>
+        <p class="text-gray-600 text-lg">Como o IBGE protege e utiliza suas informações pessoais</p>
+    </div>
+
+    <!-- Introdução -->
+    <div class="mb-8 bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+        <h2 class="text-2xl font-semibold text-[#0B2341] mb-4">Compromisso com a Privacidade</h2>
+        <p class="text-gray-700 mb-4">
+            O Instituto Brasileiro de Geografia e Estatística (IBGE) está comprometido com a proteção 
+            da privacidade e dos dados pessoais de todos os cidadãos que participam de nossas pesquisas 
+            e utilizam nossos serviços, em conformidade com a Lei Geral de Proteção de Dados (LGPD).
+        </p>
+        <div class="bg-white p-4 rounded border">
+            <p class="font-semibold text-blue-600">Lei 13.709/2018 - LGPD</p>
+            <p class="text-sm text-gray-600">Lei Geral de Proteção de Dados Pessoais</p>
+        </div>
+    </div>
+
+    <!-- Coleta de Dados -->
+    <div class="mb-8">
+        <h2 class="text-2xl font-semibold text-[#0B2341] mb-6">Coleta de Dados</h2>
+        <div class="grid md:grid-cols-2 gap-6">
+            <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-500">
+                <h3 class="text-xl font-semibold text-[#0B2341] mb-4 flex items-center">
+                    <i class="fas fa-clipboard-list mr-2 text-green-600"></i>
+                    Pesquisas Domiciliares
+                </h3>
+                <p class="text-gray-700 mb-4">
+                    Coletamos dados através de pesquisas oficiais realizadas em domicílios 
+                    selecionados estatisticamente em todo o território nacional.
+                </p>
+                <ul class="text-gray-600 space-y-2">
+                    <li>• Censo Demográfico</li>
+                    <li>• PNAD Contínua</li>
+                    <li>• POF - Pesquisa de Orçamentos Familiares</li>
+                    <li>• Outras pesquisas socioeconômicas</li>
+                </ul>
+            </div>
+
+            <div class="bg-purple-50 p-6 rounded-lg border-l-4 border-purple-500">
+                <h3 class="text-xl font-semibold text-[#0B2341] mb-4 flex items-center">
+                    <i class="fas fa-globe mr-2 text-purple-600"></i>
+                    Serviços Online
+                </h3>
+                <p class="text-gray-700 mb-4">
+                    Dados coletados através de nossos portais e aplicativos para 
+                    melhorar a experiência do usuário e fornecer serviços personalizados.
+                </p>
+                <ul class="text-gray-600 space-y-2">
+                    <li>• Dados de navegação</li>
+                    <li>• Cookies técnicos</li>
+                    <li>• Informações de contato</li>
+                    <li>• Preferências de usuário</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Finalidade e Uso -->
+    <div class="mb-8">
+        <h2 class="text-2xl font-semibold text-[#0B2341] mb-6">Finalidade e Uso dos Dados</h2>
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="bg-gray-50 p-4 rounded-lg text-center">
+                <i class="fas fa-chart-bar text-3xl text-blue-600 mb-3"></i>
+                <h3 class="font-semibold mb-2">Estatísticas Oficiais</h3>
+                <p class="text-sm text-gray-600">Produção de estatísticas nacionais e indicadores socioeconômicos</p>
+            </div>
+            <div class="bg-gray-50 p-4 rounded-lg text-center">
+                <i class="fas fa-map text-3xl text-green-600 mb-3"></i>
+                <h3 class="font-semibold mb-2">Estudos Geográficos</h3>
+                <p class="text-sm text-gray-600">Mapeamento territorial e estudos demográficos regionais</p>
+            </div>
+            <div class="bg-gray-50 p-4 rounded-lg text-center">
+                <i class="fas fa-users text-3xl text-purple-600 mb-3"></i>
+                <h3 class="font-semibold mb-2">Políticas Públicas</h3>
+                <p class="text-sm text-gray-600">Subsidio para formulação de políticas públicas eficazes</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Proteção e Segurança -->
+    <div class="mb-8 bg-orange-50 p-6 rounded-lg border-l-4 border-orange-500">
+        <h2 class="text-2xl font-semibold text-[#0B2341] mb-4 flex items-center">
+            <i class="fas fa-shield-alt mr-2 text-orange-600"></i>
+            Proteção e Segurança
+        </h2>
+        <div class="grid md:grid-cols-2 gap-6">
+            <div>
+                <h3 class="font-semibold mb-3">Medidas de Segurança</h3>
+                <ul class="text-gray-700 space-y-2">
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                        Criptografia de dados em trânsito e repouso
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                        Controles de acesso rigorosos
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                        Monitoramento contínuo de segurança
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                        Backup e recuperação de dados
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="font-semibold mb-3">Confidencialidade</h3>
+                <ul class="text-gray-700 space-y-2">
+                    <li class="flex items-start">
+                        <i class="fas fa-lock text-blue-500 mr-2 mt-1"></i>
+                        Sigilo estatístico garantido por lei
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-lock text-blue-500 mr-2 mt-1"></i>
+                        Anonimização de dados pessoais
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-lock text-blue-500 mr-2 mt-1"></i>
+                        Agregação estatística dos resultados
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-lock text-blue-500 mr-2 mt-1"></i>
+                        Treinamento da equipe em privacidade
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Direitos dos Titulares -->
+    <div class="mb-8">
+        <h2 class="text-2xl font-semibold text-[#0B2341] mb-6">Seus Direitos</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-blue-50 p-4 rounded-lg text-center">
+                <i class="fas fa-eye text-2xl text-blue-600 mb-2"></i>
+                <h3 class="font-semibold text-sm mb-1">Acesso</h3>
+                <p class="text-xs text-gray-600">Consultar dados pessoais tratados</p>
+            </div>
+            <div class="bg-green-50 p-4 rounded-lg text-center">
+                <i class="fas fa-edit text-2xl text-green-600 mb-2"></i>
+                <h3 class="font-semibold text-sm mb-1">Correção</h3>
+                <p class="text-xs text-gray-600">Corrigir dados incompletos ou incorretos</p>
+            </div>
+            <div class="bg-purple-50 p-4 rounded-lg text-center">
+                <i class="fas fa-trash text-2xl text-purple-600 mb-2"></i>
+                <h3 class="font-semibold text-sm mb-1">Eliminação</h3>
+                <p class="text-xs text-gray-600">Solicitar exclusão quando aplicável</p>
+            </div>
+            <div class="bg-orange-50 p-4 rounded-lg text-center">
+                <i class="fas fa-info-circle text-2xl text-orange-600 mb-2"></i>
+                <h3 class="font-semibold text-sm mb-1">Informação</h3>
+                <p class="text-xs text-gray-600">Conhecer o tratamento realizado</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cookies -->
+    <div class="mb-8 bg-gray-50 p-6 rounded-lg">
+        <h2 class="text-2xl font-semibold text-[#0B2341] mb-4 flex items-center">
+            <i class="fas fa-cookie-bite mr-2 text-brown-600"></i>
+            Política de Cookies
+        </h2>
+        <div class="grid md:grid-cols-3 gap-6">
+            <div>
+                <h3 class="font-semibold mb-2">Cookies Essenciais</h3>
+                <p class="text-gray-700 text-sm">
+                    Necessários para o funcionamento básico do site e não podem ser desabilitados.
+                </p>
+            </div>
+            <div>
+                <h3 class="font-semibold mb-2">Cookies de Performance</h3>
+                <p class="text-gray-700 text-sm">
+                    Coletam informações sobre como os visitantes usam o site para melhorar a performance.
+                </p>
+            </div>
+            <div>
+                <h3 class="font-semibold mb-2">Cookies Funcionais</h3>
+                <p class="text-gray-700 text-sm">
+                    Permitem lembrar escolhas e fornecer recursos aprimorados e personalizados.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contato DPO -->
+    <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+        <h2 class="text-2xl font-semibold text-[#0B2341] mb-4">Contato - Encarregado de Dados</h2>
+        <div class="grid md:grid-cols-2 gap-6">
+            <div>
+                <p class="text-gray-700 mb-4">
+                    Para exercer seus direitos ou esclarecer dúvidas sobre o tratamento de dados pessoais 
+                    pelo IBGE, entre em contato com nosso Encarregado de Proteção de Dados.
+                </p>
+                <div class="space-y-2">
+                    <div class="flex items-center">
+                        <i class="fas fa-envelope text-blue-500 mr-3"></i>
+                        <span class="text-sm">dpo@ibge.gov.br</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-phone text-blue-500 mr-3"></i>
+                        <span class="text-sm">(21) 2142-4693</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-map-marker-alt text-blue-500 mr-3"></i>
+                        <span class="text-sm">Av. Franklin Roosevelt, 166 - Centro, Rio de Janeiro/RJ</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-4 rounded border">
+                <h3 class="font-semibold mb-2">Horário de Atendimento</h3>
+                <p class="text-sm text-gray-600 mb-2">Segunda a sexta-feira</p>
+                <p class="text-sm text-gray-600">9h às 17h</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

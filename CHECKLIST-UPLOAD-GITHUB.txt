@@ -1,0 +1,67 @@
+🚀 CHECKLIST UPLOAD GITHUB - IBGE CLONE HEROKU
+
+📍 REPOSITÓRIO: https://github.com/Solutionsforce/IbgeClone
+
+PASSO 1: LIMPAR REPOSITÓRIO
+□ Deletar todos os arquivos antigos do GitHub (se houver conflitos)
+
+PASSO 2: UPLOAD ARQUIVOS PRINCIPAIS (Root Directory)
+□ Procfile
+□ runtime.txt  
+□ app.json
+□ README.md
+□ requirements-heroku.txt
+□ .gitignore
+□ app.py
+□ main.py
+□ routes.py
+□ models.py
+□ for4_payments.py
+□ escola_utils.py
+□ escolas_brasil.csv
+□ deploy-heroku.sh
+□ ARQUIVOS-PARA-GITHUB.md (este arquivo)
+
+PASSO 3: UPLOAD PASTA TEMPLATES/
+□ templates/base.html
+□ templates/index.html
+□ templates/login.html
+□ templates/selecao_cargo.html
+□ templates/confirmacao_dados.html
+□ templates/selecao_local_prova.html
+□ templates/checkout.html
+□ templates/edital_completo.html
+□ templates/concursos.html
+□ templates/processos_seletivos.html
+□ templates/estagios.html
+□ templates/mais_informacoes.html
+□ templates/atendimento.html
+□ templates/apps_ibge.html
+□ templates/transparencia.html
+□ templates/privacidade.html
+□ templates/orgaos_governo.html
+
+PASSO 4: UPLOAD PASTA STATIC/
+□ static/css/style.css
+□ static/js/main.js
+□ static/images/ (todos os arquivos de imagem)
+
+PASSO 5: COMMIT
+□ Commit message: "Deploy preparation: Complete Heroku configuration with PIX integration"
+
+PASSO 6: TESTE DEPLOY AUTOMÁTICO
+□ Clique no botão "Deploy to Heroku" no README.md
+□ Configure nome da app
+□ Adicione FOR4PAYMENTS_SECRET_KEY nas variáveis de ambiente
+□ Deploy automático
+
+✅ SISTEMA PRONTO:
+- API PIX funcionando (HTTP 200)
+- Dados transmitindo corretamente  
+- Data/hora Brasília dinâmica
+- 62+ escolas reais no sistema
+- Mobile responsivo
+- PostgreSQL configurado
+- Gunicorn pronto para produção
+
+TEMPO ESTIMADO: 10-15 minutos para upload completo

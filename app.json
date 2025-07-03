@@ -1,0 +1,48 @@
+{
+  "name": "IBGE Trabalhe Conosco",
+  "description": "Sistema web brasileiro para inscrição em concursos públicos do IBGE com integração PIX",
+  "repository": "https://github.com/Solutionsforce/IbgeClone",
+  "keywords": [
+    "flask",
+    "python",
+    "ibge",
+    "concurso-publico",
+    "pix",
+    "governo-brasileiro"
+  ],
+  "stack": "heroku-22",
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ],
+  "env": {
+    "SESSION_SECRET": {
+      "description": "Secret key for Flask sessions",
+      "generator": "secret"
+    },
+    "FOR4PAYMENTS_SECRET_KEY": {
+      "description": "API key for For4Payments PIX integration",
+      "required": true
+    },
+    "DATABASE_URL": {
+      "description": "PostgreSQL database URL (automatically provided by Heroku)",
+      "required": false
+    }
+  },
+  "addons": [
+    {
+      "plan": "heroku-postgresql:essential-0"
+    }
+  ],
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "basic"
+    }
+  },
+  "scripts": {
+    "postdeploy": "python -c \"from app import app, db; app.app_context().push(); db.create_all()\"",
+    "prebuild": "cp requirements-heroku.txt requirements.txt"
+  }
+}

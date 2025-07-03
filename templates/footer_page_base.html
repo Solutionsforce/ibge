@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}IBGE - {% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.cdnfonts.com/css/rawline" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" href="https://www.ibge.gov.br/templates/novo_portal_base/imagens/favicon.ico" type="image/x-icon">
+</head>
+<body class="font-rawline bg-gray-50">
+    <!-- Header -->
+    <div class="bg-[#0B2341] w-full">
+        <div class="flex items-center h-[42px]">
+            <div class="flex items-center h-full pl-4 pr-4 min-w-0">
+                <a href="{{ url_for('index') }}" class="flex items-center h-full">
+                    <img src="https://www.gov.br/governodigital/pt-br/estrategias-e-governanca-digital/EGD2020/imagens/logo-white.png" alt="gov.br logo" style="height: 20px; width: auto;"/>
+                </a>
+            </div>
+            <div class="h-4 w-px bg-[#33507A] mx-3"></div>
+            <div class="flex-1"></div>
+            <div class="flex items-center h-full pr-2">
+                <a href="{{ url_for('index') }}" class="header-menu text-white font-bold px-3 h-full flex items-center cursor-pointer hover:bg-[#33507A] transition-colors whitespace-nowrap text-xs">
+                    ACESSO À INFORMAÇÃO
+                </a>
+                <div class="h-4 w-px bg-[#33507A] mx-1"></div>
+                <a href="{{ url_for('index') }}" class="header-menu text-white font-bold px-3 h-full flex items-center cursor-pointer hover:bg-[#33507A] transition-colors text-xs">
+                    PARTICIPE
+                </a>
+                <div class="h-4 w-px bg-[#33507A] mx-1"></div>
+                <a href="{{ url_for('index') }}" class="header-menu text-white font-bold px-3 h-full flex items-center cursor-pointer hover:bg-[#33507A] transition-colors text-xs">
+                    LEGISLAÇÃO
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- IBGE logo -->
+    <div class="w-full flex flex-col items-center pt-6 pb-4 bg-white border-b border-gray-200">
+        <a href="{{ url_for('index') }}">
+            <img alt="IBGE logo" class="mb-2" src="https://www.ibge.gov.br/templates/novo_portal_base/imagens/logo_mobile.png" style="width:125px; height:24px;"/>
+        </a>
+    </div>
+
+    <!-- Auto-redirect notification -->
+    <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-6">
+        <div class="flex items-center">
+            <i class="fas fa-info-circle mr-2"></i>
+            <p class="text-sm">Você será redirecionado para a página inicial em <span id="countdown">5</span> segundos.</p>
+            <a href="{{ url_for('index') }}" class="ml-4 text-blue-600 hover:text-blue-800 underline text-sm">Voltar agora</a>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <main class="container mx-auto px-4 py-8 max-w-6xl">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Auto-redirect script -->
+    <script>
+        let countdown = 5;
+        const countdownElement = document.getElementById('countdown');
+        
+        const timer = setInterval(() => {
+            countdown--;
+            countdownElement.textContent = countdown;
+            
+            if (countdown <= 0) {
+                clearInterval(timer);
+                window.location.href = "{{ url_for('index') }}";
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

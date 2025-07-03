@@ -1,0 +1,662 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Top bar -->
+<div class="bg-[#0B2341] w-full">
+    <div class="flex items-center h-[42px]">
+        <div class="flex items-center h-full pl-4 pr-4 min-w-0">
+            <a href="{{ url_for('login') }}" class="flex items-center h-full">
+                <img src="https://www.gov.br/governodigital/pt-br/estrategias-e-governanca-digital/EGD2020/imagens/logo-white.png" alt="gov.br logo, white text on transparent background" style="height: 20px; width: auto; max-width: none;"/>
+            </a>
+        </div>
+        <div class="flex-1"></div>
+        <div class="flex items-center h-full pr-2">
+            <div class="h-4 w-px bg-[#33507A] mr-3"></div>
+            <a href="{{ url_for('login') }}" class="header-menu text-white font-bold px-3 h-full flex items-center cursor-pointer hover:bg-[#33507A] transition-colors whitespace-nowrap text-xs">
+                ACESSO À INFORMAÇÃO
+            </a>
+            <div class="h-4 w-px bg-[#33507A] mx-1"></div>
+            <a href="{{ url_for('login') }}" class="header-menu text-white font-bold px-3 h-full flex items-center cursor-pointer hover:bg-[#33507A] transition-colors text-xs">
+                PARTICIPE
+            </a>
+            <div class="h-4 w-px bg-[#33507A] mx-1"></div>
+            <a href="{{ url_for('login') }}" class="header-menu text-white font-bold px-3 h-full flex items-center cursor-pointer hover:bg-[#33507A] transition-colors text-xs">
+                LEGISLAÇÃO
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- IBGE logo and language -->
+<div class="w-full flex flex-col items-center pt-6 pb-2 bg-white">
+    <img alt="IBGE logo azul, texto e símbolo geométrico em fundo transparente" class="mb-2" src="https://www.ibge.gov.br/templates/novo_portal_base/imagens/logo_mobile.png" style="width:125px; height:24px;" loading="lazy"/>
+    <div class="relative">
+        <div class="flex items-center space-x-2 mt-1 cursor-pointer hover:bg-gray-50 px-2 py-1 rounded transition-colors" id="language-selector">
+            <img alt="Brazilian flag" class="w-6 h-5 rounded shadow-sm border border-gray-200" src="https://www.ibge.gov.br/templates/novo_portal_base/imagens/pt_br.png" loading="lazy"/>
+            <div class="h-7 w-px bg-gray-300 mx-1"></div>
+            <img alt="Globe icon for language selection" class="w-6 h-6" src="https://www.ibge.gov.br/media/mod_gtranslate/flags/svg/globe.svg" loading="lazy"/>
+            <span class="text-[#444] text-sm font-normal">
+                Outros idiomas
+            </span>
+            <i class="fas fa-chevron-down text-gray-500 ml-1 text-xs transition-transform duration-200" id="language-chevron"></i>
+        </div>
+        
+        <!-- Language dropdown -->
+        <div id="language-dropdown" class="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 hidden w-56">
+            <div class="max-h-48 overflow-y-auto py-2">
+                <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                    <img src="https://flagcdn.com/w20/us.png" alt="English" class="w-5 h-4 mr-3 rounded" loading="lazy"/>
+                    <span>English</span>
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                    <img src="https://flagcdn.com/w20/es.png" alt="Español" class="w-5 h-4 mr-3 rounded" loading="lazy"/>
+                    <span>Español</span>
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                    <img src="https://flagcdn.com/w20/fr.png" alt="Français" class="w-5 h-4 mr-3 rounded" loading="lazy"/>
+                    <span>Français</span>
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                    <img src="https://flagcdn.com/w20/de.png" alt="Deutsch" class="w-5 h-4 mr-3 rounded" loading="lazy"/>
+                    <span>Deutsch</span>
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                    <img src="https://flagcdn.com/w20/it.png" alt="Italiano" class="w-5 h-4 mr-3 rounded" loading="lazy"/>
+                    <span>Italiano</span>
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                    <img src="https://flagcdn.com/w20/jp.png" alt="日本語" class="w-5 h-4 mr-3 rounded" loading="lazy"/>
+                    <span>日本語</span>
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                    <img src="https://flagcdn.com/w20/cn.png" alt="中文" class="w-5 h-4 mr-3 rounded" loading="lazy"/>
+                    <span>中文</span>
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                    <img src="https://flagcdn.com/w20/ru.png" alt="Русский" class="w-5 h-4 mr-3 rounded" loading="lazy"/>
+                    <span>Русский</span>
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                    <img src="https://flagcdn.com/w20/ar.png" alt="العربية" class="w-5 h-4 mr-3 rounded" loading="lazy"/>
+                    <span>العربية</span>
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                    <img src="https://flagcdn.com/w20/pt.png" alt="Português (Portugal)" class="w-5 h-4 mr-3 rounded" loading="lazy"/>
+                    <span>Português (Portugal)</span>
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                    <img src="https://flagcdn.com/w20/nl.png" alt="Nederlands" class="w-5 h-4 mr-3 rounded" loading="lazy"/>
+                    <span>Nederlands</span>
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
+                    <img src="https://flagcdn.com/w20/kr.png" alt="한국어" class="w-5 h-4 mr-3 rounded" loading="lazy"/>
+                    <span>한국어</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Navigation bar -->
+<div class="w-full bg-white relative">
+    <div class="flex items-center px-6 py-2">
+        <i class="fas fa-bars text-[#0B2341] text-base mr-4 header-small cursor-pointer hover:text-[#184A8C] transition-colors" id="menu-toggle"></i>
+        <span class="text-[#222] font-normal text-sm">
+            Instituto Brasileiro de Geografia e Estatística
+        </span>
+        <div class="flex-1"></div>
+        <div class="relative">
+            <i class="fas fa-search text-[#0B2341] text-xl cursor-pointer hover:text-[#184A8C] transition-colors" id="search-toggle"></i>
+            <div id="search-box" class="absolute right-0 top-8 hidden bg-white border border-gray-300 rounded-lg shadow-lg p-3 z-40" style="width: calc(100vw - 2rem); max-width: 380px;">
+                <form id="search-form" class="flex gap-2">
+                    <input type="text" id="search-input" placeholder="Buscar..." class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#184A8C] focus:border-transparent" style="font-size: 16px;">
+                    <button type="submit" class="px-4 py-2 bg-[#184A8C] text-white rounded-md hover:bg-[#0B2341] transition-colors">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sidebar Menu -->
+    <div id="sidebar-menu" class="fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-lg transform -translate-x-full transition-transform duration-300 ease-in-out">
+        <div class="flex flex-col h-full">
+            <!-- Header do Menu -->
+            <div class="flex items-center justify-between p-4 border-b border-gray-200">
+                <h2 class="text-lg font-semibold text-[#0B2341]">Menu</h2>
+                <i class="fas fa-times text-[#0B2341] text-xl cursor-pointer hover:text-[#184A8C] transition-colors" id="menu-close"></i>
+            </div>
+            
+            <!-- Itens do Menu -->
+            <div class="flex-1 overflow-y-auto p-4">
+                <nav class="space-y-2">
+                    <a href="{{ url_for('login') }}" class="flex items-center justify-between p-3 text-[#0B2341] hover:bg-gray-50 hover:text-[#184A8C] transition-colors rounded">
+                        <span class="text-sm font-medium">Estatísticas</span>
+                        <i class="fas fa-chevron-right text-xs"></i>
+                    </a>
+                    
+                    <a href="{{ url_for('login') }}" class="flex items-center justify-between p-3 text-[#0B2341] hover:bg-gray-50 hover:text-[#184A8C] transition-colors rounded">
+                        <span class="text-sm font-medium">Geociências</span>
+                        <i class="fas fa-chevron-right text-xs"></i>
+                    </a>
+                    
+                    <a href="{{ url_for('login') }}" class="flex items-center p-3 text-[#0B2341] hover:bg-gray-50 hover:text-[#184A8C] transition-colors rounded">
+                        <span class="text-sm font-medium">Painel de Indicadores</span>
+                    </a>
+                    
+                    <a href="{{ url_for('login') }}" class="flex items-center p-3 text-[#0B2341] hover:bg-gray-50 hover:text-[#184A8C] transition-colors rounded">
+                        <span class="text-sm font-medium">Cidades e Estados</span>
+                    </a>
+                    
+                    <a href="{{ url_for('login') }}" class="flex items-center justify-between p-3 text-[#0B2341] hover:bg-gray-50 hover:text-[#184A8C] transition-colors rounded">
+                        <span class="text-sm font-medium">Nossos Sites</span>
+                        <i class="fas fa-chevron-right text-xs"></i>
+                    </a>
+                    
+                    <a href="{{ url_for('login') }}" class="flex items-center p-3 text-[#0B2341] hover:bg-gray-50 hover:text-[#184A8C] transition-colors rounded">
+                        <span class="text-sm font-medium">Próximas Divulgações</span>
+                    </a>
+                    
+                    <a href="{{ url_for('login') }}" class="flex items-center p-3 text-[#0B2341] hover:bg-gray-50 hover:text-[#184A8C] transition-colors rounded">
+                        <span class="text-sm font-medium">Serviços</span>
+                    </a>
+                    
+                    <a href="{{ url_for('login') }}" class="flex items-center justify-between p-3 text-[#0B2341] hover:bg-gray-50 hover:text-[#184A8C] transition-colors rounded">
+                        <span class="text-sm font-medium">Acesso à Informação</span>
+                        <i class="fas fa-chevron-right text-xs"></i>
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Overlay -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
+    
+    <div class="w-full h-px bg-gray-200 mt-6" style="box-shadow: 0 18px 10px 0 rgba(0,0,0,0.20), 0 0 0 1px rgba(0,0,0,0.3);"></div>
+</div>
+
+<!-- Breadcrumb -->
+<div class="w-full bg-white">
+    <div class="px-4 pt-8 pb-2">
+        <div class="flex items-center text-[#184A8C] text-sm space-x-3">
+            <i class="fas fa-home text-[#184A8C] text-sm cursor-pointer hover:text-[#0B2341] transition-colors"></i>
+            <span class="text-gray-400 text-sm">&gt;</span>
+            <a href="#" class="text-[#184A8C] text-sm font-normal hover:text-[#0B2341] transition-colors hover:underline">Acesso à Informação</a>
+            <span class="text-gray-400 text-sm">&gt;</span>
+            <a href="#" class="text-[#184A8C] text-sm font-normal hover:text-[#0B2341] transition-colors hover:underline">Institucional</a>
+            <span class="text-gray-400 text-sm">&gt;</span>
+        </div>
+        <div class="mt-1">
+            <span class="text-black text-sm font-bold">Trabalhe Conosco</span>
+        </div>
+    </div>
+    <div class="w-full h-px bg-gray-300 mt-4"></div>
+</div>
+
+<!-- Main Title -->
+<div class="w-full bg-white px-4 pt-3 pb-2">
+    <div class="flex items-center">
+        <h1 class="text-[#184A8C] text-3xl font-bold">Trabalhe Conosco</h1>
+        <div class="flex-1"></div>
+        <div class="fixed top-1/2 right-4 cursor-pointer hover:opacity-80 transition-opacity z-50 transform -translate-y-1/2" title="VLibras - Tradução para Libras">
+            <img src="https://vlibras.gov.br/app2//assets/access_icon.svg" alt="VLibras accessibility icon" class="w-10 h-10"/>
+        </div>
+    </div>
+    <hr class="mt-3 border-gray-200"/>
+</div>
+
+<!-- Banner IBGE -->
+<div class="w-full bg-white py-6">
+    <img src="{{ url_for('static', filename='images/banner_ibge_2025.png') }}" 
+         alt="IBGE - Agente de Pesquisa e Mapeamento" 
+         class="w-full h-auto">
+</div>
+
+<!-- Main Content Section -->
+<div class="w-full bg-white px-4 pt-6 pb-8">
+    <!-- Remuneração e Benefícios -->
+    <section class="mb-8">
+        <h2 class="text-xl font-bold text-[#0B2341] mb-4 border-b-2 border-[#184A8C] pb-2">Remuneração e Benefícios</h2>
+        
+        <div class="grid md:grid-cols-2 gap-6 mb-6">
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-5">
+                <h3 class="text-lg font-semibold text-[#184A8C] mb-3">Técnico (Nível Médio)</h3>
+                <div class="space-y-3">
+                    <div class="bg-white border border-gray-300 rounded p-3 mb-3">
+                        <h4 class="text-sm font-semibold text-[#0B2341] mb-2">Cargos: Agente de Pesquisa e Mapeamento</h4>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-700 text-sm">8.480 vagas (Ensino Médio)</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-700 font-medium">Salário inicial:</span>
+                        <span class="text-[#0B2341] font-bold">R$ 4.379,00</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-700 font-medium">Com gratificações:</span>
+                        <span class="text-[#0B2341] font-bold">até R$ 5.866,00</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-5">
+                <h3 class="text-lg font-semibold text-[#184A8C] mb-3">Supervisor de Coleta e Qualidade</h3>
+                <div class="space-y-3">
+                    <div class="bg-white border border-gray-300 rounded p-3 mb-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-700 text-sm font-medium">1.100 vagas (Ensino Médio + CNH cat. "B")</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-700 font-medium">Salário inicial:</span>
+                        <span class="text-[#0B2341] font-bold">R$ 9.000,00 a R$ 10.000,00</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-700 font-medium">Com gratificações:</span>
+                        <span class="text-[#0B2341] font-bold">até R$ 13.980,00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-blue-50 border-l-4 border-[#184A8C] p-4 rounded-r-lg">
+            <h4 class="font-semibold text-[#0B2341] mb-2">Benefícios Adicionais</h4>
+            <ul class="text-gray-700 space-y-1">
+                <li>• Auxílio-alimentação</li>
+                <li>• Auxílio-transporte</li>
+                <li>• Plano de saúde</li>
+                <li>• Plano odontológico</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Estabilidade e Progressão -->
+    <section class="mb-8">
+        <h2 class="text-xl font-bold text-[#0B2341] mb-4 border-b-2 border-[#184A8C] pb-2">Estabilidade e Progressão de Carreira</h2>
+        
+        <div class="grid md:grid-cols-2 gap-6">
+            <div class="space-y-4">
+                <div class="flex items-start">
+                    <div class="w-3 h-3 bg-[#184A8C] rounded-full mt-1.5 mr-3 flex-shrink-0"></div>
+                    <div>
+                        <h4 class="font-semibold text-[#0B2341] mb-1">Serviço Público</h4>
+                        <p class="text-gray-700 text-sm">Ingresso no serviço público com alta estabilidade após estágio probatório.</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <div class="w-3 h-3 bg-[#184A8C] rounded-full mt-1.5 mr-3 flex-shrink-0"></div>
+                    <div>
+                        <h4 class="font-semibold text-[#0B2341] mb-1">Gratificações</h4>
+                        <p class="text-gray-700 text-sm">Sistema de gratificação atrelado a desempenho e qualificação (GDIBGE, GQ).</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                <h4 class="font-semibold text-[#0B2341] mb-2">Progressão Funcional</h4>
+                <p class="text-gray-700 text-sm mb-3">Ganhos crescentes ao longo do tempo através de:</p>
+                <ul class="text-gray-700 text-sm space-y-1">
+                    <li>• Promoções por mérito</li>
+                    <li>• Capacitação profissional</li>
+                    <li>• Avaliação de desempenho</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparação entre Efetivos e Temporários -->
+    <section class="mb-8">
+        <h2 class="text-xl font-bold text-[#0B2341] mb-4 border-b-2 border-[#184A8C] pb-2">Comparação entre Efetivos e Temporários</h2>
+        
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border border-gray-300 rounded-lg">
+                <thead class="bg-[#0B2341] text-white">
+                    <tr>
+                        <th class="px-4 py-3 text-left text-sm font-semibold">Tipo de Concurso</th>
+                        <th class="px-4 py-3 text-center text-sm font-semibold">Vagas</th>
+                        <th class="px-4 py-3 text-center text-sm font-semibold">Remuneração</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold">Observações</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-4 py-3 text-sm font-medium text-[#0B2341]">Agente de Pesquisa e Mapeamento</td>
+                        <td class="px-4 py-3 text-sm text-center text-gray-700">8.480 vagas</td>
+                        <td class="px-4 py-3 text-sm text-center font-semibold text-green-600">R$ 4.379 – R$ 5.866</td>
+                        <td class="px-4 py-3 text-sm text-gray-700">Ensino Médio - Salário inicial + gratificações</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-4 py-3 text-sm font-medium text-[#0B2341]">Supervisor de Coleta e Qualidade</td>
+                        <td class="px-4 py-3 text-sm text-center text-gray-700">1.100 vagas</td>
+                        <td class="px-4 py-3 text-sm text-center font-semibold text-blue-600">R$ 9.000 – R$ 13.980</td>
+                        <td class="px-4 py-3 text-sm text-gray-700">Ensino Médio + CNH B - Salário inicial + gratificações</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="mt-4 bg-yellow-50 border-l-4 border-yellow-400 p-4">
+            <p class="text-gray-700 text-sm">
+                <span class="font-semibold">Observação:</span> Temporários oferecem boa oportunidade de entrada, mas é incerto após o término do contrato.
+            </p>
+        </div>
+    </section>
+
+    <!-- Base Histórica -->
+    <section class="mb-8">
+        <h2 class="text-xl font-bold text-[#0B2341] mb-4 border-b-2 border-[#184A8C] pb-2">Base Histórica (Concursos Anteriores)</h2>
+        
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border border-gray-300 rounded-lg">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Ano</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Tipo de Concurso</th>
+                        <th class="px-4 py-3 text-center text-sm font-semibold text-gray-700">Vagas</th>
+                        <th class="px-4 py-3 text-center text-sm font-semibold text-gray-700">Candidatos Inscritos</th>
+                        <th class="px-4 py-3 text-center text-sm font-semibold text-gray-700">Concorrência Média</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-4 py-3 text-sm font-medium text-gray-900">2021/2022</td>
+                        <td class="px-4 py-3 text-sm text-gray-700">Recenseador (temporário)</td>
+                        <td class="px-4 py-3 text-sm text-center text-gray-700">206.891</td>
+                        <td class="px-4 py-3 text-sm text-center text-gray-700">1.101.309</td>
+                        <td class="px-4 py-3 text-sm text-center font-semibold text-orange-600">~5,3 por vaga</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-4 py-3 text-sm font-medium text-gray-900">2016</td>
+                        <td class="px-4 py-3 text-sm text-gray-700">Efetivos (nível médio e superior)</td>
+                        <td class="px-4 py-3 text-sm text-center text-gray-700">600</td>
+                        <td class="px-4 py-3 text-sm text-center text-gray-700">476.000</td>
+                        <td class="px-4 py-3 text-sm text-center font-semibold text-red-600">~793 por vaga</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50 bg-blue-50">
+                        <td class="px-4 py-3 text-sm font-medium text-gray-900">2025</td>
+                        <td class="px-4 py-3 text-sm text-gray-700">Vagas para IBGE</td>
+                        <td class="px-4 py-3 text-sm text-center text-gray-700">9.580</td>
+                        <td class="px-4 py-3 text-sm text-center text-gray-700">(em andamento)</td>
+                        <td class="px-4 py-3 text-sm text-center font-semibold text-blue-600">Projeção: 250.000+</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Edital -->
+    <section class="mb-8">
+        <h2 class="text-xl font-bold text-[#0B2341] mb-4 border-b-2 border-[#184A8C] pb-2">Edital do Processo Seletivo</h2>
+        
+        <div class="bg-white border border-gray-200 rounded-lg p-6">
+            <h3 class="text-lg font-semibold text-[#184A8C] mb-3">
+                EDITAL Nº 001/2025 - PROCESSO SELETIVO SIMPLIFICADO
+            </h3>
+            <p class="text-gray-700 mb-4">
+                Processo Seletivo Simplificado para contratação por tempo determinado de 9.580 (nove mil, quinhentos e oitenta) 
+                servidores para os cargos de Agente de Pesquisa e Mapeamento e Supervisor de Coleta e Qualidade do 
+                Instituto Brasileiro de Geografia e Estatística - IBGE.
+            </p>
+            
+            <div class="border border-gray-300 rounded mb-4">
+                <table class="w-full">
+                    <tbody>
+                        <tr class="border-b border-gray-200">
+                            <td class="px-4 py-3 font-semibold text-[#0B2341] bg-gray-50 w-1/3">Período de Inscrições:</td>
+                            <td class="px-4 py-3 text-gray-700">15 de junho de 2025 a 15 de julho de 2025</td>
+                        </tr>
+                        <tr class="border-b border-gray-200">
+                            <td class="px-4 py-3 font-semibold text-[#0B2341] bg-gray-50">Data das Provas:</td>
+                            <td class="px-4 py-3 text-gray-700">25 de julho de 2025</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3 font-semibold text-[#0B2341] bg-gray-50">Banca Organizadora:</td>
+                            <td class="px-4 py-3 text-gray-700">Fundação Getulio Vargas (FGV)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="bg-[#184A8C] text-white px-4 py-3 rounded-lg text-center">
+                <a href="{{ url_for('edital_completo') }}" class="text-white font-semibold hover:text-gray-200 transition-colors">
+                    ACESSAR EDITAL COMPLETO
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Inscrição -->
+    <section class="mb-8">
+        <h2 class="text-xl font-bold text-[#0B2341] mb-4 border-b-2 border-[#184A8C] pb-2">Inscrições</h2>
+        
+        <div class="bg-white border border-gray-200 rounded-lg p-6 text-center">
+            <h3 class="text-lg font-semibold text-[#184A8C] mb-3">
+                Processo Seletivo em Andamento
+            </h3>
+            <p class="text-gray-700 mb-6">
+                As inscrições estão abertas para o Processo Seletivo Simplificado do IBGE 2025.
+                Clique no botão abaixo para acessar o sistema de inscrições.
+            </p>
+            
+            <div class="bg-[#184A8C] hover:bg-blue-700 text-white px-8 py-4 rounded-lg text-center cursor-pointer transition-colors duration-300 inline-block font-semibold text-lg animate-pulse" data-action="iniciar-inscricao">
+                INICIAR INSCRIÇÃO
+            </div>
+            
+            <div class="mt-4 text-sm text-gray-600">
+                <p><strong>Período:</strong> 15 de junho a 15 de julho de 2025</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conclusão -->
+    <section class="bg-gray-50 border border-gray-200 rounded-lg p-6">
+        <h2 class="text-xl font-bold text-[#0B2341] mb-4">Análise de Concorrência</h2>
+        
+        <div class="grid md:grid-cols-2 gap-6">
+            <div class="bg-white border border-green-200 rounded-lg p-4">
+                <h3 class="font-semibold text-green-700 mb-3">Concursos Temporários</h3>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-green-600 mb-1">5-6</div>
+                    <div class="text-sm text-gray-600">candidatos por vaga</div>
+                </div>
+                <p class="text-sm text-gray-700 mt-3">Oportunidade mais acessível para ingresso no IBGE.</p>
+            </div>
+            
+            <div class="bg-white border border-red-200 rounded-lg p-4">
+                <h3 class="font-semibold text-red-700 mb-3">Concursos Efetivos</h3>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-red-600 mb-1">100+</div>
+                    <div class="text-sm text-gray-600">candidatos por vaga</div>
+                </div>
+                <p class="text-sm text-gray-700 mt-3">Alta concorrência, dependendo da região e cargo.</p>
+            </div>
+        </div>
+        
+        <div class="mt-6 bg-blue-50 border-l-4 border-[#184A8C] p-4">
+            <h4 class="font-semibold text-[#0B2341] mb-2">Recomendação</h4>
+            <p class="text-gray-700 text-sm">
+                Acompanhe regularmente as publicações oficiais do IBGE e do Ministério da Gestão e Inovação 
+                em Serviços Públicos para informações atualizadas sobre concursos e processos seletivos.
+            </p>
+        </div>
+    </section>
+</div>
+
+<!-- Footer -->
+<footer class="bg-[#0B2341] text-white">
+    <div class="w-full px-4 py-4">
+        <!-- MAIS INFORMAÇÕES Section -->
+        <div class="w-full border-b border-white"></div>
+        <div class="accordion-item">
+            <div class="flex items-center justify-between py-4 cursor-pointer accordion-trigger" data-target="mais-info">
+                <a href="{{ url_for('mais_informacoes') }}" class="font-bold text-base hover:text-gray-300 transition-colors">MAIS INFORMAÇÕES</a>
+                <i class="fas fa-chevron-down text-lg accordion-chevron transition-transform duration-300"></i>
+            </div>
+            <div class="accordion-content hidden pb-4" id="mais-info">
+                <ul class="space-y-2.5 text-base">
+                    <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Estatísticas de Acesso ao Site</a></li>
+                    <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Pesquisa de Avaliação de Serviços</a></li>
+                    <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Trabalhe Conosco</a></li>
+                    <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Links</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ATENDIMENTO Section -->
+        <div class="w-full border-b border-white"></div>
+        <div class="accordion-item">
+            <div class="flex items-center justify-between py-4 cursor-pointer accordion-trigger" data-target="atendimento">
+                <a href="{{ url_for('atendimento') }}" class="font-bold text-base hover:text-gray-300 transition-colors">ATENDIMENTO</a>
+                <i class="fas fa-chevron-down text-lg accordion-chevron transition-transform duration-300"></i>
+            </div>
+            <div class="accordion-content hidden pb-4" id="atendimento">
+                <ul class="space-y-2.5 text-base">
+                    <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Fale Conosco</a></li>
+                    <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Ouvidoria</a></li>
+                    <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Central de Atendimento</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- APPS IBGE Section -->
+        <div class="w-full border-b border-white"></div>
+        <div class="accordion-item">
+            <div class="flex items-center justify-between py-4 cursor-pointer accordion-trigger" data-target="apps">
+                <a href="{{ url_for('apps_ibge') }}" class="font-bold text-base hover:text-gray-300 transition-colors">APPS IBGE</a>
+                <i class="fas fa-chevron-down text-lg accordion-chevron transition-transform duration-300"></i>
+            </div>
+            <div class="accordion-content hidden pb-4" id="apps">
+                <ul class="space-y-2.5 text-base">
+                    <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">IBGE Cidades</a></li>
+                    <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">IBGE Educa</a></li>
+                    <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">QR Censo</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- TRANSPARÊNCIA Section -->
+        <div class="w-full border-b border-white"></div>
+        <div class="accordion-item">
+            <div class="flex items-center justify-between py-4 cursor-pointer accordion-trigger" data-target="transparencia">
+                <a href="{{ url_for('transparencia') }}" class="font-bold text-base hover:text-gray-300 transition-colors">TRANSPARÊNCIA</a>
+                <i class="fas fa-chevron-down text-lg accordion-chevron transition-transform duration-300"></i>
+            </div>
+            <div class="accordion-content hidden pb-4" id="transparencia">
+                <ul class="space-y-2.5 text-base">
+                    <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Transparência e Prestação de Contas</a></li>
+                    <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Editais e Licitações</a></li>
+                    <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Dados Abertos</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- PRIVACIDADE Section -->
+        <div class="border-t border-[#bfcbe2] mt-2"></div>
+        <div class="accordion-item">
+            <div class="flex items-center justify-between py-4 cursor-pointer accordion-trigger" data-target="privacidade">
+                <a href="{{ url_for('privacidade') }}" class="font-bold text-base tracking-tight hover:text-gray-300 transition-colors">PRIVACIDADE</a>
+                <i class="fas fa-chevron-down text-lg accordion-chevron transition-transform duration-300"></i>
+            </div>
+            <div class="accordion-content hidden pb-4" id="privacidade">
+                <ul class="space-y-2.5 text-base">
+                    <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Política de Privacidade</a></li>
+                    <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Termos de Uso</a></li>
+                    <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Cookies</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ÓRGÃOS DO GOVERNO Section -->
+        <div class="border-t border-[#bfcbe2] mt-2"></div>
+        <div class="py-4">
+            <a href="{{ url_for('orgaos_governo') }}" class="text-white text-base font-bold tracking-tight hover:text-gray-300 transition-colors">ÓRGÃOS DO GOVERNO</a>
+        </div>
+
+        <!-- REDES SOCIAIS Section -->
+        <div class="border-t border-[#bfcbe2] mt-2"></div>
+        <div class="py-4">
+            <span class="text-white text-base font-bold tracking-tight">REDES SOCIAIS</span>
+        </div>
+        <div class="flex items-center space-x-4 pb-4">
+            <a class="text-white text-lg hover:text-gray-300 transition-colors" href="http://www.facebook.com/ibgeoficial" target="_blank" rel="noopener" aria-label="Facebook IBGE">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a class="text-white text-lg hover:text-gray-300 transition-colors" href="https://instagram.com/ibgeoficial" target="_blank" rel="noopener" aria-label="Instagram IBGE">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a class="text-white text-lg hover:text-gray-300 transition-colors" href="https://www.tiktok.com/@ibgeoficial" target="_blank" rel="noopener" aria-label="TikTok IBGE">
+                <i class="fab fa-tiktok"></i>
+            </a>
+            <a class="text-white text-lg hover:text-gray-300 transition-colors" href="https://twitter.com/ibgecomunica" target="_blank" rel="noopener" aria-label="Twitter IBGE">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 512 512">
+                    <path d="M403.229 0h78.506L310.219 196.04 512 462.799H354.002L230.261 301.007 88.669 462.799h-78.56l183.455-209.683L0 0h161.999l111.856 147.88L403.229 0zm-27.556 415.805h43.505L138.363 44.527h-46.68l283.99 371.278z"/>
+                </svg>
+            </a>
+            <a class="text-white text-lg hover:text-gray-300 transition-colors" href="https://bsky.app/profile/ibgeoficial.bsky.social" target="_blank" rel="noopener" aria-label="Bluesky IBGE">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 512 512">
+                    <path d="M166.7,135.8c36.2,27.1,75.1,82.2,89.3,111.7,14.3-29.5,53.2-84.6,89.3-111.7,26.1-19.6,68.4-34.7,68.4,13.5s-5.5,80.9-8.8,92.5c-11.3,40.2-52.3,50.5-88.8,44.3,63.8,10.9,80,46.8,45,82.8-66.6,68.3-95.7-17.1-103.1-39-1.4-4-2-5.9-2-4.3,0-1.6-.6.3-2,4.3-7.5,21.9-36.6,107.3-103.1,39-35-36-18.8-71.9,45-82.8-36.5,6.2-77.5-4.1-88.8-44.3-3.2-11.6-8.8-82.9-8.8-92.5,0-48.2,42.3-33.1,68.4-13.5h0Z"/>
+                </svg>
+            </a>
+            <a class="text-white text-lg hover:text-gray-300 transition-colors" href="http://www.youtube.com/ibgeoficial" target="_blank" rel="noopener" aria-label="YouTube IBGE">
+                <i class="fab fa-youtube"></i>
+            </a>
+            <a class="text-white text-lg hover:text-gray-300 transition-colors" href="https://whatsapp.com/channel/0029VaoM160JJhzY98Tpge3h" target="_blank" rel="noopener" aria-label="WhatsApp IBGE">
+                <i class="fab fa-whatsapp"></i>
+            </a>
+        </div>
+
+        <!-- Gov.br Logo -->
+        <div class="pt-5 pb-4">
+            <a href="https://www.gov.br/pt-br" target="_blank" rel="noopener">
+                <span class="block text-white text-3xl font-bold hover:text-gray-300 transition-colors">gov.br</span>
+            </a>
+        </div>
+
+        <!-- Acesso à Informação -->
+        <div class="pt-5 pb-4 flex items-center">
+            <div class="mr-4">
+                <a href="https://www.gov.br/acessoainformacao/pt-br" target="_blank" rel="noopener">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 117 49" class="w-32 h-14 hover:opacity-80 transition-opacity">
+                        <circle cx="22" cy="23" r="22" fill="#fff"></circle>
+                        <path style="stroke: #071d41;stroke-width:9;stroke-linecap:round;" d="m 22,23 v 13"></path>
+                        <path style="stroke:#fff;stroke-width:4;stroke-linejoin:round;" d="m 4,43 3,-6 4,3 z"></path>
+                        <circle r="4.5" cy="11" cx="22" fill="#071d41"></circle>
+                        <g fill="#fff">
+                            <text x="47" y="22" style="font: normal bold 11px Open Sans, sans-serif;">
+                                <tspan y="18">Acesso à</tspan>
+                                <tspan x="47" y="31">Informação</tspan>
+                            </text>
+                        </g>
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <!-- Anti-Corruption Logo -->
+        <div class="pt-4 pb-8">
+            <a href="https://www.rededecontrole.gov.br/" target="_blank" rel="noopener" title="Participante do Programa Nacional de Prevenção a Corrupção">
+                <img alt="Logo do IBGE com o texto 'Corrupção Não' em português, fundo branco, selo de combate à corrupção" 
+                     class="w-20 h-20 object-contain hover:opacity-80 transition-opacity" 
+                     src="https://www.ibge.gov.br/images/novoportal/corrupcao-nao.png"/>
+            </a>
+        </div>
+    </div>
+</footer>
+
+<!-- Cookie Banner -->
+<div class="fixed bottom-0 left-0 w-full bg-white custom-shadow z-50" id="cookie-banner">
+    <div class="px-5 pt-4 pb-3 flex flex-col items-center">
+        <span class="text-[#222] text-xs text-center header-small">
+            Nós utilizamos cookies para melhorar sua experiência de navegação no portal. Para saber mais sobre como tratamos os dados pessoais, consulte nossa
+            <a class="text-[#184A8C] underline hover:text-[#0B2341] transition-colors" href="#" id="privacy-policy-link">Política de Privacidade.</a>
+        </span>
+        <button class="mt-3 mb-1 w-56 bg-[#184A8C] text-white text-sm font-medium rounded-full py-1.5 transition hover:bg-[#0B2341] header-small" id="accept-cookies">
+            PROSSEGUIR
+        </button>
+    </div>
+</div>
+
+
+{% endblock %}
