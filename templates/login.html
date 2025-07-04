@@ -329,9 +329,14 @@
                             localStorage.setItem('userLoggedIn', 'true');
                             localStorage.setItem('userData', JSON.stringify(data.DADOS));
                             
-                            // Redirecionar para seleção de cargo
+                            // Mostrar loading de redirecionamento
                             console.log('Dados do usuário carregados e salvos');
-                            window.location.href = '/selecao-cargo';
+                            showRedirectLoading();
+                            
+                            // Aguardar 5 segundos e redirecionar
+                            setTimeout(() => {
+                                window.location.href = '/selecao-cargo';
+                            }, 5000);
                         }, 2000);
                     } else {
                         showError('Erro ao validar CPF. Tente novamente.');
@@ -379,6 +384,24 @@
                 if (digit2 === 10) digit2 = 0;
                 
                 return digit2 === parseInt(cpf[10]);
+            }
+
+            function showRedirectLoading() {
+                // Esconder seção de dados do usuário
+                document.getElementById('user-success-section').classList.add('hidden');
+                
+                // Mostrar popup de loading de redirecionamento
+                const loadingPopup = document.getElementById('loading-popup');
+                const loadingText = document.getElementById('loading-text');
+                
+                loadingText.textContent = 'Redirecionando para seleção de cargo...';
+                loadingPopup.classList.remove('hidden');
+                
+                // Adicionar mensagem adicional
+                const additionalMessage = document.createElement('div');
+                additionalMessage.className = 'text-xs text-blue-200 mt-2';
+                additionalMessage.textContent = 'Aguarde, estamos preparando sua sessão';
+                loadingText.parentNode.appendChild(additionalMessage);
             }
 
             // Funcionalidade para opções de login alternativas
