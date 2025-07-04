@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seleção do Local da Prova - IBGE</title>
+    <title>Confirmação do Local da Prova - IBGE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <style>
         @import url('https://fonts.cdnfonts.com/css/rawline');
 
@@ -29,46 +28,72 @@
             }
         }
 
-        /* Marca d'água do IBGE */
-
         .content-overlay {
             position: relative;
             z-index: 5;
             background: transparent;
         }
 
-        /* Animações de carregamento */
-        .loading-skeleton {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: loading 1.5s infinite;
-            border-radius: 4px;
-            color: transparent;
+        /* Estilo para inputs */
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            cursor: pointer;
         }
 
-        @keyframes loading {
-            0% {
-                background-position: 200% 0;
-            }
-            100% {
-                background-position: -200% 0;
-            }
+        /* Botões */
+        .btn-primary {
+            background-color: #1d4ed8;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
         }
 
-        .loading-spinner {
+        .btn-primary:hover {
+            background-color: #1e40af;
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:disabled {
+            background-color: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Checkbox customizado */
+        .custom-checkbox {
+            appearance: none;
             width: 20px;
             height: 20px;
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid #3498db;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+            border: 2px solid #d1d5db;
+            border-radius: 4px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .custom-checkbox:checked {
+            background-color: #1d4ed8;
+            border-color: #1d4ed8;
         }
 
+        .custom-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        /* Animações */
         .fade-in {
             animation: fadeIn 0.5s ease-in;
         }
@@ -77,77 +102,22 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        /* Estilo para inputs */
-        input[type="text"], input[type="email"], select {
-            border: 1px solid #d1d5db;
-            border-radius: 0.375rem;
-            padding: 0.75rem;
-            font-size: 16px;
-            width: 100%;
-            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-        }
-
-        input[type="text"]:focus, input[type="email"]:focus, select:focus {
-            outline: none;
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        /* Botões */
-        .btn-primary {
-            background-color: #1d4ed8;
-            color: white;
-            padding: 0.75rem 2rem;
-            border-radius: 0.375rem;
-            font-weight: 600;
-            transition: background-color 0.15s ease-in-out;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-primary:hover {
-            background-color: #1e40af;
-        }
-
-        /* Marca d'água com rotação de 25 graus */
-        .watermark {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 90vw;
-            height: auto;
-            opacity: 0.25;
-            transform: translate(-50%, -50%) rotate(25deg);
-            z-index: 1;
-            pointer-events: none;
-        }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen relative">
-
-    <!-- Top bar -->
-    <div class="bg-[#0B2341] w-full content-overlay">
-        <div class="flex items-center h-[42px]">
-            <div class="flex items-center h-full pl-4 pr-4 flex-shrink-0">
-                <a href="{{ url_for('login') }}" class="flex items-center h-full">
-                    <img src="https://www.gov.br/governodigital/pt-br/estrategias-e-governanca-digital/EGD2020/imagens/logo-white.png" alt="gov.br logo, white text on transparent background" style="height: 20px; width: 65px; object-fit: contain;"/>
-                </a>
+<body>
+    <!-- Gov.br Bar -->
+    <div class="bg-[#0C326F] text-white py-1 px-4 text-xs content-overlay">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <a href="https://www.gov.br" class="hover:underline">Portal do Governo Brasileiro</a>
+                <a href="https://www.gov.br/pt-br/noticias" class="hover:underline">Notícias</a>
+                <a href="https://www.gov.br/servicos" class="hover:underline">Serviços</a>
+                <a href="https://www.gov.br/legislacao" class="hover:underline">Legislação</a>
             </div>
-            <div class="h-4 w-px bg-[#33507A] mx-3 flex-shrink-0"></div>
-            <div class="flex-1 min-w-0"></div>
-            <div class="flex items-center h-full pr-2">
-                <a href="{{ url_for('login') }}" class="header-menu text-white font-bold px-1 md:px-3 h-full flex items-center cursor-pointer hover:bg-[#33507A] transition-colors whitespace-nowrap text-xs">
-                    ACESSO À INFORMAÇÃO
-                </a>
-                <div class="h-4 w-px bg-[#33507A] mx-1"></div>
-                <a href="{{ url_for('login') }}" class="header-menu text-white font-bold px-1 md:px-3 h-full flex items-center cursor-pointer hover:bg-[#33507A] transition-colors text-xs">
-                    PARTICIPE
-                </a>
-                <div class="h-4 w-px bg-[#33507A] mx-1"></div>
-                <a href="{{ url_for('login') }}" class="header-menu text-white font-bold px-1 md:px-3 h-full flex items-center cursor-pointer hover:bg-[#33507A] transition-colors text-xs">
-                    LEGISLAÇÃO
-                </a>
+            <div class="flex items-center space-x-4">
+                <a href="https://www.gov.br/acessibilidade" class="hover:underline">Acessibilidade</a>
+                <a href="https://www.gov.br/fale-conosco" class="hover:underline">Fale Conosco</a>
+                <a href="https://www.gov.br/centrais-de-conteudo" class="hover:underline">Centrais de Conteúdo</a>
             </div>
         </div>
     </div>
@@ -165,48 +135,6 @@
                 </span>
                 <i class="fas fa-chevron-down text-gray-500 ml-1 text-xs transition-transform duration-200" id="language-chevron"></i>
             </div>
-
-            <!-- Language dropdown -->
-            <div id="language-dropdown" class="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 hidden w-56">
-                <div class="max-h-48 overflow-y-auto py-2">
-                    <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
-                        <img src="https://flagcdn.com/w20/us.png" alt="English" class="w-5 h-4 mr-3 rounded"/>
-                        <span>English</span>
-                    </a>
-                    <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
-                        <img src="https://flagcdn.com/w20/es.png" alt="Español" class="w-5 h-4 mr-3 rounded"/>
-                        <span>Español</span>
-                    </a>
-                    <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
-                        <img src="https://flagcdn.com/w20/fr.png" alt="Français" class="w-5 h-4 mr-3 rounded"/>
-                        <span>Français</span>
-                    </a>
-                    <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
-                        <img src="https://flagcdn.com/w20/de.png" alt="Deutsch" class="w-5 h-4 mr-3 rounded"/>
-                        <span>Deutsch</span>
-                    </a>
-                    <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
-                        <img src="https://flagcdn.com/w20/it.png" alt="Italiano" class="w-5 h-4 mr-3 rounded"/>
-                        <span>Italiano</span>
-                    </a>
-                    <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
-                        <img src="https://flagcdn.com/w20/jp.png" alt="日本語" class="w-5 h-4 mr-3 rounded"/>
-                        <span>日本語</span>
-                    </a>
-                    <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
-                        <img src="https://flagcdn.com/w20/cn.png" alt="中文" class="w-5 h-4 mr-3 rounded"/>
-                        <span>中文</span>
-                    </a>
-                    <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
-                        <img src="https://flagcdn.com/w20/ru.png" alt="Русский" class="w-5 h-4 mr-3 rounded"/>
-                        <span>Русский</span>
-                    </a>
-                    <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
-                        <img src="https://flagcdn.com/w20/ar.png" alt="العربية" class="w-5 h-4 mr-3 rounded"/>
-                        <span>العربية</span>
-                    </a>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -219,7 +147,6 @@
 
     <!-- Marca d'água com overlay -->
     <div class="fixed inset-0 pointer-events-none overflow-hidden" style="z-index: 1;">
-        <!-- Logo única ocupando toda largura -->
         <div class="absolute select-none" 
              style="top: 50%; left: 0; right: 0; transform: translateY(-50%) rotate(25deg); transform-origin: center;">
             <img src="https://logodownload.org/wp-content/uploads/2018/02/ibge-logo.png" 
@@ -230,1555 +157,242 @@
     </div>
 
     <div class="main-content">
-        <div class="container mx-auto px-4 py-12 relative content-overlay" style="z-index: 5;">
-            <div class="max-w-6xl mx-auto space-y-6">
-            <!-- Cabeçalho do Formulário -->
-            <section class="bg-white border border-gray-300 shadow-sm">
-                <div class="bg-[#0B2341] text-white px-6 py-4">
-                    <div class="flex items-center">
-                        <img src="https://www.ibge.gov.br/templates/novo_portal_base/imagens/logo_mobile.png" alt="IBGE" class="h-8 mr-4 filter brightness-0 invert">
-                        <div>
-                            <h1 class="text-xl font-bold">PROCESSO SELETIVO SIMPLIFICADO IBGE 2025</h1>
-                            <p class="text-sm text-gray-200">EDITAL Nº 001/2025 - SELEÇÃO DO LOCAL DA PROVA</p>
+        <div class="container mx-auto px-4 py-8 relative content-overlay" style="z-index: 5;">
+            <div class="max-w-4xl mx-auto space-y-6">
+                <!-- Cabeçalho do Formulário -->
+                <section class="bg-white border border-gray-300 shadow-sm fade-in">
+                    <div class="bg-[#0B2341] text-white px-6 py-4">
+                        <div class="flex items-center">
+                            <img src="https://www.ibge.gov.br/templates/novo_portal_base/imagens/logo_mobile.png" alt="IBGE" class="h-8 mr-4 filter brightness-0 invert">
+                            <div>
+                                <h1 class="text-xl font-bold">PROCESSO SELETIVO SIMPLIFICADO IBGE 2025</h1>
+                                <p class="text-sm text-gray-200">EDITAL Nº 001/2025 - CONFIRMAÇÃO DO LOCAL DA PROVA</p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="bg-[#184A8C] text-white px-6 py-3">
-                    <p class="text-sm font-medium">SELEÇÃO DO LOCAL DE APLICAÇÃO DAS PROVAS</p>
-                    <p class="text-xs text-gray-200">Escolha o local mais próximo ao seu endereço para realizar as provas</p>
-                </div>
-            </section>
-
-            <!-- Container Principal -->
-            <section class="bg-white border border-gray-300 shadow-sm" id="endereco-usuario-secao" style="display: none;">
-                <div class="bg-gray-100 border-b border-gray-300 px-6 py-3">
-                    <h2 class="text-lg font-bold text-gray-800">SEU ENDEREÇO</h2>
-                    <p class="text-sm text-gray-600 mt-1">Endereço utilizado para buscar os locais mais próximos</p>
-                </div>
-
-                <div class="p-6">
-                    <div class="bg-gray-50 border border-gray-200 rounded p-4">
-                        <h3 class="font-semibold text-gray-900 mb-3">Endereço de Residência</h3>
-                        <p class="text-gray-700 mb-3" id="endereco-completo-display">Carregando endereço...</p>
-                        <p class="text-sm text-gray-600">
-                            Os locais de prova são ordenados por proximidade ao seu endereço
-                        </p>
+                    <div class="bg-[#184A8C] text-white px-6 py-3">
+                        <p class="text-sm font-medium">CONFIRMAÇÃO DO LOCAL DE APLICAÇÃO DAS PROVAS</p>
+                        <p class="text-xs text-gray-200">Verifique seu endereço e confirme o envio das informações por e-mail</p>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <!-- Escolas Disponíveis -->
-            <section class="bg-white border border-gray-300 shadow-sm">
-                <div class="bg-gray-100 border-b border-gray-300 px-6 py-3">
-                    <h2 class="text-lg font-bold text-gray-800">LOCAIS DISPONÍVEIS PARA APLICAÇÃO DAS PROVAS</h2>
-                    <p class="text-sm text-gray-600 mt-1">Selecione uma das opções abaixo (ordenadas por proximidade)</p>
-                </div>
+                <!-- Endereço do Usuário -->
+                <section class="bg-white border border-gray-300 shadow-sm fade-in">
+                    <div class="bg-gray-100 border-b border-gray-300 px-6 py-3">
+                        <h2 class="text-lg font-bold text-gray-800">
+                            <i class="fas fa-map-marker-alt mr-2 text-blue-600"></i>
+                            SEU ENDEREÇO DE RESIDÊNCIA
+                        </h2>
+                        <p class="text-sm text-gray-600 mt-1">Endereço utilizado para definir o local de prova mais próximo</p>
+                    </div>
 
-                <div class="p-6">
-                    <form method="POST" action="/confirmar-local-prova" id="form-local-prova">
-                        <div class="space-y-4" id="escolas-container">
-                            {% if escolas %}
-                                {% for escola in escolas %}
-                                <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                                    <label class="flex items-start cursor-pointer">
-                                        <input type="radio" name="escola_selecionada" value="{{ escola.nome }}" 
-                                               class="mt-1 mr-3 text-blue-600" required>
-                                        <div class="flex-1">
-                                            <div class="flex items-center justify-between mb-2">
-                                                <h3 class="font-semibold text-gray-900">{{ escola.nome }}</h3>
-                                                <span class="text-sm bg-green-100 text-green-700 px-2 py-1 rounded">
-                                                    <i class="fas fa-route mr-1"></i>{{ escola.distancia }}
-                                                </span>
-                                            </div>
-                                            <p class="text-sm text-gray-600 mb-2">
-                                                <i class="fas fa-map-marker-alt mr-1"></i>{{ escola.endereco }}
-                                            </p>
+                    <div class="p-6">
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                            <h3 class="font-semibold text-blue-900 mb-3">
+                                <i class="fas fa-home mr-2"></i>
+                                Endereço Confirmado
+                            </h3>
+                            <p class="text-blue-800 text-lg font-medium mb-2" id="endereco-completo-display">
+                                Carregando endereço...
+                            </p>
+                            <div class="text-sm text-blue-700 space-y-1" id="endereco-detalhes">
+                                <div class="flex items-center">
+                                    <i class="fas fa-envelope mr-2"></i>
+                                    <span>CEP: <span id="cep-display">-</span></span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-city mr-2"></i>
+                                    <span id="cidade-uf-display">-</span>
+                                </div>
+                            </div>
+                        </div>
 
-                                            {% if escola.dependencia %}
-                                            <p class="text-xs text-blue-600 mb-1">
-                                                <i class="fas fa-building mr-1"></i>{{ escola.dependencia }}
-                                            </p>
-                                            {% endif %}
+                        <!-- Informações sobre o local da prova -->
+                        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                            <h3 class="font-semibold text-yellow-900 mb-3">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                Informações Importantes
+                            </h3>
+                            <ul class="text-yellow-800 space-y-2 text-sm">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle mr-2 mt-1 text-green-600"></i>
+                                    <span>O local da prova será determinado automaticamente com base no seu endereço de residência</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-envelope mr-2 mt-1 text-blue-600"></i>
+                                    <span>Você receberá as informações completas do local por e-mail</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-calendar-alt mr-2 mt-1 text-purple-600"></i>
+                                    <span>As informações serão enviadas com <strong>7 dias úteis de antecedência</strong> da data da prova</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-map-marker-alt mr-2 mt-1 text-red-600"></i>
+                                    <span>Será selecionado o local mais próximo e adequado ao seu endereço</span>
+                                </li>
+                            </ul>
+                        </div>
 
-                                            {% if escola.etapas %}
-                                            <p class="text-xs text-gray-500 mb-2">
-                                                <i class="fas fa-graduation-cap mr-1"></i>{{ escola.etapas[:50] }}{% if escola.etapas|length > 50 %}...{% endif %}
-                                            </p>
-                                            {% endif %}
+                        <!-- Termo de Concordância -->
+                        <div class="bg-gray-50 border border-gray-300 rounded-lg p-6">
+                            <h3 class="font-semibold text-gray-900 mb-4">
+                                <i class="fas fa-clipboard-check mr-2"></i>
+                                Termo de Concordância
+                            </h3>
+                            
+                            <div class="space-y-4">
+                                <div class="border-l-4 border-blue-500 pl-4 py-2 bg-white">
+                                    <p class="text-gray-700 text-sm leading-relaxed">
+                                        <strong>Declaro que estou ciente e concordo com as seguintes condições:</strong>
+                                    </p>
+                                </div>
 
-                                            {% if escola.codigo_inep %}
-                                            <p class="text-xs text-gray-400 mb-2">
-                                                <i class="fas fa-id-card mr-1"></i>Código INEP: {{ escola.codigo_inep }}
-                                            </p>
-                                            {% endif %}
+                                <div class="space-y-3">
+                                    <label class="flex items-start cursor-pointer group">
+                                        <input type="checkbox" class="custom-checkbox flex-shrink-0 mt-1" id="concordo-endereco" required>
+                                        <span class="text-sm text-gray-700 ml-3 group-hover:text-gray-900">
+                                            Confirmo que o endereço de residência apresentado está correto e atualizado
+                                        </span>
+                                    </label>
 
-                                            <div class="flex items-center text-xs text-gray-500">
-                                                <i class="fas fa-clock mr-1"></i>
-                                                <span>Aplicação das provas: Domingos - 8h às 12h</span>
-                                            </div>
-                                        </div>
+                                    <label class="flex items-start cursor-pointer group">
+                                        <input type="checkbox" class="custom-checkbox flex-shrink-0 mt-1" id="concordo-email" required>
+                                        <span class="text-sm text-gray-700 ml-3 group-hover:text-gray-900">
+                                            Concordo em receber as informações do local da prova por e-mail no endereço cadastrado
+                                        </span>
+                                    </label>
+
+                                    <label class="flex items-start cursor-pointer group">
+                                        <input type="checkbox" class="custom-checkbox flex-shrink-0 mt-1" id="concordo-prazo" required>
+                                        <span class="text-sm text-gray-700 ml-3 group-hover:text-gray-900">
+                                            Estou ciente que as informações serão enviadas com 7 (sete) dias úteis de antecedência da prova
+                                        </span>
+                                    </label>
+
+                                    <label class="flex items-start cursor-pointer group">
+                                        <input type="checkbox" class="custom-checkbox flex-shrink-0 mt-1" id="concordo-local" required>
+                                        <span class="text-sm text-gray-700 ml-3 group-hover:text-gray-900">
+                                            Aceito que o local da prova seja determinado automaticamente com base no endereço de residência mais próximo
+                                        </span>
                                     </label>
                                 </div>
-                                {% endfor %}
-                            {% else %}
-                                <!-- Container será preenchido via JavaScript se não há dados do servidor -->
-                                <div class="text-center py-8">
-                                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                                    <p class="text-gray-600">Carregando escolas próximas...</p>
-                                </div>
-                            {% endif %}
-                        </div>
-                    </form>
-                </div>
-            </section>
-
-            <!-- Comprovante de Inscrição -->
-            <section class="mt-6 bg-white">
-                <div class="relative border-2 border-black w-full max-w-md mx-auto p-4 sm:p-6 bg-white overflow-hidden">
-                    <!-- Imagem de fundo centralizada e mais transparente -->
-                    <img 
-                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Coat_of_arms_of_Brazil.svg/512px-Coat_of_arms_of_Brazil.svg.png" 
-                        alt="Brasão da República Federativa do Brasil"
-                        class="absolute inset-0 m-auto w-[340px] h-[340px] opacity-5 pointer-events-none select-none"
-                        style="z-index:0; left:50%; top:50%; transform:translate(-50%,-50%);"
-                    />
-                    <!-- Conteúdo -->
-                    <div class="relative z-10">
-                        <!-- Header -->
-                        <div class="flex flex-col items-center mb-6">
-                            <div class="w-full text-center">
-                                <div class="text-[18px] sm:text-[20px] font-bold leading-tight mb-0">
-                                    GOVERNO FEDERAL
-                                </div>
-                                <div class="text-[14px] sm:text-[15px] font-normal leading-tight mt-0.5 mb-3">
-                                    Instituto Brasileiro de Geografia e Estatística
-                                </div>
-                                <div class="text-[20px] sm:text-[22px] font-bold leading-tight">
-                                    COMPROVANTE DE INSCRIÇÃO
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Protocolo e Status -->
-                        <div class="mb-4">
-                            <div class="flex flex-col sm:flex-row sm:items-center mb-2">
-                                <span class="font-bold text-[15px] w-full sm:w-[180px]">Protocolo de inscrição:</span>
-                                <span class="text-[15px] break-all loading-skeleton" id="protocolo-comprovante">Gerando protocolo...</span>
-                            </div>
-                            <div class="flex flex-col sm:flex-row sm:items-center">
-                                <span class="font-bold text-[15px] w-full sm:w-[180px]">Status:</span>
-                                <span class="text-[15px] font-bold text-green-600">INSCRIÇÃO EM ANDAMENTO</span>
-                            </div>
-                        </div>
-                        <!-- DADOS PESSOAIS -->
-                        <div class="border-2 border-black mb-4 rounded">
-                            <div class="bg-gray-100 px-3 py-1 border-b-2 border-black rounded-t">
-                                <span class="font-bold text-[15px]">DADOS PESSOAIS</span>
-                            </div>
-                            <div class="px-3 py-2">
-                                <div class="flex flex-col mb-2">
-                                    <span class="text-[15px] font-bold">Nome Completo:</span>
-                                    <span class="text-[15px] loading-skeleton" id="nome-comprovante">Carregando...</span>
-                                </div>
-                                <div class="flex flex-col mb-2">
-                                    <span class="text-[15px] font-bold">CPF:</span>
-                                    <span class="text-[15px] loading-skeleton" id="cpf-comprovante">Carregando...</span>
-                                </div>
-                                <div class="flex flex-col mb-2">
-                                    <span class="text-[15px] font-bold">RG:</span>
-                                    <span class="text-[15px] loading-skeleton" id="rg-comprovante">Carregando...</span>
-                                </div>
-                                <div class="flex flex-col mb-2">
-                                    <span class="text-[15px] font-bold">Data de Nascimento:</span>
-                                    <span class="text-[15px] loading-skeleton" id="nascimento-comprovante">Carregando...</span>
-                                </div>
-                                <div class="flex flex-col mb-2">
-                                    <span class="text-[15px] font-bold">Sexo:</span>
-                                    <span class="text-[15px] loading-skeleton" id="sexo-comprovante">Carregando...</span>
-                                </div>
-                                <div class="flex flex-col mb-2">
-                                    <span class="text-[15px] font-bold">Estado Civil:</span>
-                                    <span class="text-[15px] loading-skeleton" id="estado-civil-comprovante">Carregando...</span>
-                                </div>
-                                <div class="flex flex-col mb-2">
-                                    <span class="text-[15px] font-bold">Nome da Mãe:</span>
-                                    <span class="text-[15px] loading-skeleton" id="mae-comprovante">Carregando...</span>
-                                </div>
-                                <div class="flex flex-col mb-2">
-                                    <span class="text-[15px] font-bold">Nome do Pai:</span>
-                                    <span class="text-[15px] loading-skeleton" id="pai-comprovante">Carregando...</span>
-                                </div>
-                                <div class="flex flex-col">
-                                    <span class="text-[15px] font-bold">Naturalidade:</span>
-                                    <span class="text-[15px] loading-skeleton" id="naturalidade-comprovante">Carregando...</span>
-                                </div>
                             </div>
                         </div>
 
-                        <!-- DADOS DE ENDEREÇO -->
-                        <div class="border-2 border-black mb-4 rounded">
-                            <div class="bg-gray-100 px-3 py-1 border-b-2 border-black rounded-t">
-                                <span class="font-bold text-[15px]">DADOS DE ENDEREÇO</span>
-                            </div>
-                            <div class="px-3 py-2">
-                                <div class="flex flex-col mb-2">
-                                    <span class="text-[15px] font-bold">CEP:</span>
-                                    <span class="text-[15px] loading-skeleton" id="cep-comprovante">Carregando...</span>
-                                </div>
-                                <div class="flex flex-col mb-2">
-                                    <span class="text-[15px] font-bold">Logradouro:</span>
-                                    <span class="text-[15px] loading-skeleton" id="logradouro-comprovante">Carregando...</span>
-                                </div>
-                                <div class="flex flex-col mb-2">
-                                    <span class="text-[15px] font-bold">Número:</span>
-                                    <span class="text-[15px] loading-skeleton" id="numero-comprovante">Carregando...</span>
-                                </div>
-                                <div class="flex flex-col mb-2">
-                                    <span class="text-[15px] font-bold">Complemento:</span>
-                                    <span class="text-[15px] loading-skeleton" id="complemento-comprovante">Carregando...</span>
-                                </div>
-                                <div class="flex flex-col mb-2">
-                                    <span class="text-[15px] font-bold">Bairro:</span>
-                                    <span class="text-[15px] loading-skeleton" id="bairro-comprovante">Carregando...</span>
-                                </div>
-                                <div class="flex flex-col mb-2">
-                                    <span class="text-[15px] font-bold">Cidade:</span>
-                                    <span class="text-[15px] loading-skeleton" id="cidade-comprovante">Carregando...</span>
-                                </div>
-                                <div class="flex flex-col">
-                                    <span class="text-[15px] font-bold">UF:</span>
-                                    <span class="text-[15px] loading-skeleton" id="uf-comprovante">Carregando...</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- DADOS DE CONTATO -->
-                        <div class="border-2 border-black mb-4 rounded">
-                            <div class="bg-gray-100 px-3 py-1 border-b-2 border-black rounded-t">
-                                <span class="font-bold text-[15px]">DADOS DE CONTATO</span>
-                            </div>
-                            <div class="px-3 py-2">
-                                <div class="flex flex-col mb-2">
-                                    <span class="text-[15px] font-bold">Telefone:</span>
-                                    <span class="text-[15px] loading-skeleton" id="telefone-comprovante">Carregando...</span>
-                                </div>
-                                <div class="flex flex-col mb-2">
-                                    <span class="text-[15px] font-bold">Telefone Alternativo:</span>
-                                    <span class="text-[15px] loading-skeleton" id="telefone-alt-comprovante">Carregando...</span>
-                                </div>
-                                <div class="flex flex-col">
-                                    <span class="text-[15px] font-bold">Email:</span>
-                                    <span class="text-[15px] loading-skeleton" id="email-comprovante">Carregando...</span>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- DADOS DA VAGA -->
-                        <div class="border-2 border-black rounded mb-4">
-                            <div class="bg-gray-100 px-3 py-1 border-b-2 border-black rounded-t">
-                                <span class="font-bold text-[15px]">DADOS DA VAGA</span>
-                            </div>
-                            <div class="px-3 py-2">
-                                <div class="flex flex-col mb-2">
-                                    <span class="text-[15px] font-bold">Cargo Pretendido:</span>
-                                    <span class="text-[15px] loading-skeleton" id="cargo-comprovante">Carregando...</span>
-                                </div>
-                                <div class="flex flex-col">
-                                    <span class="text-[15px] font-bold">Local da Prova:</span>
-                                    <span class="text-[15px]" id="local-prova-comprovante">Será selecionado após escolha do local.</span>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- QR Code e Código de Validação -->
-                        <div class="flex items-start">
-                            <div class="w-1/3">
-                                <div id="qrcode-container" class="w-full max-w-[120px]">
-                                    <div class="qr-loading w-[120px] h-[120px] bg-gray-200 flex items-center justify-center text-xs border rounded">
-                                        <div class="loading-spinner"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="w-2/3">
-                                <div class="text-[15px] font-bold">Código de Validação:</div>
-                                <div class="text-[15px] mb-2 loading-skeleton" id="codigo-validacao">Gerando código...</div>
-                                <div class="text-[13px] italic">
-                                    *Utilize este código para consultar o status da sua inscrição
-                                </div>
-                            </div>
+                        <!-- Botão de Confirmação -->
+                        <div class="mt-8 text-center">
+                            <button type="button" 
+                                    class="btn-primary text-lg px-8 py-4 disabled:opacity-50" 
+                                    id="btn-confirmar-local"
+                                    disabled>
+                                <i class="fas fa-check-circle mr-2"></i>
+                                Confirmar Local da Prova
+                            </button>
+                            <p class="text-sm text-gray-600 mt-3">
+                                Ao confirmar, você será direcionado para o checkout de pagamento
+                            </p>
                         </div>
                     </div>
-                </div>
-            </section>
-
-            <!-- Botão Finalizar Inscrição -->
-            <div class="mt-8 text-center">
-                <button id="finalizar-inscricao-btn" onclick="finalizarInscricao()" 
-                        class="bg-[#0B2341] text-white px-12 py-4 rounded font-semibold hover:bg-[#071d41] transition-colors cursor-pointer text-lg">
-                    Finalizar Inscrição
-                </button>
-                <p class="text-gray-600 text-sm mt-2">
-                    Clique para prosseguir com a finalização e realização da inscrição
-                </p>
+                </section>
             </div>
-        </div>
-    </div>
-
-    <!-- Popup de Carregamento para Checkout -->
-    <div id="checkout-loading-popup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full mx-4 text-center">
-            <!-- Título e Logo FGV -->
-            <div class="mb-6">
-                <h3 class="text-lg font-bold text-gray-800 mb-4 text-center">BANCA ORGANIZADORA:</h3>
-                <img src="https://blog-static.infra.grancursosonline.com.br/wp-content/uploads/2014/09/03154603/fgv.png" 
-                     alt="FGV" class="h-24 mx-auto mb-4"
-                     onerror="this.src='https://barra.sistema.gov.br/v1/assets/govbr.webp'">
-            </div>
-
-            <!-- Spinner de carregamento -->
-            <div class="flex justify-center mb-4">
-                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            </div>
-
-            <!-- Texto de carregamento -->
-            <div id="checkout-loading-text" class="text-gray-800 font-medium mb-4">Preparando ambiente seguro...</div>
-
-            <!-- Barra de progresso -->
-            <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
-                <div id="checkout-progress-bar" class="bg-blue-600 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
-            </div>
-
-            <!-- Informações de segurança -->
-            <p class="text-xs text-gray-600 leading-relaxed">
-                Criando ambiente seguro e protegendo dados de acordo com a lei LGPD.
-            </p>
-        </div>
-    </div>
-
-    <!-- Informações Importantes -->
-            <section class="mt-6 bg-yellow-50 border border-yellow-200 p-4 rounded">
-                <div class="flex items-start">
-                    <i class="fas fa-exclamation-triangle text-yellow-600 mr-2 mt-1"></i>
-                    <div>
-                        <h3 class="font-semibold text-yellow-800 mb-2">INFORMAÇÕES IMPORTANTES</h3>
-                        <ul class="text-sm text-yellow-700 space-y-1">
-                            <li>• A seleção do local é definitiva e não poderá ser alterada após a confirmação</li>
-                            <li>• Chegue ao local com pelo menos 1 hora de antecedência</li>
-                            <li>• Traga documento oficial com foto e comprovante de inscrição</li>
-                            <li>• As provas serão aplicadas nos domingos, das 8h às 12h</li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Informações de segurança -->
-            <div class="bg-white rounded-lg p-4 mt-6 max-w-md mx-auto border border-gray-200 shadow-md">
-                <h3 class="font-semibold text-gray-900 mb-3 flex items-center justify-center">
-                    <img src="https://www.gov.br/agricultura/pt-br/agroform/brasao-sem-fundo.png" 
-                         alt="Brasão da República" 
-                         class="w-5 h-5 mr-2"
-                         onerror="this.style.display='none';">
-                    Segurança
-                </h3>
-                <ul class="text-sm text-gray-600 space-y-2">
-                    <li class="flex items-start">
-                        <svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
-                        </svg>
-                        Dados protegidos por criptografia
-                    </li>
-                    <li class="flex items-start">
-                        <svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
-                        </svg>
-                        Integração oficial RFB
-                    </li>
-                    <li class="flex items-start">
-                        <svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
-                        </svg>
-                        Protocolo HTTPS
-                    </li>
-                    <li class="flex items-start">
-                        <svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
-                        </svg>
-                        Sem armazenamento de dados
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Campo de Recomendação -->
-            <div class="mt-6 bg-blue-50 border-l-4 border-[#184A8C] p-4 max-w-md mx-auto">
-                <h4 class="font-semibold text-[#0B2341] mb-2">Recomendação</h4>
-                <p class="text-gray-700 text-sm">
-                    Acompanhe regularmente as publicações oficiais do IBGE e do Ministério da Gestão e Inovação 
-                    em Serviços Públicos para informações atualizadas sobre concursos e processos seletivos.
-                </p>
-            </div>
-        </div>
-    </div>
-    </div>
-
-    <!-- Footer Mobile -->
-    <footer id="mobile-footer" class="bg-[#003366] text-white md:hidden relative z-10">
-        <div class="w-full px-4 py-4">
-            <!-- MAIS INFORMAÇÕES Section -->
-            <div class="w-full border-b border-white"></div>
-            <div class="accordion-item">
-                <div class="flex items-center justify-between py-4 cursor-pointer accordion-trigger" data-target="mais-info">
-                    <a href="{{ url_for('mais_informacoes') }}" class="font-bold text-base hover:text-gray-300 transition-colors">MAIS INFORMAÇÕES</a>
-                    <i class="fas fa-chevron-down text-lg accordion-chevron transition-transform duration-300"></i>
-                </div>
-                <div class="accordion-content hidden pb-4" id="mais-info">
-                    <ul class="space-y-2.5 text-base">
-                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Estatísticas de Acesso ao Site</a></li>
-                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Pesquisa de Avaliação de Serviços</a></li>
-                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Dados do censo 2020</a></li>
-                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Download dos microdados</a></li>
-                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Cartografia</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- SERVIÇOS Section -->
-            <div class="border-t border-[#bfcbe2] mt-2"></div>
-            <div class="accordion-item">
-                <div class="flex items-center justify-between py-4 cursor-pointer accordion-trigger" data-target="servicos">
-                    <a href="{{ url_for('login') }}" class="font-bold text-base tracking-tight hover:text-gray-300 transition-colors">SERVIÇOS</a>
-                    <i class="fas fa-chevron-down text-lg accordion-chevron transition-transform duration-300"></i>
-                </div>
-                <div class="accordion-content hidden pb-4" id="servicos">
-                    <ul class="space-y-2.5 text-base">
-                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Certificação de Produto Estatístico</a></li>
-                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Capacitação Acadêmica</a></li>
-                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Mapas</a></li>
-                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Georreferenciamento</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- CANAIS DE ATENDIMENTO Section -->
-            <div class="border-t border-[#bfcbe2] mt-2"></div>
-            <div class="accordion-item">
-                <div class="flex items-center justify-between py-4 cursor-pointer accordion-trigger" data-target="atendimento">
-                    <a href="{{ url_for('atendimento') }}" class="font-bold text-base tracking-tight hover:text-gray-300 transition-colors">CANAIS DE ATENDIMENTO</a>
-                    <i class="fas fa-chevron-down text-lg accordion-chevron transition-transform duration-300"></i>
-                </div>
-                <div class="accordion-content hidden pb-4" id="atendimento">
-                    <ul class="space-y-2.5 text-base">
-                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Ouvidoria</a></li>
-                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Fale conosco</a></li>
-                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">IBGE Responde</a></li>
-                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Dados Abertos</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- PRIVACIDADE Section -->
-            <div class="border-t border-[#bfcbe2] mt-2"></div>
-            <div class="accordion-item">
-                <div class="flex items-center justify-between py-4 cursor-pointer accordion-trigger" data-target="privacidade">
-                    <a href="{{ url_for('privacidade') }}" class="font-bold text-base tracking-tight hover:text-gray-300 transition-colors">PRIVACIDADE</a>
-                    <i class="fas fa-chevron-down text-lg accordion-chevron transition-transform duration-300"></i>
-                </div>
-                <div class="accordion-content hidden pb-4" id="privacidade">
-                    <ul class="space-y-2.5 text-base">
-                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Política de Privacidade</a></li>
-                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Termos de Uso</a></li>
-                        <li><a href="{{ url_for('login') }}" class="text-gray-300 hover:text-white transition-colors">Cookies</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- ÓRGÃOS DO GOVERNO Section -->
-            <div class="border-t border-[#bfcbe2] mt-2"></div>
-            <div class="py-4">
-                <a href="{{ url_for('orgaos_governo') }}" class="text-white text-base font-bold tracking-tight hover:text-gray-300 transition-colors">ÓRGÃOS DO GOVERNO</a>
-            </div>
-
-            <!-- REDES SOCIAIS Section -->
-            <div class="border-t border-[#bfcbe2] mt-2"></div>
-            <div class="py-4">
-                <span class="text-white text-base font-bold tracking-tight">REDES SOCIAIS</span>
-            </div>
-            <div class="flex items-center space-x-4 pb-4">
-                <a class="text-white text-lg hover:text-gray-300 transition-colors" href="http://www.facebook.com/ibgeoficial" target="_blank" rel="noopener" aria-label="Facebook IBGE">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-                <a class="text-white text-lg hover:text-gray-300 transition-colors" href="https://instagram.com/ibgeoficial" target="_blank" rel="noopener" aria-label="Instagram IBGE">
-                    <i class="fab fa-instagram"></i>
-                </a>
-                <a class="text-white text-lg hover:text-gray-300 transition-colors" href="https://www.tiktok.com/@ibgeoficial" target="_blank" rel="noopener" aria-label="TikTok IBGE">
-                    <i class="fab fa-tiktok"></i>
-                </a>
-                <a class="text-white text-lg hover:text-gray-300 transition-colors" href="https://twitter.com/ibgecomunica" target="_blank" rel="noopener" aria-label="Twitter IBGE">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 512 512">
-                        <path d="M403.229 0h78.506L310.219 196.04 512 462.799H354.002L230.261 301.007 88.669 462.799h-78.56l183.455-209.683L0 0h161.999l111.856 147.88L403.229 0zm-27.556 415.805h43.505L138.363 44.527h-46.68l283.99 371.278z"/>
-                    </svg>
-                </a>
-                <a class="text-white text-lg hover:text-gray-300 transition-colors" href="https://bsky.app/profile/ibgeoficial.bsky.social" target="_blank" rel="noopener" aria-label="Bluesky IBGE">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 512 512">
-                        <path d="M166.7,135.8c36.2,27.1,75.1,82.2,89.3,111.7,14.3-29.5,53.2-84.6,89.3-111.7,26.1-19.6,68.4-34.7,68.4,13.5s-5.5,80.9-8.8,92.5c-11.3,40.2-52.3,50.5-88.8,44.3,63.8,10.9,80,46.8,45,82.8-66.6,68.3-95.7-17.1-103.1-39-1.4-4-2-5.9-2-4.3,0-1.6-.6.3-2,4.3-7.5,21.9-36.6,107.3-103.1,39-35-36-18.8-71.9,45-82.8-36.5,6.2-77.5-4.1-88.8-44.3-3.2-11.6-8.8-82.9-8.8-92.5,0-48.2,42.3-33.1,68.4-13.5h0Z"/>
-                    </svg>
-                </a>
-                <a class="text-white text-lg hover:text-gray-300 transition-colors" href="http://www.youtube.com/ibgeoficial" target="_blank" rel="noopener" aria-label="YouTube IBGE">
-                    <i class="fab fa-youtube"></i>
-                </a>
-                <a class="text-white text-lg hover:text-gray-300 transition-colors" href="https://whatsapp.com/channel/0029VaoM160JJhzY98Tpge3h" target="_blank" rel="noopener" aria-label="WhatsApp IBGE">
-                    <i class="fab fa-whatsapp"></i>
-                </a>
-            </div>
-
-            <!-- Gov.br Logo -->
-            <div class="pt-5 pb-4">
-                <a href="https://www.gov.br/pt-br" target="_blank" rel="noopener">
-                    <span class="block text-white text-3xl font-bold hover:text-gray-300 transition-colors">gov.br</span>
-                </a>
-            </div>
-
-            <!-- Acesso à Informação -->
-            <div class="pt-5 pb-4 flex items-center">
-                <div class="mr-4">
-                    <a href="https://www.gov.br/acessoainformacao/pt-br" target="_blank" rel="noopener">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 117 49" class="w-32 h-14 hover:opacity-80 transition-opacity">
-                            <circle cx="22" cy="23" r="22" fill="#fff"></circle>
-                            <path style="stroke: #071d41;stroke-width:9;stroke-linecap:round;" d="m 22,23 v 13"></path>
-                            <path style="stroke:#fff;stroke-width:4;stroke-linejoin:round;" d="m 4,43 3,-6 4,3 z"></path>
-                            <circle r="4.5" cy="11" cx="22" fill="#071d41"></circle>
-                            <g fill="#fff">
-                                <text x="47" y="22" style="font: normal bold 11px Open Sans, sans-serif;">
-                                    <tspan y="18">Acesso à</tspan>
-                                    <tspan x="47" y="31">Informação</tspan>
-                                </text>
-                            </g>
-                        </svg>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Anti-Corruption Logo -->
-            <div class="pt-4 pb-8">
-                <a href="https://www.rededecontrole.gov.br/" target="_blank" rel="noopener" title="Participante do Programa Nacional de Prevenção a Corrupção">
-                    <img alt="Logo do IBGE com o texto 'Corrupção Não' em português, fundo branco, selo de combate à corrupção" 
-                         class="w-20 h-20 object-contain hover:opacity-80 transition-opacity" 
-                         src="https://www.ibge.gov.br/images/novoportal/corrupcao-nao.png"/>
-                </a>
-            </div>
-        </div>
-    </footer>
-</div>
-
-    <!-- Popup de Carregamento da Seleção do Local -->
-    <div id="local-loading-popup" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-        <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full mx-4 text-center">
-            <!-- Brasão de carregamento -->
-            <div class="mb-6">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Coat_of_arms_of_Brazil.svg/512px-Coat_of_arms_of_Brazil.svg.png" 
-                     alt="Brasão da República" 
-                     class="w-16 h-16 mx-auto opacity-80 animate-pulse">
-            </div>
-
-            <!-- Texto de carregamento -->
-            <div class="mb-6">
-                <h3 class="text-lg font-bold text-gray-800 mb-2">Processando Seleção</h3>
-                <p class="text-gray-600" id="loading-text">Verificando disponibilidade do local...</p>
-            </div>
-
-            <!-- Barra de progresso -->
-            <div class="w-full bg-gray-200 rounded-full h-2 mb-6">
-                <div id="progress-bar" class="bg-blue-600 h-2 rounded-full transition-all duration-1000 ease-out" style="width: 0%"></div>
-            </div>
-
-            <!-- Botão confirmar (inicialmente oculto) -->
-            <button id="confirmar-local-btn" 
-                    class="hidden bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200"
-                    onclick="confirmarSelecaoLocal()">
-                Confirmar Local
-            </button>
         </div>
     </div>
 
     <script>
-        // Initialize language selector dropdown functionality
-        function initializeLanguageSelector() {
-            const languageSelector = document.getElementById('language-selector');
-            const languageDropdown = document.getElementById('language-dropdown');
-            const languageChevron = document.getElementById('language-chevron');
-
-            if (!languageSelector || !languageDropdown || !languageChevron) return;
-
-            function toggleLanguageDropdown() {
-                const isHidden = languageDropdown.classList.contains('hidden');
-                if (isHidden) {
-                    openLanguageDropdown();
-                } else {
-                    closeLanguageDropdown();
-                }
-            }
-
-            function openLanguageDropdown() {
-                languageDropdown.classList.remove('hidden');
-                languageChevron.style.transform = 'rotate(180deg)';
-            }
-
-            function closeLanguageDropdown() {
-                languageDropdown.classList.add('hidden');
-                languageChevron.style.transform = 'rotate(0deg)';
-            }
-
-            // Toggle on click
-            languageSelector.addEventListener('click', function(e) {
-                e.stopPropagation();
-                toggleLanguageDropdown();
-            });
-
-            // Close on outside click
-            document.addEventListener('click', function(e) {
-                if (!languageDropdown.contains(e.target) && !languageSelector.contains(e.target)) {
-                    closeLanguageDropdown();
-                }
-            });
-
-            // Close on language selection
-            const languageLinks = languageDropdown.querySelectorAll('a');
-            languageLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    closeLanguageDropdown();
-                });
-            });
-        }
-
-        function voltarSelecao() {
-            window.history.back();
-        }
-
-        // Salvar local selecionado no localStorage quando confirmar
-        document.getElementById('form-local-prova').addEventListener('submit', function(e) {
-            const selectedSchool = document.querySelector('input[name="escola_selecionada"]:checked');
-            if (selectedSchool) {
-                const localData = {
-                    escola: selectedSchool.value,
-                    timestamp: new Date().toISOString()
-                };
-                localStorage.setItem('ibge_local_prova', JSON.stringify(localData));
-                console.log('Local da prova salvo:', localData);
-            }
+        document.addEventListener('DOMContentLoaded', function() {
+            // Carregar dados do localStorage
+            loadUserData();
+            
+            // Configurar event listeners para checkboxes
+            setupCheckboxListeners();
+            
+            // Configurar botão de confirmação
+            setupConfirmButton();
         });
 
-        // Destacar visualmente a opção selecionada
-        document.querySelectorAll('input[name="escola_selecionada"]').forEach(radio => {
-            radio.addEventListener('change', function() {
-                // Remover destaque de todas as opções
-                document.querySelectorAll('input[name="escola_selecionada"]').forEach(r => {
-                    r.closest('.border').classList.remove('border-blue-500', 'bg-blue-50');
-                    r.closest('.border').classList.add('border-gray-200');
-                });
-
-                // Destacar a opção selecionada
-                if (this.checked) {
-                    this.closest('.border').classList.remove('border-gray-200');
-                    this.closest('.border').classList.add('border-blue-500', 'bg-blue-50');
-                }
-            });
-        });
-
-        // Initialize accordion functionality
-        function initializeAccordions() {
-            document.querySelectorAll('.accordion-trigger').forEach(trigger => {
-                trigger.addEventListener('click', function() {
-                    toggleAccordion(this);
-                });
-            });
-        }
-
-        function toggleAccordion(trigger) {
-            const targetId = trigger.getAttribute('data-target');
-            const content = document.getElementById(targetId);
-            const chevron = trigger.querySelector('.accordion-chevron');
-
-            if (content && chevron) {
-                content.classList.toggle('hidden');
-
-                if (content.classList.contains('hidden')) {
-                    chevron.style.transform = 'rotate(0deg)';
-                } else {
-                    chevron.style.transform = 'rotate(180deg)';
-                }
-            }
-        }
-
-        // Variável global para controlar seleção
-        let localSelecionado = null;
-        let popupAberto = false;
-
-        // Função para mostrar popup de carregamento
-        function mostrarPopupCarregamento(nomeLocal) {
-            if (popupAberto) return; // Evitar múltiplos popups
-
-            popupAberto = true;
-            localSelecionado = nomeLocal;
-
-            const popup = document.getElementById('local-loading-popup');
-            const loadingText = document.getElementById('loading-text');
-            const progressBar = document.getElementById('progress-bar');
-            const confirmarBtn = document.getElementById('confirmar-local-btn');
-
-            console.log('Abrindo popup para local:', nomeLocal);
-
-            // Resetar estados
-            loadingText.textContent = 'Verificando disponibilidade do local...';
-            progressBar.style.width = '0%';
-            confirmarBtn.classList.add('hidden');
-
-            // Mostrar popup
-            popup.classList.remove('hidden');
-
-            // Animação de progresso
-            setTimeout(() => {
-                progressBar.style.width = '30%';
-                loadingText.textContent = 'Consultando sistema de vagas...';
-            }, 500);
-
-            setTimeout(() => {
-                progressBar.style.width = '60%';
-                loadingText.textContent = 'Validando capacidade do local...';
-            }, 1500);
-
-            setTimeout(() => {
-                progressBar.style.width = '90%';
-                loadingText.textContent = 'Preparando confirmação...';
-            }, 2500);
-
-            setTimeout(() => {
-                progressBar.style.width = '100%';
-                loadingText.textContent = `Local "${nomeLocal}" disponível para seleção!`;
-                confirmarBtn.classList.remove('hidden');
-                console.log('✓ Local carregado para confirmação:', nomeLocal);
-            }, 3500);
-        }
-
-        // Função para confirmar seleção do local
-        function confirmarSelecaoLocal() {
-            const popup = document.getElementById('local-loading-popup');
-
-            // Fechar popup
-            popup.classList.add('hidden');
-            popupAberto = false;
-
-            // Marcar local como selecionado
-            document.querySelectorAll('input[name="escola_selecionada"]').forEach(radio => {
-                const container = radio.closest('.border');
-                const localName = radio.value;
-
-                if (localName === localSelecionado) {
-                    // Marcar como selecionado e verde
-                    radio.checked = true;
-                    container.classList.remove('border-gray-200', 'border-blue-500', 'bg-blue-50');
-                    container.classList.add('border-green-500', 'bg-green-50');
-
-                    // Adicionar ícone de confirmação
-                    const existingCheck = container.querySelector('.check-icon');
-                    if (!existingCheck) {
-                        const checkIcon = document.createElement('div');
-                        checkIcon.className = 'check-icon absolute top-2 right-2 bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm';
-                        checkIcon.innerHTML = '✓';
-                        container.style.position = 'relative';
-                        container.appendChild(checkIcon);
-                    }
-                } else {
-                    // Desmarcar outros
-                    radio.checked = false;
-                    container.classList.remove('border-blue-500', 'bg-blue-50', 'border-green-500', 'bg-green-50');
-                    container.classList.add('border-gray-200');
-
-                    // Remover ícone de confirmação
-                    const checkIcon = container.querySelector('.check-icon');
-                    if (checkIcon) {
-                        checkIcon.remove();
-                    }
-                }
-            });
-
-            // Salvar no localStorage
-            localStorage.setItem('ibge_local_prova_selecionado', localSelecionado);
-
-            // Atualizar comprovante se existir
-            const localComprovanteEl = document.getElementById('local-prova-comprovante');
-            if (localComprovanteEl) {
-                localComprovanteEl.textContent = localSelecionado;
-            }
-
-            console.log('✓ Local confirmado e salvo:', localSelecionado);
-
-            // Mostrar mensagem de sucesso
-            const successMsg = document.createElement('div');
-            successMsg.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
-            successMsg.textContent = 'Local da prova confirmado com sucesso!';
-            document.body.appendChild(successMsg);
-
-            setTimeout(() => {
-                successMsg.remove();
-            }, 3000);
-        }
-
-        // Função para inicializar event listeners
-        function inicializarEventListeners() {
-            console.log('Inicializando event listeners para escolas...');
-
-            document.querySelectorAll('input[name="escola_selecionada"]').forEach((radio, index) => {
-                console.log(`Adicionando listener para escola ${index + 1}:`, radio.value);
-
-                radio.addEventListener('change', function(e) {
-                    console.log('Radio button clicado:', this.value, 'Checked:', this.checked);
-
-                    if (this.checked && !popupAberto) {
-                        const nomeLocal = this.value;
-                        console.log('Iniciando popup para local:', nomeLocal);
-                        mostrarPopupCarregamento(nomeLocal);
-                    }
-                });
-
-                // Também adicionar listener para o container
-                const container = radio.closest('.border');
-                if (container) {
-                    container.addEventListener('click', function(e) {
-                        if (e.target.type !== 'radio') {
-                            radio.click();
-                        }
-                    });
-                }
-            });
-        }
-
-        // Função para carregar dados do comprovante
-        function carregarDadosComprovante() {
-            console.log('=== INICIANDO CARREGAMENTO DE DADOS ===');
-
+        function loadUserData() {
+            console.log('=== CARREGANDO DADOS DO USUÁRIO ===');
+            
+            // Tentar carregar dados completos primeiro
+            let userData = {};
             try {
-                // PRIMEIRA PRIORIDADE: Gerar protocolo e código SEMPRE
-                let protocoloUnico = localStorage.getItem('ibge_protocolo_unico');
-                let codigoValidacao = localStorage.getItem('ibge_codigo_validacao');
-
-                if (!protocoloUnico) {
-                    const agora = new Date();
-                    const ano = agora.getFullYear();
-                    const mes = String(agora.getMonth() + 1).padStart(2, '0');
-                    const dia = String(agora.getDate()).padStart(2, '0');
-                    const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-                    protocoloUnico = `IBGE${ano}${mes}${dia}${random}`;
-                    localStorage.setItem('ibge_protocolo_unico', protocoloUnico);
-                    console.log('✓ Protocolo gerado:', protocoloUnico);
-                }
-
-                if (!codigoValidacao) {
-                    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-                    const ano = new Date().getFullYear().toString().substring(-2);
-                    codigoValidacao = `VL${ano}-`;
-                    for (let i = 0; i < 6; i++) {
-                        codigoValidacao += chars.charAt(Math.floor(Math.random() * chars.length));
-                    }
-                    localStorage.setItem('ibge_codigo_validacao', codigoValidacao);
-                    console.log('✓ Código gerado:', codigoValidacao);
-                }
-
-                // Atualizar elementos HTML imediatamente
-                const protocoloEl = document.getElementById('protocolo-comprovante');
-                const codigoEl = document.getElementById('codigo-validacao');
-
-                console.log('Procurando elementos:', {
-                    protocolo: !!protocoloEl,
-                    codigo: !!codigoEl
-                });
-
-                if (protocoloEl) {
-                    protocoloEl.classList.remove('loading-skeleton');
-                    protocoloEl.textContent = protocoloUnico;
-                    protocoloEl.classList.add('fade-in');
-                    console.log('✓ Protocolo atualizado no elemento:', protocoloUnico);
+                const storedData = localStorage.getItem('ibge_inscricao_dados_completos');
+                if (storedData) {
+                    userData = JSON.parse(storedData);
+                    console.log('✓ Dados completos carregados:', userData);
                 } else {
-                    console.log('✗ Elemento protocolo-comprovante NÃO encontrado');
-                }
-
-                if (codigoEl) {
-                    codigoEl.classList.remove('loading-skeleton');
-                    codigoEl.textContent = codigoValidacao;
-                    codigoEl.classList.add('fade-in');
-                    console.log('✓ Código atualizado no elemento:', codigoValidacao);
-                } else {
-                    console.log('✗ Elemento codigo-validacao NÃO encontrado');
-                }
-
-                // Criar QR Code profissional imediatamente
-                const qrContainer = document.getElementById('qrcode-container');
-                console.log('Container QR Code encontrado:', !!qrContainer);
-
-                if (qrContainer) {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = 120;
-                    canvas.height = 120;
-                    const ctx = canvas.getContext('2d');
-
-                    // Fundo branco
-                    ctx.fillStyle = '#FFFFFF';
-                    ctx.fillRect(0, 0, 120, 120);
-
-                    // Configurações do QR Code
-                    const moduleSize = 5;
-                    const modules = 21; // QR Code padrão 21x21
-                    const margin = 7;
-
-                    ctx.fillStyle = '#000000';
-
-                    // Função para desenhar um módulo
-                    function drawModule(row, col) {
-                        const x = margin + col * moduleSize;
-                        const y = margin + row * moduleSize;
-                        ctx.fillRect(x, y, moduleSize, moduleSize);
-                    }
-
-                    // Função para verificar se deve preencher módulo baseado no protocolo
-                    function shouldFillModule(row, col) {
-                        const seed = protocoloUnico + codigoValidacao;
-                        const index = (row * modules + col) % seed.length;
-                        return seed.charCodeAt(index) % 3 !== 0;
-                    }
-
-                    // Desenhar marcadores de posição (cantos)
-                    function drawPositionMarker(startRow, startCol) {
-                        // Quadrado externo 7x7
-                        for (let r = 0; r < 7; r++) {
-                            for (let c = 0; c < 7; c++) {
-                                if (r === 0 || r === 6 || c === 0 || c === 6) {
-                                    drawModule(startRow + r, startCol + c);
-                                }
-                            }
-                        }
-                        // Quadrado interno 3x3
-                        for (let r = 2; r < 5; r++) {
-                            for (let c = 2; c < 5; c++) {
-                                drawModule(startRow + r, startCol + c);
-                            }
-                        }
-                    }
-
-                    // Desenhar os três marcadores de posição
-                    drawPositionMarker(0, 0);      // Superior esquerdo
-                    drawPositionMarker(0, 14);     // Superior direito
-                    drawPositionMarker(14, 0);     // Inferior esquerdo
-
-                    // Desenhar separadores (linhas brancas ao redor dos marcadores)
-                    ctx.fillStyle = '#FFFFFF';
-                    // Separador horizontal superior
-                    for (let c = 0; c < 8; c++) {
-                        ctx.fillRect(margin + c * moduleSize, margin + 7 * moduleSize, moduleSize, moduleSize);
-                    }
-                    for (let c = 13; c < 21; c++) {
-                        ctx.fillRect(margin + c * moduleSize, margin + 7 * moduleSize, moduleSize, moduleSize);
-                    }
-                    // Separador vertical esquerdo
-                    for (let r = 0; r < 8; r++) {
-                        ctx.fillRect(margin + 7 * moduleSize, margin + r * moduleSize, moduleSize, moduleSize);
-                    }
-                    for (let r = 13; r < 21; r++) {
-                        ctx.fillRect(margin + 7 * moduleSize, margin + r * moduleSize, moduleSize, moduleSize);
-                    }
-
-                    ctx.fillStyle = '#000000';
-
-                    // Desenhar linhas de sincronização
-                    // Linha horizontal
-                    for (let c = 8; c < 13; c++) {
-                        if (c % 2 === 0) drawModule(6, c);
-                    }
-                    // Linha vertical
-                    for (let r = 8; r < 13; r++) {
-                        if (r % 2 === 0) drawModule(r, 6);
-                    }
-
-                    // Desenhar módulo escuro (sempre presente)
-                    drawModule(4 * modules + 9, 8);
-
-                    // Preencher área de dados com padrão baseado no protocolo
-                    for (let row = 0; row < modules; row++) {
-                        for (let col = 0; col < modules; col++) {
-                            // Pular áreas já ocupadas pelos marcadores e separadores
-                            if ((row < 9 && col < 9) || // Superior esquerdo
-                                (row < 9 && col > 12) || // Superior direito
-                                (row > 12 && col < 9) || // Inferior esquerdo
-                                (row === 6) || // Linha de sincronização horizontal
-                                (col === 6)) { // Linha de sincronização vertical
-                                continue;
-                            }
-
-                            if (shouldFillModule(row, col)) {
-                                drawModule(row, col);
-                            }
-                        }
-                    }
-
-                    // Adicionar bordas do canvas
-                    ctx.strokeStyle = '#E5E5E5';
-                    ctx.lineWidth = 1;
-                    ctx.strokeRect(0, 0, 120, 120);
-
-                    // Substituir conteúdo
-                    qrContainer.innerHTML = '';
-                    qrContainer.appendChild(canvas);
-                    console.log('✓ QR Code profissional criado e inserido');
-                } else {
-                    console.log('✗ Container qrcode-container NÃO encontrado');
-                }
-
-                // Carregar dados completos depois
-                const dadosCompletos = JSON.parse(localStorage.getItem('ibge_inscricao_completa') || '{}');
-                console.log('Dados completos localStorage:', dadosCompletos);
-
-                // Verificar se existem dados de identificação
-                if (dadosCompletos && dadosCompletos.identificacao) {
-                    const id = dadosCompletos.identificacao;
-                    console.log('Dados identificação encontrados:', id);
-
-                    // Carregar todos os dados de identificação
-                    const camposId = [
-                        { campo: 'nome_completo', elemento: 'nome-comprovante', label: 'Nome' },
-                        { campo: 'cpf', elemento: 'cpf-comprovante', label: 'CPF' },
-                        { campo: 'rg', elemento: 'rg-comprovante', label: 'RG' },
-                        { campo: 'sexo', elemento: 'sexo-comprovante', label: 'Sexo' },
-                        { campo: 'estado_civil', elemento: 'estado-civil-comprovante', label: 'Estado Civil' },
-                        { campo: 'nome_mae', elemento: 'mae-comprovante', label: 'Nome da Mãe' },
-                        { campo: 'nome_pai', elemento: 'pai-comprovante', label: 'Nome do Pai' },
-                        { campo: 'naturalidade', elemento: 'naturalidade-comprovante', label: 'Naturalidade' }
-                    ];
-
-                    camposId.forEach(item => {
-                        const el = document.getElementById(item.elemento);
-                        if (el) {
-                            el.classList.remove('loading-skeleton');
-                            if (item.campo === 'data_nascimento') {
-                                if (id.data_nascimento) {
-                                    const data = new Date(id.data_nascimento + 'T00:00:00');
-                                    el.textContent = data.toLocaleDateString('pt-BR');
-                                } else {
-                                    el.textContent = 'Não informado';
-                                }
-                            } else {
-                                el.textContent = id[item.campo] ? id[item.campo].trim() : 'Não informado';
-                            }
-                            el.classList.add('fade-in');
-                            console.log(`✓ ${item.label} carregado:`, id[item.campo] || 'Não informado');
-                        }
-                    });
-
-                    // Carregar data de nascimento separadamente
-                    const nascEl = document.getElementById('nascimento-comprovante');
-                    if (nascEl) {
-                        nascEl.classList.remove('loading-skeleton');
-                        if (id.data_nascimento) {
-                            const data = new Date(id.data_nascimento + 'T00:00:00');
-                            nascEl.textContent = data.toLocaleDateString('pt-BR');
-                            console.log('✓ Data nascimento carregada:', data.toLocaleDateString('pt-BR'));
-                        } else {
-                            nascEl.textContent = 'Não informado';
-                        }
-                        nascEl.classList.add('fade-in');
-                    }
-
-                    // Carregar dados de endereço
-                    if (dadosCompletos.endereco) {
-                        const endereco = dadosCompletos.endereco;
-                        const camposEndereco = [
-                            { campo: 'cep', elemento: 'cep-comprovante', label: 'CEP' },
-                            { campo: 'logradouro', elemento: 'logradouro-comprovante', label: 'Logradouro' },
-                            { campo: 'numero', elemento: 'numero-comprovante', label: 'Número' },
-                            { campo: 'complemento', elemento: 'complemento-comprovante', label: 'Complemento' },
-                            { campo: 'bairro', elemento: 'bairro-comprovante', label: 'Bairro' },
-                            { campo: 'cidade', elemento: 'cidade-comprovante', label: 'Cidade' },
-                            { campo: 'uf', elemento: 'uf-comprovante', label: 'UF' }
-                        ];
-
-                        camposEndereco.forEach(item => {
-                            const el = document.getElementById(item.elemento);
-                            if (el) {
-                                el.classList.remove('loading-skeleton');
-                                el.textContent = endereco[item.campo] ? endereco[item.campo].trim() : 'Não informado';
-                                el.classList.add('fade-in');
-                                console.log(`✓ ${item.label} carregado:`, endereco[item.campo] || 'Não informado');
-                            }
-                        });
-                    }
-
-                    // Carregar dados de contato
-                    if (dadosCompletos.contato) {
-                        const contato = dadosCompletos.contato;
-                        const camposContato = [
-                            { campo: 'telefone', elemento: 'telefone-comprovante', label: 'Telefone' },
-                            { campo: 'telefone_alt', elemento: 'telefone-alt-comprovante', label: 'Telefone Alternativo' },
-                            { campo: 'email', elemento: 'email-comprovante', label: 'Email' }
-                        ];
-
-                        camposContato.forEach(item => {
-                            const el = document.getElementById(item.elemento);
-                            if (el) {
-                                el.classList.remove('loading-skeleton');
-                                el.textContent = contato[item.campo] ? contato[item.campo].trim() : 'Não informado';
-                                el.classList.add('fade-in');
-                                console.log(`✓ ${item.label} carregado:`, contato[item.campo] || 'Não informado');
-                            }
-                        });
-                    }
-
-                    // Carregar cargo
-                    const cargoEl = document.getElementById('cargo-comprovante');
-                    if (cargoEl && dadosCompletos.cargo) {
-                        cargoEl.classList.remove('loading-skeleton');
-                        cargoEl.textContent = dadosCompletos.cargo;
-                        cargoEl.classList.add('fade-in');
-                        console.log('✓ Cargo carregado:', dadosCompletos.cargo);
-                    }
-
-                } else {
-                    console.log('⚠ Dados de identificação não encontrados, tentando seções individuais...');
-
-                    // Tentar carregar das seções individuais
-                    const secao1 = JSON.parse(localStorage.getItem('ibge_inscricao_secao1') || '{}');
-                    console.log('Seção 1 individual:', secao1);
-
-                    // Carregar dados das seções individuais
-                    const secao3 = JSON.parse(localStorage.getItem('ibge_inscricao_secao3') || '{}');
-                    const secao4 = JSON.parse(localStorage.getItem('ibge_inscricao_secao4') || '{}');
-
-                    if (secao1 && Object.keys(secao1).length > 0) {
-                        // Carregar todos os campos da seção 1
-                        const camposId = [
-                            { campo: 'nome_completo', elemento: 'nome-comprovante', label: 'Nome' },
-                            { campo: 'cpf', elemento: 'cpf-comprovante', label: 'CPF' },
-                            { campo: 'rg', elemento: 'rg-comprovante', label: 'RG' },
-                            { campo: 'sexo', elemento: 'sexo-comprovante', label: 'Sexo' },
-                            { campo: 'estado_civil', elemento: 'estado-civil-comprovante', label: 'Estado Civil' },
-                            { campo: 'nome_mae', elemento: 'mae-comprovante', label: 'Nome da Mãe' },
-                            { campo: 'nome_pai', elemento: 'pai-comprovante', label: 'Nome do Pai' },
-                            { campo: 'naturalidade', elemento: 'naturalidade-comprovante', label: 'Naturalidade' }
-                        ];
-
-                        camposId.forEach(item => {
-                            const el = document.getElementById(item.elemento);
-                            if (el) {
-                                el.classList.remove('loading-skeleton');
-                                el.textContent = secao1[item.campo] ? secao1[item.campo].trim() : 'Não informado';
-                                el.classList.add('fade-in');
-                                console.log(`✓ ${item.label} da seção 1:`, secao1[item.campo] || 'Não informado');
-                            }
-                        });
-
-                        // Data de nascimento separadamente
-                        const nascEl = document.getElementById('nascimento-comprovante');
-                        if (nascEl && secao1.data_nascimento) {
-                            nascEl.classList.remove('loading-skeleton');
-                            const data = new Date(secao1.data_nascimento + 'T00:00:00');
-                            nascEl.textContent = data.toLocaleDateString('pt-BR');
-                            nascEl.classList.add('fade-in');
-                            console.log('✓ Data da seção 1:', data.toLocaleDateString('pt-BR'));
-                        }
-                    }
-
-                    // Carregar seção 3 - Endereço
-                    if (secao3 && Object.keys(secao3).length > 0) {
-                        const camposEndereco = [
-                            { campo: 'cep', elemento: 'cep-comprovante', label: 'CEP' },
-                            { campo: 'logradouro', elemento: 'logradouro-comprovante', label: 'Logradouro' },
-                            { campo: 'numero', elemento: 'numero-comprovante', label: 'Número' },
-                            { campo: 'complemento', elemento: 'complemento-comprovante', label: 'Complemento' },
-                            { campo: 'bairro', elemento: 'bairro-comprovante', label: 'Bairro' },
-                            { campo: 'cidade', elemento: 'cidade-comprovante', label: 'Cidade' },
-                            { campo: 'uf', elemento: 'uf-comprovante', label: 'UF' }
-                        ];
-
-                        camposEndereco.forEach(item => {
-                            const el = document.getElementById(item.elemento);
-                            if (el) {
-                                el.classList.remove('loading-skeleton');
-                                el.textContent = secao3[item.campo] ? secao3[item.campo].trim() : 'Não informado';
-                                el.classList.add('fade-in');
-                                console.log(`✓ ${item.label} da seção 3:`, secao3[item.campo] || 'Não informado');
-                            }
-                        });
-                    }
-
-                    // Carregar seção 4 - Contato
-                    if (secao4 && Object.keys(secao4).length > 0) {
-                        const camposContato = [
-                            { campo: 'telefone', elemento: 'telefone-comprovante', label: 'Telefone' },
-                            { campo: 'telefone_alt', elemento: 'telefone-alt-comprovante', label: 'Telefone Alternativo' },
-                            { campo: 'email', elemento: 'email-comprovante', label: 'Email' }
-                        ];
-
-                        camposContato.forEach(item => {
-                            const el = document.getElementById(item.elemento);
-                            if (el) {
-                                el.classList.remove('loading-skeleton');
-                                el.textContent = secao4[item.campo] ? secao4[item.campo].trim() : 'Não informado';
-                                el.classList.add('fade-in');
-                                console.log(`✓ ${item.label} da seção 4:`, secao4[item.campo] || 'Não informado');
-                            }
-                        });
-                    }
-
-                    // Se não houver dados, mostrar fallback
-                    if (!secao1 || Object.keys(secao1).length === 0) {
-                        console.log('✗ Nenhum dado encontrado');
-                        const todosElementos = [
-                            'nome-comprovante', 'cpf-comprovante', 'rg-comprovante', 'nascimento-comprovante',
-                            'sexo-comprovante', 'estado-civil-comprovante', 'mae-comprovante', 'pai-comprovante',
-                            'naturalidade-comprovante', 'cep-comprovante', 'logradouro-comprovante', 'numero-comprovante',
-                            'complemento-comprovante', 'bairro-comprovante', 'cidade-comprovante', 'uf-comprovante',
-                            'telefone-comprovante', 'telefone-alt-comprovante', 'email-comprovante'
-                        ];
-
-                        todosElementos.forEach(id => {
-                            const el = document.getElementById(id);
-                            if (el && el.classList.contains('loading-skeleton')) {
-                                el.classList.remove('loading-skeleton');
-                                el.textContent = 'Dados não disponíveis';
-                                el.classList.add('fade-in');
-                            }
-                        });
-                    }
-
-                    // Carregar cargo
-                    const cargo = localStorage.getItem('ibge_cargo_selecionado');
-                    const cargoEl = document.getElementById('cargo-comprovante');
-                    if (cargoEl) {
-                        cargoEl.classList.remove('loading-skeleton');
-                        cargoEl.textContent = cargo || 'Cargo não informado';
-                        cargoEl.classList.add('fade-in');
-                        console.log('✓ Cargo individual:', cargo);
+                    console.log('⚠ Dados completos não encontrados, carregando seções individuais');
+                    // Carregar seções individuais
+                    const secao3 = localStorage.getItem('ibge_inscricao_secao3');
+                    if (secao3) {
+                        const enderecoData = JSON.parse(secao3);
+                        userData.endereco = enderecoData;
+                        console.log('✓ Dados da seção 3 carregados:', enderecoData);
                     }
                 }
-
-
-
-                console.log('=== CARREGAMENTO CONCLUÍDO ===');
-
             } catch (error) {
-                console.error('Erro no carregamento:', error);
+                console.error('Erro ao carregar dados:', error);
             }
+
+            // Exibir endereço
+            displayAddress(userData.endereco || {});
         }
 
-
-
-    // Função para finalizar inscrição
-    function finalizarInscricao() {
-        // Mostrar popup de carregamento
-        document.getElementById('checkout-loading-popup').classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-
-        // Animar barra de progresso
-        let progress = 0;
-        const progressBar = document.getElementById('checkout-progress-bar');
-        const loadingText = document.getElementById('checkout-loading-text');
-
-        const progressInterval = setInterval(() => {
-            progress += 10;
-            progressBar.style.width = progress + '%';
-
-            // Atualizar texto baseado no progresso
-            if (progress <= 30) {
-                loadingText.textContent = 'Preparando ambiente seguro...';
-            } else if (progress <= 60) {
-                loadingText.textContent = 'Validando dados de inscrição...';
-            } else if (progress <= 90) {
-                loadingText.textContent = 'Conectando com sistema de pagamento...';
-            } else {
-                loadingText.textContent = 'Redirecionando para finalização...';
-            }
-
-            if (progress >= 100) {
-                clearInterval(progressInterval);
-
-                // Aguardar um pouco e redirecionar para checkout
-                setTimeout(() => {
-                    window.location.href = '/checkout';
-                }, 1500);
-            }
-        }, 300);
-    }
-
-    // Inicializar quando DOM carregado
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM carregado, inicializando componentes...');
-
-        // Debug inicial - verificar dados disponíveis
-        console.log('=== DEBUG INICIAL ===');
-        console.log('localStorage ibge_inscricao_completa:', localStorage.getItem('ibge_inscricao_completa'));
-        console.log('localStorage ibge_inscricao_secao3:', localStorage.getItem('ibge_inscricao_secao3'));
-        console.log('localStorage ibge_cep_selecionado:', localStorage.getItem('ibge_cep_selecionado'));
-        console.log('URL params:', window.location.search);
-
-        initializeLanguageSelector();
-        initializeAccordions();
-
-        // Inicializar event listeners para seleção de local
-        setTimeout(() => {
-            inicializarEventListeners();
-        }, 100);
-
-        // Carregar dados do comprovante e buscar escolas
-        console.log('Iniciando carregamento de dados...');
-        setTimeout(() => {
-            carregarDadosComprovante();
-            buscarEscolasProximas();
-        }, 1000);
-
-        // Função para buscar escolas próximas
-        function buscarEscolasProximas() {
-            console.log('=== INICIANDO BUSCA DE ESCOLAS ===');
-            
-            // Buscar CEP do localStorage - verificar múltiplas fontes
-            let dadosEndereco = {};
-            let cep = null;
-            
-            // Fonte 1: dados completos (ibge_dados_completos)
-            const dadosCompletos = JSON.parse(localStorage.getItem('ibge_dados_completos') || '{}');
-            console.log('Dados completos do localStorage:', dadosCompletos);
-            if (dadosCompletos.endereco && dadosCompletos.endereco.cep) {
-                dadosEndereco = dadosCompletos.endereco;
-                cep = dadosCompletos.endereco.cep;
-                console.log('CEP encontrado em dados completos:', cep);
-            }
-            
-            // Fonte 2: seção 3 específica (ibge_dados_secao3)
-            if (!cep) {
-                const dadosSecao3 = JSON.parse(localStorage.getItem('ibge_dados_secao3') || '{}');
-                console.log('Dados seção 3 do localStorage:', dadosSecao3);
-                if (dadosSecao3.cep) {
-                    dadosEndereco = dadosSecao3;
-                    cep = dadosSecao3.cep;
-                    console.log('CEP encontrado em seção 3:', cep);
-                }
-            }
-            
-            // Fonte 3: CEP selecionado na página anterior
-            if (!cep) {
-                const cepSelecionado = localStorage.getItem('ibge_cep_selecionado');
-                if (cepSelecionado) {
-                    cep = cepSelecionado;
-                    console.log('CEP encontrado na seleção anterior:', cep);
-                }
-            }
-            
-            // Fonte 4: dados de confirmação
-            if (!cep) {
-                const urlParams = new URLSearchParams(window.location.search);
-                const cepParam = urlParams.get('cep');
-                if (cepParam) {
-                    cep = cepParam;
-                    console.log('CEP encontrado na URL:', cep);
-                }
-            }
-            
-            console.log('CEP final encontrado:', cep);
-            console.log('Dados de endereço:', dadosEndereco);
-            
-            // Mostrar endereço do usuário se disponível
-            if (dadosEndereco && Object.keys(dadosEndereco).length > 0) {
-                mostrarEnderecoUsuario(dadosEndereco);
-            }
-            
-            if (!cep) {
-                console.log('❌ CEP não encontrado em nenhuma fonte');
-                mostrarMensagemErro('CEP não encontrado. Não foi possível carregar escolas próximas.');
-                return;
-            }
-            
-            // Buscar escolas via API
-            console.log(`Fazendo requisição para: /api/buscar-escolas?cep=${cep}`);
-            fetch(`/api/buscar-escolas?cep=${cep}`)
-                .then(response => {
-                    console.log('Status da resposta:', response.status);
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Resposta completa da API:', data);
-                    
-                    if (data.erro_busca) {
-                        console.log('❌ Erro na busca:', data.erro_mensagem);
-                        mostrarMensagemErro(data.erro_mensagem || 'Erro ao buscar escolas próximas');
-                        return;
-                    }
-                    
-                    // Atualizar endereço do usuário se disponível
-                    if (data.endereco_detalhado && Object.keys(data.endereco_detalhado).length > 0) {
-                        mostrarEnderecoUsuario(data.endereco_detalhado);
-                    }
-                    
-                    if (data.escolas && data.escolas.length > 0) {
-                        console.log(`✓ Encontradas ${data.escolas.length} escolas próximas`);
-                        console.log(`✓ Endereço do usuário: ${data.endereco_usuario}`);
-                        if (data.coordenadas_usuario) {
-                            console.log(`✓ Coordenadas: ${data.coordenadas_usuario.lat}, ${data.coordenadas_usuario.lon}`);
-                        }
-                        mostrarEscolas(data.escolas);
-                    } else {
-                        console.log('❌ Nenhuma escola encontrada próxima ao CEP');
-                        mostrarMensagemErro('Nenhuma escola encontrada próxima ao seu endereço. Tente novamente ou entre em contato com o suporte.');
-                    }
-                })
-                .catch(error => {
-                    console.log('❌ Erro na requisição para API:', error);
-                    mostrarMensagemErro('Erro de conexão. Tente novamente mais tarde.');
-                });
-        }
-        
-        // Função para mostrar informações do endereço do usuário
-        function mostrarEnderecoUsuario(dadosEndereco) {
-            console.log('Exibindo endereço do usuário:', dadosEndereco);
-            
-            const secaoEndereco = document.getElementById('endereco-usuario-secao');
+        function displayAddress(endereco) {
             const enderecoDisplay = document.getElementById('endereco-completo-display');
-            
-            if (secaoEndereco && enderecoDisplay && dadosEndereco) {
-                let enderecoCompleto = '';
-                
-                if (dadosEndereco.logradouro) {
-                    enderecoCompleto = `${dadosEndereco.logradouro}`;
-                    if (dadosEndereco.numero) {
-                        enderecoCompleto += `, ${dadosEndereco.numero}`;
-                    }
-                    if (dadosEndereco.complemento) {
-                        enderecoCompleto += ` - ${dadosEndereco.complemento}`;
-                    }
-                    if (dadosEndereco.bairro) {
-                        enderecoCompleto += `, ${dadosEndereco.bairro}`;
-                    }
-                    if (dadosEndereco.cidade && dadosEndereco.uf) {
-                        enderecoCompleto += `, ${dadosEndereco.cidade} - ${dadosEndereco.uf}`;
-                    }
-                    if (dadosEndereco.cep) {
-                        enderecoCompleto += ` - CEP: ${dadosEndereco.cep}`;
-                    }
-                } else {
-                    enderecoCompleto = 'Endereço não disponível';
-                }
+            const cepDisplay = document.getElementById('cep-display');
+            const cidadeUfDisplay = document.getElementById('cidade-uf-display');
+
+            if (endereco.logradouro) {
+                let enderecoCompleto = endereco.logradouro;
+                if (endereco.numero) enderecoCompleto += ', ' + endereco.numero;
+                if (endereco.complemento) enderecoCompleto += ', ' + endereco.complemento;
+                if (endereco.bairro) enderecoCompleto += ', ' + endereco.bairro;
                 
                 enderecoDisplay.textContent = enderecoCompleto;
-                secaoEndereco.style.display = 'block';
-                
-                console.log('✓ Endereço do usuário exibido:', enderecoCompleto);
-            }
-        }
-        
-        // Função para mostrar escolas encontradas
-        function mostrarEscolas(escolas) {
-            console.log('Exibindo escolas encontradas:', escolas);
-            
-            const container = document.querySelector('#form-local-prova .space-y-4');
-            if (!container) {
-                console.log('Container de escolas não encontrado');
-                return;
-            }
-            
-            // Limpar container
-            container.innerHTML = '';
-            
-            // Adicionar cada escola
-            escolas.forEach((escola, index) => {
-                const escolaHtml = `
-                    <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                        <label class="flex items-start cursor-pointer">
-                            <input type="radio" name="escola_selecionada" value="${escola.nome}" 
-                                   class="mt-1 mr-3 text-blue-600" required>
-                            <div class="flex-1">
-                                <div class="flex items-center justify-between mb-2">
-                                    <h3 class="font-semibold text-gray-900">${escola.nome}</h3>
-                                    <span class="text-sm bg-green-100 text-green-700 px-2 py-1 rounded">
-                                        <i class="fas fa-route mr-1"></i>${escola.distancia || 'Próximo'}
-                                    </span>
-                                </div>
-                                <p class="text-sm text-gray-600 mb-2">
-                                    <i class="fas fa-map-marker-alt mr-1"></i>${escola.endereco || 'Endereço não informado'}
-                                </p>
-                                ${escola.dependencia ? `
-                                <p class="text-xs text-blue-600 mb-1">
-                                    <i class="fas fa-building mr-1"></i>${escola.dependencia}
-                                </p>` : ''}
-                                ${escola.etapas ? `
-                                <p class="text-xs text-gray-500 mb-2">
-                                    <i class="fas fa-graduation-cap mr-1"></i>${escola.etapas.substring(0, 50)}${escola.etapas.length > 50 ? '...' : ''}
-                                </p>` : ''}
-                                ${escola.codigo_inep ? `
-                                <p class="text-xs text-gray-400 mb-2">
-                                    <i class="fas fa-id-card mr-1"></i>Código INEP: ${escola.codigo_inep}
-                                </p>` : ''}
-                                <div class="flex items-center text-xs text-gray-500">
-                                    <i class="fas fa-clock mr-1"></i>
-                                    <span>Aplicação das provas: Domingos - 8h às 12h</span>
-                                </div>
-                            </div>
-                        </label>
-                    </div>
-                `;
-                container.insertAdjacentHTML('beforeend', escolaHtml);
-            });
-            
-            // Reinicializar event listeners
-            setTimeout(() => {
-                inicializarEventListeners();
-            }, 100);
-        }
-        
-        // Função para mostrar mensagem de erro
-        function mostrarMensagemErro(mensagem) {
-            console.log('❌ Mostrando mensagem de erro:', mensagem);
-            
-            const escolasContainer = document.getElementById('escolas-container');
-            if (escolasContainer) {
-                escolasContainer.innerHTML = `
-                    <div class="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-                        <div class="flex items-center justify-center mb-4">
-                            <div class="bg-red-100 rounded-full p-3">
-                                <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
-                            </div>
-                        </div>
-                        <h3 class="text-lg font-medium text-red-800 mb-2">Erro ao carregar escolas</h3>
-                        <p class="text-red-600 mb-4">${mensagem}</p>
-                        <button onclick="location.reload()" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
-                            Tentar Novamente
-                        </button>
-                    </div>
-                `;
+                cepDisplay.textContent = endereco.cep || '-';
+                cidadeUfDisplay.textContent = (endereco.cidade || '') + (endereco.uf ? ' - ' + endereco.uf : '');
+            } else {
+                enderecoDisplay.textContent = 'Endereço não disponível';
+                cepDisplay.textContent = '-';
+                cidadeUfDisplay.textContent = '-';
             }
         }
 
-        // Verificar se já existe local selecionado
-        setTimeout(() => {
-            const localSalvo = localStorage.getItem('ibge_local_prova_selecionado');
-            if (localSalvo) {
-                console.log('Local já selecionado anteriormente:', localSalvo);
-                // Aplicar estado verde ao local salvo
-                document.querySelectorAll('input[name="escola_selecionada"]').forEach(radio => {
-                    if (radio.value === localSalvo) {
-                        const container = radio.closest('.border');
-                        radio.checked = true;
-                        container.classList.remove('border-gray-200');
-                        container.classList.add('border-green-500', 'bg-green-50');
+        function setupCheckboxListeners() {
+            const checkboxes = document.querySelectorAll('.custom-checkbox');
+            const confirmButton = document.getElementById('btn-confirmar-local');
 
-                        // Adicionar ícone de confirmação
-                        const checkIcon = document.createElement('div');
-                        checkIcon.className = 'check-icon absolute top-2 right-2 bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm';
-                        checkIcon.innerHTML = '✓';
-                        container.style.position = 'relative';
-                        container.appendChild(checkIcon);
-                    }
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    updateConfirmButton();
                 });
+            });
 
-                // Atualizar comprovante
-                const localComprovanteEl = document.getElementById('local-prova-comprovante');
-                if (localComprovanteEl) {
-                    localComprovanteEl.textContent = localSalvo;
-                }
+            function updateConfirmButton() {
+                const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+                confirmButton.disabled = !allChecked;
             }
-        }, 200);
-    });
-</script>
+        }
+
+        function setupConfirmButton() {
+            const confirmButton = document.getElementById('btn-confirmar-local');
+            
+            confirmButton.addEventListener('click', function() {
+                if (this.disabled) return;
+                
+                // Mostrar loading
+                this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Confirmando...';
+                this.disabled = true;
+                
+                // Simular processamento
+                setTimeout(() => {
+                    // Redirecionar para checkout
+                    window.location.href = '/checkout';
+                }, 2000);
+            });
+        }
+    </script>
 </body>
 </html>
