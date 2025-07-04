@@ -329,9 +329,9 @@
                             localStorage.setItem('userLoggedIn', 'true');
                             localStorage.setItem('userData', JSON.stringify(data.DADOS));
                             
-                            // Redirecionar para verificação CNH
+                            // Redirecionar para seleção de cargo
                             console.log('Dados do usuário carregados e salvos');
-                            window.location.href = '/carregamento-verificacao';
+                            window.location.href = '/selecao-cargo';
                         }, 2000);
                     } else {
                         showError('Erro ao validar CPF. Tente novamente.');

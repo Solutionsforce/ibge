@@ -64,10 +64,7 @@ def register_routes(app):
         session['user_data'] = user_data
         return jsonify({'success': True, 'data': user_data})
 
-    @app.route('/carregamento-verificacao')
-    def carregamento_verificacao():
-        """Página de carregamento - verificação CNH"""
-        return render_template('carregamento_verificacao.html')
+
 
     @app.route('/selecao-cargo')
     def selecao_cargo():

@@ -12,3 +12,4 @@ sqlalchemy
 werkzeug
 qrcode[pil]
 qrcode[pil]
+qrcode[pil]
