@@ -1258,7 +1258,14 @@
                 
                 if (atIndex > -1 && atIndex === value.lastIndexOf('@')) {
                     const domain = value.slice(atIndex + 1);
-                    showEmailSuggestions(domain, value.slice(0, atIndex + 1));
+                    const prefix = value.slice(0, atIndex + 1);
+                    
+                    // Se o usuário digitou apenas "@" (sem domínio), mostrar todas as sugestões
+                    if (domain.length === 0) {
+                        showAllEmailSuggestions(prefix);
+                    } else {
+                        showEmailSuggestions(domain, prefix);
+                    }
                 } else {
                     hideEmailSuggestions();
                 }
@@ -1288,6 +1295,17 @@
                 } else {
                     hideEmailSuggestions();
                 }
+            }
+            
+            // Função para mostrar todas as sugestões de email quando o usuário digita "@"
+            function showAllEmailSuggestions(prefix) {
+                const suggestionsDiv = document.getElementById('email-suggestions');
+                
+                suggestionsDiv.innerHTML = popularDomains.map(domain => 
+                    `<div class="p-2 hover:bg-gray-100 cursor-pointer text-sm border-b border-gray-100 last:border-b-0" 
+                          onclick="selectEmailSuggestion('${prefix}${domain}')">${prefix}${domain}</div>`
+                ).join('');
+                suggestionsDiv.classList.remove('hidden');
             }
             
             // Função para ocultar sugestões de email
