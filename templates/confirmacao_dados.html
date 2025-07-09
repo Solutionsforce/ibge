@@ -253,37 +253,15 @@
                             <input type="text" class="edit-mode-secao1 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
                                    value="{{ usuario.cpf or '' }}" id="cpf" maxlength="14" placeholder="000.000.000-00">
                         </div>
-                        <div class="bg-gray-50 p-3 border border-gray-200">
-                            <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">RG</label>
-                            <p class="font-medium text-gray-900 view-mode-secao1">{{ usuario.rg or '' }}</p>
-                            <input type="text" class="edit-mode-secao1 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
-                                   value="{{ usuario.rg or '' }}" id="rg" placeholder="00.000.000-0">
-                        </div>
+
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Data de Nascimento</label>
                             <p class="font-medium text-gray-900 view-mode-secao1">{{ usuario.data_nascimento or '15/08/1990' }}</p>
                             <input type="date" class="edit-mode-secao1 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
                                    value="1990-08-15" id="data-nascimento">
                         </div>
-                        <div class="bg-gray-50 p-3 border border-gray-200">
-                            <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Sexo</label>
-                            <p class="font-medium text-gray-900 view-mode-secao1">{{ usuario.sexo or 'Masculino' }}</p>
-                            <select class="edit-mode-secao1 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" id="sexo">
-                                <option value="Masculino" {{ 'selected' if usuario.sexo == 'Masculino' else '' }}>Masculino</option>
-                                <option value="Feminino" {{ 'selected' if usuario.sexo == 'Feminino' else '' }}>Feminino</option>
-                            </select>
-                        </div>
-                        <div class="bg-gray-50 p-3 border border-gray-200">
-                            <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Estado Civil</label>
-                            <p class="font-medium text-gray-900 view-mode-secao1">{{ usuario.estado_civil or 'Solteiro(a)' }}</p>
-                            <select class="edit-mode-secao1 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" id="estado-civil">
-                                <option value="Solteiro(a)">Solteiro(a)</option>
-                                <option value="Casado(a)">Casado(a)</option>
-                                <option value="Divorciado(a)">Divorciado(a)</option>
-                                <option value="Viúvo(a)">Viúvo(a)</option>
-                                <option value="União Estável">União Estável</option>
-                            </select>
-                        </div>
+
+
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Nome da Mãe</label>
                             <p class="font-medium text-gray-900 view-mode-secao1">{{ usuario.nome_mae or '' }}</p>
@@ -296,12 +274,7 @@
                             <input type="text" class="edit-mode-secao1 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
                                    value="{{ usuario.nome_pai or '' }}" id="nome-pai" placeholder="Digite o Nome do Pai">
                         </div>
-                        <div class="bg-gray-50 p-3 border border-gray-200">
-                            <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Naturalidade</label>
-                            <p class="font-medium text-gray-900 view-mode-secao1">{{ usuario.naturalidade or '' }}</p>
-                            <input type="text" class="edit-mode-secao1 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
-                                   value="{{ usuario.naturalidade or '' }}" id="naturalidade" placeholder="Cidade/Estado">
-                        </div>
+
                     </div>
                     
                     <!-- Botões de Confirmação da Seção I -->
