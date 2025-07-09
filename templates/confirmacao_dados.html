@@ -847,29 +847,23 @@
         function confirmarInscricao() {
             // Capturar dados do usuário das seções para transmitir
             const dadosUsuario = {
-                // Seção I - Dados Pessoais
-                nome_completo: document.getElementById('nome_completo')?.value || '',
+                // Seção I - Dados Pessoais (usando IDs corretos)
+                nome_completo: document.getElementById('nome-completo')?.value || '',
                 cpf: document.getElementById('cpf')?.value || '',
-                rg: document.getElementById('rg')?.value || '',
-                data_nascimento: document.getElementById('data_nascimento')?.value || '',
-                sexo: document.getElementById('sexo')?.value || '',
-                estado_civil: document.getElementById('estado_civil')?.value || '',
-                nome_mae: document.getElementById('nome_mae')?.value || '',
-                nome_pai: document.getElementById('nome_pai')?.value || '',
-                naturalidade: document.getElementById('naturalidade')?.value || '',
+                data_nascimento: document.getElementById('data-nascimento')?.value || '',
+                nome_mae: document.getElementById('nome-mae')?.value || '',
+                nome_pai: document.getElementById('nome-pai')?.value || '',
                 
-                // Seção III - Endereço
-                cep: document.getElementById('cep')?.value || '',
+                // Seção III - Endereço (usando IDs corretos)
+                cep: document.getElementById('cep-endereco')?.value || '',
                 logradouro: document.getElementById('logradouro')?.value || '',
-                numero: document.getElementById('numero')?.value || '',
-                complemento: document.getElementById('complemento')?.value || '',
                 bairro: document.getElementById('bairro')?.value || '',
                 cidade: document.getElementById('cidade')?.value || '',
                 uf: document.getElementById('uf')?.value || '',
                 
-                // Seção IV - Contatos
+                // Seção IV - Contatos (usando IDs corretos)
                 telefone: document.getElementById('telefone')?.value || '',
-                telefone_alt: document.getElementById('telefone_alt')?.value || '',
+                telefone_alt: document.getElementById('telefone-alt')?.value || '',
                 email: document.getElementById('email')?.value || '',
                 
                 // Dados do cargo
@@ -886,19 +880,13 @@
                 identificacao: {
                     nome_completo: dadosUsuario.nome_completo,
                     cpf: dadosUsuario.cpf,
-                    rg: dadosUsuario.rg,
                     data_nascimento: dadosUsuario.data_nascimento,
-                    sexo: dadosUsuario.sexo,
-                    estado_civil: dadosUsuario.estado_civil,
                     nome_mae: dadosUsuario.nome_mae,
-                    nome_pai: dadosUsuario.nome_pai,
-                    naturalidade: dadosUsuario.naturalidade
+                    nome_pai: dadosUsuario.nome_pai
                 },
                 endereco: {
                     cep: dadosUsuario.cep,
                     logradouro: dadosUsuario.logradouro,
-                    numero: dadosUsuario.numero,
-                    complemento: dadosUsuario.complemento,
                     bairro: dadosUsuario.bairro,
                     cidade: dadosUsuario.cidade,
                     uf: dadosUsuario.uf
@@ -915,7 +903,32 @@
                 data_inscricao: obterDataHoraBrasilia()
             };
             
+            // Salvar seções individuais atualizadas
+            localStorage.setItem('ibge_inscricao_secao1', JSON.stringify({
+                nome_completo: dadosUsuario.nome_completo,
+                cpf: dadosUsuario.cpf,
+                data_nascimento: dadosUsuario.data_nascimento,
+                nome_mae: dadosUsuario.nome_mae,
+                nome_pai: dadosUsuario.nome_pai
+            }));
+            
+            localStorage.setItem('ibge_inscricao_secao3', JSON.stringify({
+                cep: dadosUsuario.cep,
+                logradouro: dadosUsuario.logradouro,
+                bairro: dadosUsuario.bairro,
+                cidade: dadosUsuario.cidade,
+                uf: dadosUsuario.uf
+            }));
+            
+            localStorage.setItem('ibge_inscricao_secao4', JSON.stringify({
+                telefone: dadosUsuario.telefone,
+                telefone_alt: dadosUsuario.telefone_alt,
+                email: dadosUsuario.email
+            }));
+            
             localStorage.setItem('ibge_inscricao_completa', JSON.stringify(dadosCompletos));
+            
+            console.log('✓ Dados salvos para transferência:', dadosCompletos);
             
             // Redirecionar imediatamente para seleção de local
             window.location.href = '/selecao-local-prova';
