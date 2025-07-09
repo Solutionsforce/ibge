@@ -356,18 +356,8 @@
                             <input type="text" class="edit-mode-secao3 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
                                    value="{{ endereco.logradouro or 'Rua das Flores' }}" id="logradouro">
                         </div>
-                        <div class="bg-gray-50 p-3 border border-gray-200">
-                            <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Número</label>
-                            <p class="font-medium text-gray-900 view-mode-secao3">{{ endereco.numero or '123' }}</p>
-                            <input type="text" class="edit-mode-secao3 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
-                                   value="{{ endereco.numero or '123' }}" id="numero">
-                        </div>
-                        <div class="bg-gray-50 p-3 border border-gray-200">
-                            <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Complemento</label>
-                            <p class="font-medium text-gray-900 view-mode-secao3">{{ endereco.complemento or 'Apto 45' }}</p>
-                            <input type="text" class="edit-mode-secao3 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
-                                   value="{{ endereco.complemento or 'Apto 45' }}" id="complemento" placeholder="Apartamento, casa, etc.">
-                        </div>
+
+
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Bairro</label>
                             <p class="font-medium text-gray-900 view-mode-secao3">{{ endereco.bairro or 'Centro' }}</p>
