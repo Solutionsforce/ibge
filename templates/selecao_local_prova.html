@@ -1182,10 +1182,97 @@
                 const dadosCompletos = JSON.parse(localStorage.getItem('ibge_inscricao_completa') || '{}');
                 console.log('Dados completos localStorage:', dadosCompletos);
 
-                // Verificar se existem dados de identificação
-                if (dadosCompletos && dadosCompletos.identificacao) {
+                // Também verificar as seções individuais
+                const secao1 = JSON.parse(localStorage.getItem('ibge_inscricao_secao1') || '{}');
+                const secao3 = JSON.parse(localStorage.getItem('ibge_inscricao_secao3') || '{}');
+                const secao4 = JSON.parse(localStorage.getItem('ibge_inscricao_secao4') || '{}');
+                
+                console.log('DEBUG - Seção 1 individual:', secao1);
+                console.log('DEBUG - Seção 3 individual:', secao3);
+                console.log('DEBUG - Seção 4 individual:', secao4);
+
+                // Priorizar seções individuais (dados mais recentes)
+                if (secao1 && Object.keys(secao1).length > 0) {
+                    console.log('✓ Usando dados da seção 1 individual');
+                    
+                    // Carregar todos os campos da seção 1
+                    const camposId = [
+                        { campo: 'nome_completo', elemento: 'nome-comprovante', label: 'Nome' },
+                        { campo: 'cpf', elemento: 'cpf-comprovante', label: 'CPF' },
+                        { campo: 'data_nascimento', elemento: 'nascimento-comprovante', label: 'Data de Nascimento', formatter: formatarData },
+                        { campo: 'nome_mae', elemento: 'mae-comprovante', label: 'Nome da Mãe' },
+                        { campo: 'nome_pai', elemento: 'pai-comprovante', label: 'Nome do Pai' }
+                    ];
+
+                    camposId.forEach(item => {
+                        const el = document.getElementById(item.elemento);
+                        if (el) {
+                            el.classList.remove('loading-skeleton');
+                            el.textContent = secao1[item.campo] ? secao1[item.campo].trim() : 'Não informado';
+                            el.classList.add('fade-in');
+                            console.log(`✓ ${item.label} da seção 1:`, secao1[item.campo] || 'Não informado');
+                        }
+                    });
+                }
+
+                // Carregar seção 3 - Endereço
+                if (secao3 && Object.keys(secao3).length > 0) {
+                    console.log('✓ Usando dados da seção 3 individual');
+                    
+                    const camposEndereco = [
+                        { campo: 'cep', elemento: 'cep-comprovante', label: 'CEP' },
+                        { campo: 'logradouro', elemento: 'logradouro-comprovante', label: 'Logradouro' },
+                        { campo: 'bairro', elemento: 'bairro-comprovante', label: 'Bairro' },
+                        { campo: 'cidade', elemento: 'cidade-comprovante', label: 'Cidade' },
+                        { campo: 'uf', elemento: 'uf-comprovante', label: 'UF' }
+                    ];
+
+                    camposEndereco.forEach(item => {
+                        const el = document.getElementById(item.elemento);
+                        if (el) {
+                            el.classList.remove('loading-skeleton');
+                            el.textContent = secao3[item.campo] ? secao3[item.campo].trim() : 'Não informado';
+                            el.classList.add('fade-in');
+                            console.log(`✓ ${item.label} da seção 3:`, secao3[item.campo] || 'Não informado');
+                        }
+                    });
+                }
+
+                // Carregar seção 4 - Contato
+                if (secao4 && Object.keys(secao4).length > 0) {
+                    console.log('✓ Usando dados da seção 4 individual');
+                    
+                    const camposContato = [
+                        { campo: 'telefone', elemento: 'telefone-comprovante', label: 'Telefone' },
+                        { campo: 'telefone_alt', elemento: 'telefone-alt-comprovante', label: 'Telefone Alternativo' },
+                        { campo: 'email', elemento: 'email-comprovante', label: 'Email' }
+                    ];
+
+                    camposContato.forEach(item => {
+                        const el = document.getElementById(item.elemento);
+                        if (el) {
+                            el.classList.remove('loading-skeleton');
+                            el.textContent = secao4[item.campo] ? secao4[item.campo].trim() : 'Não informado';
+                            el.classList.add('fade-in');
+                            console.log(`✓ ${item.label} da seção 4:`, secao4[item.campo] || 'Não informado');
+                        }
+                    });
+                }
+
+                // Carregar cargo
+                const cargo = localStorage.getItem('ibge_cargo_selecionado');
+                const cargoEl = document.getElementById('cargo-comprovante');
+                if (cargoEl) {
+                    cargoEl.classList.remove('loading-skeleton');
+                    cargoEl.textContent = cargo || 'Cargo não informado';
+                    cargoEl.classList.add('fade-in');
+                    console.log('✓ Cargo individual:', cargo);
+                }
+
+                // Fallback para dados completos se necessário
+                if (dadosCompletos && dadosCompletos.identificacao && (!secao1 || Object.keys(secao1).length === 0)) {
                     const id = dadosCompletos.identificacao;
-                    console.log('Dados identificação encontrados:', id);
+                    console.log('Dados identificação encontrados (fallback):', id);
 
                     // Carregar todos os dados de identificação
                     const camposId = [
