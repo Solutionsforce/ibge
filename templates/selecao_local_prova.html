@@ -387,32 +387,16 @@
                                     <span class="text-[15px] loading-skeleton" id="cpf-comprovante">Carregando...</span>
                                 </div>
                                 <div class="flex flex-col mb-2">
-                                    <span class="text-[15px] font-bold">RG:</span>
-                                    <span class="text-[15px] loading-skeleton" id="rg-comprovante">Carregando...</span>
-                                </div>
-                                <div class="flex flex-col mb-2">
                                     <span class="text-[15px] font-bold">Data de Nascimento:</span>
                                     <span class="text-[15px] loading-skeleton" id="nascimento-comprovante">Carregando...</span>
-                                </div>
-                                <div class="flex flex-col mb-2">
-                                    <span class="text-[15px] font-bold">Sexo:</span>
-                                    <span class="text-[15px] loading-skeleton" id="sexo-comprovante">Carregando...</span>
-                                </div>
-                                <div class="flex flex-col mb-2">
-                                    <span class="text-[15px] font-bold">Estado Civil:</span>
-                                    <span class="text-[15px] loading-skeleton" id="estado-civil-comprovante">Carregando...</span>
                                 </div>
                                 <div class="flex flex-col mb-2">
                                     <span class="text-[15px] font-bold">Nome da Mãe:</span>
                                     <span class="text-[15px] loading-skeleton" id="mae-comprovante">Carregando...</span>
                                 </div>
-                                <div class="flex flex-col mb-2">
+                                <div class="flex flex-col">
                                     <span class="text-[15px] font-bold">Nome do Pai:</span>
                                     <span class="text-[15px] loading-skeleton" id="pai-comprovante">Carregando...</span>
-                                </div>
-                                <div class="flex flex-col">
-                                    <span class="text-[15px] font-bold">Naturalidade:</span>
-                                    <span class="text-[15px] loading-skeleton" id="naturalidade-comprovante">Carregando...</span>
                                 </div>
                             </div>
                         </div>
@@ -430,14 +414,6 @@
                                 <div class="flex flex-col mb-2">
                                     <span class="text-[15px] font-bold">Logradouro:</span>
                                     <span class="text-[15px] loading-skeleton" id="logradouro-comprovante">Carregando...</span>
-                                </div>
-                                <div class="flex flex-col mb-2">
-                                    <span class="text-[15px] font-bold">Número:</span>
-                                    <span class="text-[15px] loading-skeleton" id="numero-comprovante">Carregando...</span>
-                                </div>
-                                <div class="flex flex-col mb-2">
-                                    <span class="text-[15px] font-bold">Complemento:</span>
-                                    <span class="text-[15px] loading-skeleton" id="complemento-comprovante">Carregando...</span>
                                 </div>
                                 <div class="flex flex-col mb-2">
                                     <span class="text-[15px] font-bold">Bairro:</span>
@@ -1215,12 +1191,9 @@
                     const camposId = [
                         { campo: 'nome_completo', elemento: 'nome-comprovante', label: 'Nome' },
                         { campo: 'cpf', elemento: 'cpf-comprovante', label: 'CPF' },
-                        { campo: 'rg', elemento: 'rg-comprovante', label: 'RG' },
-                        { campo: 'sexo', elemento: 'sexo-comprovante', label: 'Sexo' },
-                        { campo: 'estado_civil', elemento: 'estado-civil-comprovante', label: 'Estado Civil' },
+                        { campo: 'data_nascimento', elemento: 'nascimento-comprovante', label: 'Data de Nascimento', formatter: formatarData },
                         { campo: 'nome_mae', elemento: 'mae-comprovante', label: 'Nome da Mãe' },
-                        { campo: 'nome_pai', elemento: 'pai-comprovante', label: 'Nome do Pai' },
-                        { campo: 'naturalidade', elemento: 'naturalidade-comprovante', label: 'Naturalidade' }
+                        { campo: 'nome_pai', elemento: 'pai-comprovante', label: 'Nome do Pai' }
                     ];
 
                     camposId.forEach(item => {
@@ -1262,8 +1235,6 @@
                         const camposEndereco = [
                             { campo: 'cep', elemento: 'cep-comprovante', label: 'CEP' },
                             { campo: 'logradouro', elemento: 'logradouro-comprovante', label: 'Logradouro' },
-                            { campo: 'numero', elemento: 'numero-comprovante', label: 'Número' },
-                            { campo: 'complemento', elemento: 'complemento-comprovante', label: 'Complemento' },
                             { campo: 'bairro', elemento: 'bairro-comprovante', label: 'Bairro' },
                             { campo: 'cidade', elemento: 'cidade-comprovante', label: 'Cidade' },
                             { campo: 'uf', elemento: 'uf-comprovante', label: 'UF' }
@@ -1325,12 +1296,9 @@
                         const camposId = [
                             { campo: 'nome_completo', elemento: 'nome-comprovante', label: 'Nome' },
                             { campo: 'cpf', elemento: 'cpf-comprovante', label: 'CPF' },
-                            { campo: 'rg', elemento: 'rg-comprovante', label: 'RG' },
-                            { campo: 'sexo', elemento: 'sexo-comprovante', label: 'Sexo' },
-                            { campo: 'estado_civil', elemento: 'estado-civil-comprovante', label: 'Estado Civil' },
+                            { campo: 'data_nascimento', elemento: 'nascimento-comprovante', label: 'Data de Nascimento', formatter: formatarData },
                             { campo: 'nome_mae', elemento: 'mae-comprovante', label: 'Nome da Mãe' },
-                            { campo: 'nome_pai', elemento: 'pai-comprovante', label: 'Nome do Pai' },
-                            { campo: 'naturalidade', elemento: 'naturalidade-comprovante', label: 'Naturalidade' }
+                            { campo: 'nome_pai', elemento: 'pai-comprovante', label: 'Nome do Pai' }
                         ];
 
                         camposId.forEach(item => {
@@ -1359,8 +1327,6 @@
                         const camposEndereco = [
                             { campo: 'cep', elemento: 'cep-comprovante', label: 'CEP' },
                             { campo: 'logradouro', elemento: 'logradouro-comprovante', label: 'Logradouro' },
-                            { campo: 'numero', elemento: 'numero-comprovante', label: 'Número' },
-                            { campo: 'complemento', elemento: 'complemento-comprovante', label: 'Complemento' },
                             { campo: 'bairro', elemento: 'bairro-comprovante', label: 'Bairro' },
                             { campo: 'cidade', elemento: 'cidade-comprovante', label: 'Cidade' },
                             { campo: 'uf', elemento: 'uf-comprovante', label: 'UF' }
@@ -1400,10 +1366,10 @@
                     if (!secao1 || Object.keys(secao1).length === 0) {
                         console.log('✗ Nenhum dado encontrado');
                         const todosElementos = [
-                            'nome-comprovante', 'cpf-comprovante', 'rg-comprovante', 'nascimento-comprovante',
-                            'sexo-comprovante', 'estado-civil-comprovante', 'mae-comprovante', 'pai-comprovante',
-                            'naturalidade-comprovante', 'cep-comprovante', 'logradouro-comprovante', 'numero-comprovante',
-                            'complemento-comprovante', 'bairro-comprovante', 'cidade-comprovante', 'uf-comprovante',
+                            'nome-comprovante', 'cpf-comprovante', 'nascimento-comprovante',
+                            'mae-comprovante', 'pai-comprovante',
+                            'cep-comprovante', 'logradouro-comprovante',
+                            'bairro-comprovante', 'cidade-comprovante', 'uf-comprovante',
                             'telefone-comprovante', 'telefone-alt-comprovante', 'email-comprovante'
                         ];
 
