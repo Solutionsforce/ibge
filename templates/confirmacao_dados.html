@@ -440,20 +440,20 @@
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Telefone Principal</label>
                             <p class="font-medium text-gray-900 view-mode-secao4">{{ usuario.telefone or '(11) 9 9999-9999' }}</p>
                             <input type="tel" class="edit-mode-secao4 hidden w-full p-2 border border-gray-300 rounded font-medium" 
-                                   style="font-size: 16px;" value="{{ usuario.telefone or '(11) 9 9999-9999' }}" id="telefone" maxlength="16" placeholder="(11) 9 9999-9999">
+                                   style="font-size: 16px;" value="" id="telefone" maxlength="16" placeholder="(11) 9 9999-9999">
                         </div>
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Telefone Alternativo</label>
                             <p class="font-medium text-gray-900 view-mode-secao4">{{ usuario.telefone_alt or '(11) 9 3333-3333' }}</p>
                             <input type="tel" class="edit-mode-secao4 hidden w-full p-2 border border-gray-300 rounded font-medium" 
-                                   style="font-size: 16px;" value="{{ usuario.telefone_alt or '(11) 9 3333-3333' }}" id="telefone-alt" maxlength="16" placeholder="(11) 9 9999-9999">
+                                   style="font-size: 16px;" value="" id="telefone-alt" maxlength="16" placeholder="(11) 9 9999-9999">
                         </div>
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">E-mail</label>
                             <p class="font-medium text-gray-900 view-mode-secao4">{{ usuario.email or 'joao.silva@email.com' }}</p>
                             <div class="edit-mode-secao4 hidden relative">
                                 <input type="email" class="w-full p-2 border border-gray-300 rounded font-medium" 
-                                       style="font-size: 16px;" value="{{ usuario.email or 'joao.silva@email.com' }}" id="email" autocomplete="off" placeholder="seuemail@exemplo.com">
+                                       style="font-size: 16px;" value="" id="email" autocomplete="off" placeholder="seuemail@exemplo.com">
                                 <div id="email-suggestions" class="hidden absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-b shadow-lg z-10 max-h-40 overflow-y-auto"></div>
                             </div>
                         </div>
