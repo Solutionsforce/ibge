@@ -1094,45 +1094,33 @@
                     sectionData = {
                         nome_completo: document.getElementById('nome-completo')?.value || '',
                         cpf: document.getElementById('cpf')?.value || '',
-                        rg: document.getElementById('rg')?.value || '',
                         data_nascimento: document.getElementById('data-nascimento')?.value || '',
-                        sexo: document.getElementById('sexo')?.value || '',
-                        estado_civil: document.getElementById('estado-civil')?.value || '',
                         nome_mae: document.getElementById('nome-mae')?.value || '',
-                        nome_pai: document.getElementById('nome-pai')?.value || '',
-                        naturalidade: document.getElementById('naturalidade')?.value || ''
+                        nome_pai: document.getElementById('nome-pai')?.value || ''
                     };
                     
-                    // Atualizar valores de visualização
+                    // Atualizar valores de visualização (índices ajustados após remoção dos campos)
                     updateDisplayValue('.view-mode-secao1', 'nome-completo', 0);
                     updateDisplayValue('.view-mode-secao1', 'cpf', 1);
-                    updateDisplayValue('.view-mode-secao1', 'rg', 2);
-                    updateDisplayValue('.view-mode-secao1', 'data-nascimento', 3, formatDate);
-                    updateDisplayValue('.view-mode-secao1', 'sexo', 4);
-                    updateDisplayValue('.view-mode-secao1', 'estado-civil', 5);
-                    updateDisplayValue('.view-mode-secao1', 'nome-mae', 6);
-                    updateDisplayValue('.view-mode-secao1', 'nome-pai', 7);
-                    updateDisplayValue('.view-mode-secao1', 'naturalidade', 8);
+                    updateDisplayValue('.view-mode-secao1', 'data-nascimento', 2, formatDate);
+                    updateDisplayValue('.view-mode-secao1', 'nome-mae', 3);
+                    updateDisplayValue('.view-mode-secao1', 'nome-pai', 4);
                     
                 } else if (secao === 'secao3') {
                     sectionData = {
                         cep: document.getElementById('cep-endereco')?.value || '',
                         logradouro: document.getElementById('logradouro')?.value || '',
-                        numero: document.getElementById('numero')?.value || '',
-                        complemento: document.getElementById('complemento')?.value || '',
                         bairro: document.getElementById('bairro')?.value || '',
                         cidade: document.getElementById('cidade')?.value || '',
                         uf: document.getElementById('uf')?.value || ''
                     };
                     
-                    // Atualizar valores de visualização
+                    // Atualizar valores de visualização (índices ajustados após remoção dos campos)
                     updateDisplayValue('.view-mode-secao3', 'cep-endereco', 0);
                     updateDisplayValue('.view-mode-secao3', 'logradouro', 1);
-                    updateDisplayValue('.view-mode-secao3', 'numero', 2);
-                    updateDisplayValue('.view-mode-secao3', 'complemento', 3);
-                    updateDisplayValue('.view-mode-secao3', 'bairro', 4);
-                    updateDisplayValue('.view-mode-secao3', 'cidade', 5);
-                    updateDisplayValue('.view-mode-secao3', 'uf', 6);
+                    updateDisplayValue('.view-mode-secao3', 'bairro', 2);
+                    updateDisplayValue('.view-mode-secao3', 'cidade', 3);
+                    updateDisplayValue('.view-mode-secao3', 'uf', 4);
                     
                 } else if (secao === 'secao4') {
                     sectionData = {
