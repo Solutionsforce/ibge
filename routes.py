@@ -160,8 +160,66 @@ def register_routes(app):
         # Carregar página imediatamente sem processamento lento
         return render_template('selecao_local_prova.html')
 
-    # API removida - funcionalidade de busca de escolas não é mais necessária
-    # A página /selecao-local-prova agora usa apenas termo de concordância
+    @app.route('/api/buscar-escolas')
+    def api_buscar_escolas():
+        """API para buscar escolas baseada em CEP real com coordenadas"""
+        from escola_utils import obter_coordenadas_por_cep, buscar_escolas_proximas
+        
+        cep = request.args.get('cep', '').replace('-', '').replace(' ', '')
+        
+        if not cep or len(cep) != 8:
+            return jsonify({
+                'erro_busca': True,
+                'erro_mensagem': 'CEP inválido',
+                'escolas': [],
+                'total_escolas_encontradas': 0
+            }), 400
+        
+        print(f"🔍 Buscando escolas para CEP: {cep}")
+        
+        # Obter coordenadas do usuário
+        resultado_coords = obter_coordenadas_por_cep(cep)
+        
+        if len(resultado_coords) == 3:
+            lat_usuario, lon_usuario, endereco_completo = resultado_coords
+        else:
+            lat_usuario, lon_usuario = resultado_coords
+            endereco_completo = None
+        
+        # Buscar escolas próximas
+        if lat_usuario and lon_usuario:
+            escolas_proximas = buscar_escolas_proximas(lat_usuario, lon_usuario, limite=3)
+            
+            # Formatar endereço do usuário
+            if endereco_completo:
+                endereco_usuario = f"{endereco_completo.get('logradouro', '')}, {endereco_completo.get('bairro', '')}, {endereco_completo.get('localidade', '')} - {endereco_completo.get('uf', '')}"
+            else:
+                endereco_usuario = "Endereço não encontrado"
+            
+            return jsonify({
+                'escolas': escolas_proximas,
+                'endereco_usuario': endereco_usuario,
+                'endereco_detalhado': endereco_completo if endereco_completo else {},
+                'erro_busca': False,
+                'cep_consultado': cep,
+                'coordenadas_usuario': {
+                    'lat': lat_usuario,
+                    'lon': lon_usuario
+                },
+                'total_escolas_encontradas': len(escolas_proximas)
+            })
+        else:
+            # Erro ao obter coordenadas - retornar erro
+            return jsonify({
+                'erro_busca': True,
+                'erro_mensagem': 'Não foi possível obter coordenadas para o CEP informado',
+                'escolas': [],
+                'endereco_usuario': 'Endereço não encontrado',
+                'endereco_detalhado': {},
+                'cep_consultado': cep,
+                'coordenadas_usuario': None,
+                'total_escolas_encontradas': 0
+            })
 
     @app.route('/checkout')
     def checkout():
