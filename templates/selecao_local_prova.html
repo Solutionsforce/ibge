@@ -268,66 +268,74 @@
                 </div>
             </section>
 
-            <!-- Escolas Disponíveis -->
+            <!-- Confirmação de Endereço e Termos -->
             <section class="bg-white border border-gray-300 shadow-sm">
                 <div class="bg-gray-100 border-b border-gray-300 px-6 py-3">
-                    <h2 class="text-lg font-bold text-gray-800">LOCAIS DISPONÍVEIS PARA APLICAÇÃO DAS PROVAS</h2>
-                    <p class="text-sm text-gray-600 mt-1">Selecione uma das opções abaixo (ordenadas por proximidade)</p>
+                    <h2 class="text-lg font-bold text-gray-800">CONFIRMAÇÃO DE ENDEREÇO E TERMOS</h2>
+                    <p class="text-sm text-gray-600 mt-1">Confirme seu endereço e leia atentamente os termos</p>
                 </div>
 
                 <div class="p-6">
                     <form method="POST" action="/confirmar-local-prova" id="form-local-prova">
-                        <div class="space-y-4" id="escolas-container">
-                            {% if escolas %}
-                                {% for escola in escolas %}
-                                <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                                    <label class="flex items-start cursor-pointer">
-                                        <input type="radio" name="escola_selecionada" value="{{ escola.nome }}" 
-                                               class="mt-1 mr-3 text-blue-600" required>
-                                        <div class="flex-1">
-                                            <div class="flex items-center justify-between mb-2">
-                                                <h3 class="font-semibold text-gray-900">{{ escola.nome }}</h3>
-                                                <span class="text-sm bg-green-100 text-green-700 px-2 py-1 rounded">
-                                                    <i class="fas fa-route mr-1"></i>{{ escola.distancia }}
-                                                </span>
-                                            </div>
-                                            <p class="text-sm text-gray-600 mb-2">
-                                                <i class="fas fa-map-marker-alt mr-1"></i>{{ escola.endereco }}
-                                            </p>
-
-                                            {% if escola.dependencia %}
-                                            <p class="text-xs text-blue-600 mb-1">
-                                                <i class="fas fa-building mr-1"></i>{{ escola.dependencia }}
-                                            </p>
-                                            {% endif %}
-
-                                            {% if escola.etapas %}
-                                            <p class="text-xs text-gray-500 mb-2">
-                                                <i class="fas fa-graduation-cap mr-1"></i>{{ escola.etapas[:50] }}{% if escola.etapas|length > 50 %}...{% endif %}
-                                            </p>
-                                            {% endif %}
-
-                                            {% if escola.codigo_inep %}
-                                            <p class="text-xs text-gray-400 mb-2">
-                                                <i class="fas fa-id-card mr-1"></i>Código INEP: {{ escola.codigo_inep }}
-                                            </p>
-                                            {% endif %}
-
-                                            <div class="flex items-center text-xs text-gray-500">
-                                                <i class="fas fa-clock mr-1"></i>
-                                                <span>Aplicação das provas: Domingos - 8h às 12h</span>
-                                            </div>
-                                        </div>
+                        <!-- Confirmação de Endereço -->
+                        <div class="mb-6">
+                            <h3 class="font-semibold text-gray-900 mb-3">Confirmação do Endereço de Residência</h3>
+                            <div class="bg-gray-50 border border-gray-200 rounded p-4">
+                                <p class="text-gray-700 mb-3" id="endereco-confirmacao-display">Carregando endereço...</p>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="confirmar-endereco" name="confirmar_endereco" 
+                                           class="mr-3 text-blue-600" required>
+                                    <label for="confirmar-endereco" class="text-sm text-gray-700">
+                                        Confirmo que o endereço acima está correto e atualizado
                                     </label>
                                 </div>
-                                {% endfor %}
-                            {% else %}
-                                <!-- Container será preenchido via JavaScript se não há dados do servidor -->
-                                <div class="text-center py-8">
-                                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                                    <p class="text-gray-600">Carregando escolas próximas...</p>
+                            </div>
+                        </div>
+
+                        <!-- Termos de Concordância -->
+                        <div class="mb-6">
+                            <h3 class="font-semibold text-gray-900 mb-3">Termos de Concordância</h3>
+                            <div class="bg-blue-50 border border-blue-200 rounded p-4">
+                                <div class="flex items-start">
+                                    <i class="fas fa-info-circle text-blue-600 mr-2 mt-0.5"></i>
+                                    <div class="flex-1">
+                                        <p class="text-sm text-gray-700 mb-3">
+                                            <strong>IMPORTANTE:</strong> O local exato da aplicação das provas será informado 
+                                            via e-mail cadastrado em até <strong>7 (sete) dias úteis</strong> antes da data 
+                                            da prova.
+                                        </p>
+                                        <p class="text-sm text-gray-700 mb-3">
+                                            O local será determinado com base no seu endereço de residência confirmado acima, 
+                                            priorizando a proximidade e a disponibilidade de vagas.
+                                        </p>
+                                        <p class="text-sm text-gray-700">
+                                            É de responsabilidade do candidato verificar regularmente o e-mail cadastrado 
+                                            e confirmar o recebimento da notificação.
+                                        </p>
+                                    </div>
                                 </div>
-                            {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Checkbox de Concordância -->
+                        <div class="mb-6">
+                            <div class="flex items-start">
+                                <input type="checkbox" id="concordar-termos" name="concordar_termos" 
+                                       class="mr-3 text-blue-600 mt-1" required>
+                                <label for="concordar-termos" class="text-sm text-gray-700">
+                                    Declaro que li e concordo com os termos acima. Estou ciente de que o local da prova 
+                                    será informado via e-mail até 7 (sete) dias úteis antes da data da prova, e que é 
+                                    minha responsabilidade verificar regularmente o e-mail cadastrado.
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Botão de Confirmação -->
+                        <div class="text-center">
+                            <button type="submit" 
+                                    class="bg-blue-600 text-white px-8 py-3 rounded font-semibold hover:bg-blue-700 transition-colors">
+                                <i class="fas fa-check mr-2"></i>Confirmar e Continuar
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -1021,35 +1029,6 @@
             }, 3000);
         }
 
-        // Função para inicializar event listeners
-        function inicializarEventListeners() {
-            console.log('Inicializando event listeners para escolas...');
-
-            document.querySelectorAll('input[name="escola_selecionada"]').forEach((radio, index) => {
-                console.log(`Adicionando listener para escola ${index + 1}:`, radio.value);
-
-                radio.addEventListener('change', function(e) {
-                    console.log('Radio button clicado:', this.value, 'Checked:', this.checked);
-
-                    if (this.checked && !popupAberto) {
-                        const nomeLocal = this.value;
-                        console.log('Iniciando popup para local:', nomeLocal);
-                        mostrarPopupCarregamento(nomeLocal);
-                    }
-                });
-
-                // Também adicionar listener para o container
-                const container = radio.closest('.border');
-                if (container) {
-                    container.addEventListener('click', function(e) {
-                        if (e.target.type !== 'radio') {
-                            radio.click();
-                        }
-                    });
-                }
-            });
-        }
-
         // Função para carregar dados do comprovante
         function carregarDadosComprovante() {
             console.log('=== INICIANDO CARREGAMENTO DE DADOS ===');
@@ -1517,267 +1496,86 @@
         initializeLanguageSelector();
         initializeAccordions();
 
-        // Inicializar event listeners para seleção de local
-        setTimeout(() => {
-            inicializarEventListeners();
-        }, 100);
 
-        // Carregar dados do comprovante e buscar escolas
+
+        // Carregar dados do comprovante e endereço
         console.log('Iniciando carregamento de dados...');
         setTimeout(() => {
             carregarDadosComprovante();
-            buscarEscolasProximas();
+            carregarDadosEndereco();
         }, 1000);
 
-        // Função para buscar escolas próximas
-        function buscarEscolasProximas() {
-            console.log('=== INICIANDO BUSCA DE ESCOLAS ===');
+        // Função para carregar dados do endereço
+        function carregarDadosEndereco() {
+            console.log('=== CARREGANDO DADOS DO ENDEREÇO ===');
             
-            // Buscar CEP do localStorage - verificar múltiplas fontes
+            // Buscar dados do endereço do localStorage
             let dadosEndereco = {};
-            let cep = null;
             
             // Fonte 1: dados completos (ibge_dados_completos)
             const dadosCompletos = JSON.parse(localStorage.getItem('ibge_dados_completos') || '{}');
-            console.log('Dados completos do localStorage:', dadosCompletos);
             if (dadosCompletos.endereco && dadosCompletos.endereco.cep) {
                 dadosEndereco = dadosCompletos.endereco;
-                cep = dadosCompletos.endereco.cep;
-                console.log('CEP encontrado em dados completos:', cep);
+                console.log('Endereço encontrado em dados completos:', dadosEndereco);
             }
             
-            // Fonte 2: seção 3 específica (ibge_dados_secao3)
-            if (!cep) {
-                const dadosSecao3 = JSON.parse(localStorage.getItem('ibge_dados_secao3') || '{}');
-                console.log('Dados seção 3 do localStorage:', dadosSecao3);
+            // Fonte 2: seção 3 específica (ibge_inscricao_secao3)
+            if (!dadosEndereco.cep) {
+                const dadosSecao3 = JSON.parse(localStorage.getItem('ibge_inscricao_secao3') || '{}');
                 if (dadosSecao3.cep) {
                     dadosEndereco = dadosSecao3;
-                    cep = dadosSecao3.cep;
-                    console.log('CEP encontrado em seção 3:', cep);
+                    console.log('Endereço encontrado em seção 3:', dadosEndereco);
                 }
             }
             
-            // Fonte 3: CEP selecionado na página anterior
-            if (!cep) {
-                const cepSelecionado = localStorage.getItem('ibge_cep_selecionado');
-                if (cepSelecionado) {
-                    cep = cepSelecionado;
-                    console.log('CEP encontrado na seleção anterior:', cep);
-                }
-            }
-            
-            // Fonte 4: dados de confirmação
-            if (!cep) {
-                const urlParams = new URLSearchParams(window.location.search);
-                const cepParam = urlParams.get('cep');
-                if (cepParam) {
-                    cep = cepParam;
-                    console.log('CEP encontrado na URL:', cep);
-                }
-            }
-            
-            console.log('CEP final encontrado:', cep);
-            console.log('Dados de endereço:', dadosEndereco);
-            
-            // Mostrar endereço do usuário se disponível
+            // Mostrar endereço do usuário
             if (dadosEndereco && Object.keys(dadosEndereco).length > 0) {
                 mostrarEnderecoUsuario(dadosEndereco);
+            } else {
+                console.log('❌ Endereço não encontrado');
+                mostrarEnderecoVazio();
             }
-            
-            if (!cep) {
-                console.log('❌ CEP não encontrado em nenhuma fonte');
-                mostrarMensagemErro('CEP não encontrado. Não foi possível carregar escolas próximas.');
-                return;
-            }
-            
-            // Buscar escolas via API
-            console.log(`Fazendo requisição para: /api/buscar-escolas?cep=${cep}`);
-            fetch(`/api/buscar-escolas?cep=${cep}`)
-                .then(response => {
-                    console.log('Status da resposta:', response.status);
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Resposta completa da API:', data);
-                    
-                    if (data.erro_busca) {
-                        console.log('❌ Erro na busca:', data.erro_mensagem);
-                        mostrarMensagemErro(data.erro_mensagem || 'Erro ao buscar escolas próximas');
-                        return;
-                    }
-                    
-                    // Atualizar endereço do usuário se disponível
-                    if (data.endereco_detalhado && Object.keys(data.endereco_detalhado).length > 0) {
-                        mostrarEnderecoUsuario(data.endereco_detalhado);
-                    }
-                    
-                    if (data.escolas && data.escolas.length > 0) {
-                        console.log(`✓ Encontradas ${data.escolas.length} escolas próximas`);
-                        console.log(`✓ Endereço do usuário: ${data.endereco_usuario}`);
-                        if (data.coordenadas_usuario) {
-                            console.log(`✓ Coordenadas: ${data.coordenadas_usuario.lat}, ${data.coordenadas_usuario.lon}`);
-                        }
-                        mostrarEscolas(data.escolas);
-                    } else {
-                        console.log('❌ Nenhuma escola encontrada próxima ao CEP');
-                        mostrarMensagemErro('Nenhuma escola encontrada próxima ao seu endereço. Tente novamente ou entre em contato com o suporte.');
-                    }
-                })
-                .catch(error => {
-                    console.log('❌ Erro na requisição para API:', error);
-                    mostrarMensagemErro('Erro de conexão. Tente novamente mais tarde.');
-                });
         }
         
         // Função para mostrar informações do endereço do usuário
         function mostrarEnderecoUsuario(dadosEndereco) {
             console.log('Exibindo endereço do usuário:', dadosEndereco);
             
-            const secaoEndereco = document.getElementById('endereco-usuario-secao');
-            const enderecoDisplay = document.getElementById('endereco-completo-display');
+            // Atualizar elementos de endereço na seção de confirmação
+            const cepEl = document.getElementById('cep-endereço');
+            const logradouroEl = document.getElementById('logradouro-endereço');
+            const numeroEl = document.getElementById('numero-endereço');
+            const bairroEl = document.getElementById('bairro-endereço');
+            const cidadeEl = document.getElementById('cidade-endereço');
+            const ufEl = document.getElementById('uf-endereço');
             
-            if (secaoEndereco && enderecoDisplay && dadosEndereco) {
-                let enderecoCompleto = '';
-                
-                if (dadosEndereco.logradouro) {
-                    enderecoCompleto = `${dadosEndereco.logradouro}`;
-                    if (dadosEndereco.numero) {
-                        enderecoCompleto += `, ${dadosEndereco.numero}`;
-                    }
-                    if (dadosEndereco.complemento) {
-                        enderecoCompleto += ` - ${dadosEndereco.complemento}`;
-                    }
-                    if (dadosEndereco.bairro) {
-                        enderecoCompleto += `, ${dadosEndereco.bairro}`;
-                    }
-                    if (dadosEndereco.cidade && dadosEndereco.uf) {
-                        enderecoCompleto += `, ${dadosEndereco.cidade} - ${dadosEndereco.uf}`;
-                    }
-                    if (dadosEndereco.cep) {
-                        enderecoCompleto += ` - CEP: ${dadosEndereco.cep}`;
-                    }
-                } else {
-                    enderecoCompleto = 'Endereço não disponível';
-                }
-                
-                enderecoDisplay.textContent = enderecoCompleto;
-                secaoEndereco.style.display = 'block';
-                
-                console.log('✓ Endereço do usuário exibido:', enderecoCompleto);
-            }
+            if (cepEl) cepEl.textContent = dadosEndereco.cep || 'Não informado';
+            if (logradouroEl) logradouroEl.textContent = dadosEndereco.logradouro || 'Não informado';
+            if (numeroEl) numeroEl.textContent = dadosEndereco.numero || 'Não informado';
+            if (bairroEl) bairroEl.textContent = dadosEndereco.bairro || 'Não informado';
+            if (cidadeEl) cidadeEl.textContent = dadosEndereco.cidade || 'Não informado';
+            if (ufEl) ufEl.textContent = dadosEndereco.uf || 'Não informado';
+            
+            console.log('✓ Endereço do usuário exibido na seção de confirmação');
         }
         
-        // Função para mostrar escolas encontradas
-        function mostrarEscolas(escolas) {
-            console.log('Exibindo escolas encontradas:', escolas);
+        // Função para mostrar endereço vazio
+        function mostrarEnderecoVazio() {
+            console.log('Exibindo endereço vazio');
             
-            const container = document.querySelector('#form-local-prova .space-y-4');
-            if (!container) {
-                console.log('Container de escolas não encontrado');
-                return;
-            }
+            const elementos = ['cep-endereço', 'logradouro-endereço', 'numero-endereço', 'bairro-endereço', 'cidade-endereço', 'uf-endereço'];
             
-            // Limpar container
-            container.innerHTML = '';
-            
-            // Adicionar cada escola
-            escolas.forEach((escola, index) => {
-                const escolaHtml = `
-                    <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                        <label class="flex items-start cursor-pointer">
-                            <input type="radio" name="escola_selecionada" value="${escola.nome}" 
-                                   class="mt-1 mr-3 text-blue-600" required>
-                            <div class="flex-1">
-                                <div class="flex items-center justify-between mb-2">
-                                    <h3 class="font-semibold text-gray-900">${escola.nome}</h3>
-                                    <span class="text-sm bg-green-100 text-green-700 px-2 py-1 rounded">
-                                        <i class="fas fa-route mr-1"></i>${escola.distancia || 'Próximo'}
-                                    </span>
-                                </div>
-                                <p class="text-sm text-gray-600 mb-2">
-                                    <i class="fas fa-map-marker-alt mr-1"></i>${escola.endereco || 'Endereço não informado'}
-                                </p>
-                                ${escola.dependencia ? `
-                                <p class="text-xs text-blue-600 mb-1">
-                                    <i class="fas fa-building mr-1"></i>${escola.dependencia}
-                                </p>` : ''}
-                                ${escola.etapas ? `
-                                <p class="text-xs text-gray-500 mb-2">
-                                    <i class="fas fa-graduation-cap mr-1"></i>${escola.etapas.substring(0, 50)}${escola.etapas.length > 50 ? '...' : ''}
-                                </p>` : ''}
-                                ${escola.codigo_inep ? `
-                                <p class="text-xs text-gray-400 mb-2">
-                                    <i class="fas fa-id-card mr-1"></i>Código INEP: ${escola.codigo_inep}
-                                </p>` : ''}
-                                <div class="flex items-center text-xs text-gray-500">
-                                    <i class="fas fa-clock mr-1"></i>
-                                    <span>Aplicação das provas: Domingos - 8h às 12h</span>
-                                </div>
-                            </div>
-                        </label>
-                    </div>
-                `;
-                container.insertAdjacentHTML('beforeend', escolaHtml);
+            elementos.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = 'Não informado';
             });
             
-            // Reinicializar event listeners
-            setTimeout(() => {
-                inicializarEventListeners();
-            }, 100);
+            console.log('✓ Endereço vazio exibido');
         }
         
-        // Função para mostrar mensagem de erro
-        function mostrarMensagemErro(mensagem) {
-            console.log('❌ Mostrando mensagem de erro:', mensagem);
-            
-            const escolasContainer = document.getElementById('escolas-container');
-            if (escolasContainer) {
-                escolasContainer.innerHTML = `
-                    <div class="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-                        <div class="flex items-center justify-center mb-4">
-                            <div class="bg-red-100 rounded-full p-3">
-                                <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
-                            </div>
-                        </div>
-                        <h3 class="text-lg font-medium text-red-800 mb-2">Erro ao carregar escolas</h3>
-                        <p class="text-red-600 mb-4">${mensagem}</p>
-                        <button onclick="location.reload()" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
-                            Tentar Novamente
-                        </button>
-                    </div>
-                `;
-            }
-        }
 
-        // Verificar se já existe local selecionado
-        setTimeout(() => {
-            const localSalvo = localStorage.getItem('ibge_local_prova_selecionado');
-            if (localSalvo) {
-                console.log('Local já selecionado anteriormente:', localSalvo);
-                // Aplicar estado verde ao local salvo
-                document.querySelectorAll('input[name="escola_selecionada"]').forEach(radio => {
-                    if (radio.value === localSalvo) {
-                        const container = radio.closest('.border');
-                        radio.checked = true;
-                        container.classList.remove('border-gray-200');
-                        container.classList.add('border-green-500', 'bg-green-50');
+        
 
-                        // Adicionar ícone de confirmação
-                        const checkIcon = document.createElement('div');
-                        checkIcon.className = 'check-icon absolute top-2 right-2 bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm';
-                        checkIcon.innerHTML = '✓';
-                        container.style.position = 'relative';
-                        container.appendChild(checkIcon);
-                    }
-                });
-
-                // Atualizar comprovante
-                const localComprovanteEl = document.getElementById('local-prova-comprovante');
-                if (localComprovanteEl) {
-                    localComprovanteEl.textContent = localSalvo;
-                }
-            }
-        }, 200);
     });
 </script>
 </body>
