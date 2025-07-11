@@ -232,10 +232,10 @@
 
             <!-- SEÇÃO I - DADOS PESSOAIS -->
             <section class="bg-white border border-gray-300 shadow-sm">
-                <div class="bg-gray-100 border-b border-gray-300 px-6 py-3 flex items-center justify-between">
+                <div class="bg-gray-100 border-b border-gray-300 px-6 py-3">
                     <h2 class="text-lg font-bold text-gray-800">SEÇÃO I - IDENTIFICAÇÃO DO CANDIDATO</h2>
-                    <button onclick="toggleEditMode('secao1')" id="btn-edit-secao1" class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold text-sm transition-colors duration-200 shadow-md hover:shadow-lg animate-pulse">
-                        <i class="fas fa-edit mr-2"></i>PREENCHER DADOS
+                    <button onclick="toggleEditMode('secao1')" id="btn-edit-secao1" class="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-medium transition-colors duration-200">
+                        <i class="fas fa-edit mr-2"></i>Editar
                     </button>
                 </div>
                 
@@ -336,10 +336,10 @@
 
             <!-- SEÇÃO III - ENDEREÇO RESIDENCIAL -->
             <section class="bg-white border border-gray-300 shadow-sm">
-                <div class="bg-gray-100 border-b border-gray-300 px-6 py-3 flex items-center justify-between">
+                <div class="bg-gray-100 border-b border-gray-300 px-6 py-3">
                     <h2 class="text-lg font-bold text-gray-800">SEÇÃO III - ENDEREÇO RESIDENCIAL</h2>
-                    <button onclick="toggleEditMode('secao3')" id="btn-edit-secao3" class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold text-sm transition-colors duration-200 shadow-md hover:shadow-lg animate-pulse">
-                        <i class="fas fa-edit mr-2"></i>PREENCHER DADOS
+                    <button onclick="toggleEditMode('secao3')" id="btn-edit-secao3" class="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-medium transition-colors duration-200">
+                        <i class="fas fa-edit mr-2"></i>Editar
                     </button>
                 </div>
                 
@@ -427,10 +427,10 @@
 
             <!-- SEÇÃO IV - CONTATO -->
             <section class="bg-white border border-gray-300 shadow-sm">
-                <div class="bg-gray-100 border-b border-gray-300 px-6 py-3 flex items-center justify-between">
+                <div class="bg-gray-100 border-b border-gray-300 px-6 py-3">
                     <h2 class="text-lg font-bold text-gray-800">SEÇÃO IV - DADOS DE CONTATO</h2>
-                    <button onclick="toggleEditMode('secao4')" id="btn-edit-secao4" class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold text-sm transition-colors duration-200 shadow-md hover:shadow-lg animate-pulse">
-                        <i class="fas fa-edit mr-2"></i>PREENCHER DADOS
+                    <button onclick="toggleEditMode('secao4')" id="btn-edit-secao4" class="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-medium transition-colors duration-200">
+                        <i class="fas fa-edit mr-2"></i>Editar
                     </button>
                 </div>
                 
@@ -1058,8 +1058,8 @@
                         el.classList.remove('hidden');
                         console.log('Mostrando elemento edit:', el);
                     });
-                    btnEdit.innerHTML = '<i class="fas fa-eye mr-2"></i>VISUALIZAR';
-                    btnEdit.classList.remove('bg-orange-500', 'hover:bg-orange-600', 'animate-pulse');
+                    btnEdit.innerHTML = '<i class="fas fa-eye mr-2"></i>Visualizar';
+                    btnEdit.classList.remove('bg-blue-600', 'hover:bg-blue-700');
                     btnEdit.classList.add('bg-gray-600', 'hover:bg-gray-700');
                 }
             };
@@ -1082,9 +1082,9 @@
                 });
                 
                 if (btnEdit) {
-                    btnEdit.innerHTML = '<i class="fas fa-edit mr-2"></i>PREENCHER DADOS';
+                    btnEdit.innerHTML = '<i class="fas fa-edit mr-2"></i>Editar';
                     btnEdit.classList.remove('bg-gray-600', 'hover:bg-gray-700');
-                    btnEdit.classList.add('bg-orange-500', 'hover:bg-orange-600', 'animate-pulse');
+                    btnEdit.classList.add('bg-blue-600', 'hover:bg-blue-700');
                 }
                 
                 if (confirmCheckbox) {
@@ -1159,8 +1159,8 @@
                 
                 viewElements.forEach(el => el.classList.remove('hidden'));
                 editElements.forEach(el => el.classList.add('hidden'));
-                btnEdit.innerHTML = '<i class="fas fa-check mr-2"></i>DADOS SALVOS';
-                btnEdit.classList.remove('bg-gray-600', 'hover:bg-gray-700', 'animate-pulse');
+                btnEdit.innerHTML = '<i class="fas fa-check mr-2"></i>Dados Salvos';
+                btnEdit.classList.remove('bg-gray-600', 'hover:bg-gray-700');
                 btnEdit.classList.add('bg-green-600', 'hover:bg-green-700');
                 
                 confirmCheckbox.checked = false;
