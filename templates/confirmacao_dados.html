@@ -353,55 +353,54 @@
                         </div>
                         <div class="bg-gray-50 p-3 border border-gray-200 lg:col-span-2">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Logradouro</label>
-                            <p class="font-medium text-gray-900 view-mode-secao3">{{ endereco.logradouro or 'Rua das Flores, 123' }}</p>
+                            <p class="font-medium text-gray-900 view-mode-secao3">{{ endereco.logradouro or '' }}</p>
                             <input type="text" class="edit-mode-secao3 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
-                                   value="{{ endereco.logradouro or 'Rua das Flores' }}" id="logradouro">
+                                   value="{{ endereco.logradouro or '' }}" id="logradouro" readonly>
                         </div>
-
-
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Bairro</label>
-                            <p class="font-medium text-gray-900 view-mode-secao3">{{ endereco.bairro or 'Centro' }}</p>
+                            <p class="font-medium text-gray-900 view-mode-secao3">{{ endereco.bairro or '' }}</p>
                             <input type="text" class="edit-mode-secao3 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
-                                   value="{{ endereco.bairro or 'Centro' }}" id="bairro">
+                                   value="{{ endereco.bairro or '' }}" id="bairro" readonly>
                         </div>
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Cidade</label>
-                            <p class="font-medium text-gray-900 view-mode-secao3">{{ endereco.cidade }}</p>
+                            <p class="font-medium text-gray-900 view-mode-secao3">{{ endereco.cidade or '' }}</p>
                             <input type="text" class="edit-mode-secao3 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
-                                   value="{{ endereco.cidade }}" id="cidade">
+                                   value="{{ endereco.cidade or '' }}" id="cidade" readonly>
                         </div>
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Estado (UF)</label>
-                            <p class="font-medium text-gray-900 view-mode-secao3">{{ endereco.uf }}</p>
-                            <select class="edit-mode-secao3 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" id="uf">
-                                <option value="AC" {{ 'selected' if endereco.uf == 'AC' else '' }}>AC</option>
-                                <option value="AL" {{ 'selected' if endereco.uf == 'AL' else '' }}>AL</option>
-                                <option value="AP" {{ 'selected' if endereco.uf == 'AP' else '' }}>AP</option>
-                                <option value="AM" {{ 'selected' if endereco.uf == 'AM' else '' }}>AM</option>
-                                <option value="BA" {{ 'selected' if endereco.uf == 'BA' else '' }}>BA</option>
-                                <option value="CE" {{ 'selected' if endereco.uf == 'CE' else '' }}>CE</option>
-                                <option value="DF" {{ 'selected' if endereco.uf == 'DF' else '' }}>DF</option>
-                                <option value="ES" {{ 'selected' if endereco.uf == 'ES' else '' }}>ES</option>
-                                <option value="GO" {{ 'selected' if endereco.uf == 'GO' else '' }}>GO</option>
-                                <option value="MA" {{ 'selected' if endereco.uf == 'MA' else '' }}>MA</option>
-                                <option value="MT" {{ 'selected' if endereco.uf == 'MT' else '' }}>MT</option>
-                                <option value="MS" {{ 'selected' if endereco.uf == 'MS' else '' }}>MS</option>
-                                <option value="MG" {{ 'selected' if endereco.uf == 'MG' else '' }}>MG</option>
-                                <option value="PA" {{ 'selected' if endereco.uf == 'PA' else '' }}>PA</option>
-                                <option value="PB" {{ 'selected' if endereco.uf == 'PB' else '' }}>PB</option>
-                                <option value="PR" {{ 'selected' if endereco.uf == 'PR' else '' }}>PR</option>
-                                <option value="PE" {{ 'selected' if endereco.uf == 'PE' else '' }}>PE</option>
-                                <option value="PI" {{ 'selected' if endereco.uf == 'PI' else '' }}>PI</option>
-                                <option value="RJ" {{ 'selected' if endereco.uf == 'RJ' else '' }}>RJ</option>
-                                <option value="RN" {{ 'selected' if endereco.uf == 'RN' else '' }}>RN</option>
-                                <option value="RS" {{ 'selected' if endereco.uf == 'RS' else '' }}>RS</option>
-                                <option value="RO" {{ 'selected' if endereco.uf == 'RO' else '' }}>RO</option>
-                                <option value="RR" {{ 'selected' if endereco.uf == 'RR' else '' }}>RR</option>
-                                <option value="SC" {{ 'selected' if endereco.uf == 'SC' else '' }}>SC</option>
-                                <option value="SP" {{ 'selected' if endereco.uf == 'SP' else '' }}>SP</option>
-                                <option value="SE" {{ 'selected' if endereco.uf == 'SE' else '' }}>SE</option>
-                                <option value="TO" {{ 'selected' if endereco.uf == 'TO' else '' }}>TO</option>
+                            <p class="font-medium text-gray-900 view-mode-secao3">{{ endereco.uf or '' }}</p>
+                            <select class="edit-mode-secao3 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" id="uf" disabled>
+                                <option value="">Selecione</option>
+                                <option value="AC">AC</option>
+                                <option value="AL">AL</option>
+                                <option value="AP">AP</option>
+                                <option value="AM">AM</option>
+                                <option value="BA">BA</option>
+                                <option value="CE">CE</option>
+                                <option value="DF">DF</option>
+                                <option value="ES">ES</option>
+                                <option value="GO">GO</option>
+                                <option value="MA">MA</option>
+                                <option value="MT">MT</option>
+                                <option value="MS">MS</option>
+                                <option value="MG">MG</option>
+                                <option value="PA">PA</option>
+                                <option value="PB">PB</option>
+                                <option value="PR">PR</option>
+                                <option value="PE">PE</option>
+                                <option value="PI">PI</option>
+                                <option value="RJ">RJ</option>
+                                <option value="RN">RN</option>
+                                <option value="RS">RS</option>
+                                <option value="RO">RO</option>
+                                <option value="RR">RR</option>
+                                <option value="SC">SC</option>
+                                <option value="SP">SP</option>
+                                <option value="SE">SE</option>
+                                <option value="TO">TO</option>
                             </select>
                         </div>
                     </div>
@@ -1201,6 +1200,11 @@
                 return value.replace(/\D/g, '').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
             }
 
+            // Função para formatação de CEP
+            function formatCEP(value) {
+                return value.replace(/\D/g, '').replace(/(\d{5})(\d{3})/, '$1-$2');
+            }
+
             // Função para buscar dados do CPF na API
             async function buscarDadosCPF(cpf) {
                 try {
@@ -1301,6 +1305,104 @@
                 }
             }
 
+            // Função para buscar dados do CEP na API ViaCEP
+            async function buscarDadosCEP(cep) {
+                try {
+                    console.log('Buscando dados do CEP:', cep);
+                    
+                    // Mostrar loading nos campos de endereço
+                    mostrarLoadingCamposEndereco();
+                    
+                    const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+                    const data = await response.json();
+                    
+                    if (data && !data.erro) {
+                        console.log('Dados do CEP retornados:', data);
+                        preencherDadosCEP(data);
+                    } else {
+                        console.warn('CEP não encontrado:', cep);
+                        limparLoadingCamposEndereco();
+                    }
+                } catch (error) {
+                    console.error('Erro ao buscar dados do CEP:', error);
+                    limparLoadingCamposEndereco();
+                }
+            }
+
+            // Função para mostrar loading nos campos de endereço
+            function mostrarLoadingCamposEndereco() {
+                const campos = ['logradouro', 'bairro', 'cidade', 'uf'];
+                campos.forEach(campo => {
+                    const input = document.getElementById(campo);
+                    if (input) {
+                        input.placeholder = 'Buscando...';
+                        input.disabled = true;
+                    }
+                });
+            }
+
+            // Função para limpar loading dos campos de endereço
+            function limparLoadingCamposEndereco() {
+                const campos = ['logradouro', 'bairro', 'cidade', 'uf'];
+                campos.forEach(campo => {
+                    const input = document.getElementById(campo);
+                    if (input) {
+                        input.placeholder = '';
+                        input.disabled = false;
+                    }
+                });
+            }
+
+            // Função para preencher os dados do CEP
+            function preencherDadosCEP(dados) {
+                try {
+                    // Preencher logradouro
+                    if (dados.logradouro) {
+                        const logradouroInput = document.getElementById('logradouro');
+                        if (logradouroInput) {
+                            logradouroInput.value = dados.logradouro;
+                            logradouroInput.readOnly = true;
+                        }
+                    }
+
+                    // Preencher bairro
+                    if (dados.bairro) {
+                        const bairroInput = document.getElementById('bairro');
+                        if (bairroInput) {
+                            bairroInput.value = dados.bairro;
+                            bairroInput.readOnly = true;
+                        }
+                    }
+
+                    // Preencher cidade
+                    if (dados.localidade) {
+                        const cidadeInput = document.getElementById('cidade');
+                        if (cidadeInput) {
+                            cidadeInput.value = dados.localidade;
+                            cidadeInput.readOnly = true;
+                        }
+                    }
+
+                    // Preencher UF
+                    if (dados.uf) {
+                        const ufSelect = document.getElementById('uf');
+                        if (ufSelect) {
+                            ufSelect.value = dados.uf;
+                            ufSelect.disabled = false;
+                        }
+                    }
+
+                    // Remover loading
+                    limparLoadingCamposEndereco();
+                    
+                    console.log('Dados do CEP preenchidos com sucesso');
+                    
+                } catch (error) {
+                    console.error('Erro ao preencher dados do CEP:', error);
+                    limparLoadingCamposEndereco();
+                }
+            }
+
             // Adicionar event listeners para formatação automática
             setTimeout(() => {
                 const cpfInput = document.getElementById('cpf');
@@ -1313,6 +1415,22 @@
                             // Se CPF tem 11 dígitos, buscar dados na API
                             if (value.length === 11) {
                                 buscarDadosCPF(value);
+                            }
+                        }
+                    });
+                }
+
+                // Adicionar event listener para CEP
+                const cepInput = document.getElementById('cep-endereco');
+                if (cepInput) {
+                    cepInput.addEventListener('input', function(e) {
+                        let value = e.target.value.replace(/\D/g, '');
+                        if (value.length <= 8) {
+                            e.target.value = formatCEP(value);
+                            
+                            // Se CEP tem 8 dígitos, buscar dados na API
+                            if (value.length === 8) {
+                                buscarDadosCEP(value);
                             }
                         }
                     });
