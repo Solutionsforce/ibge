@@ -80,6 +80,8 @@ The deployment uses parallel workflows for development convenience, allowing bot
 
 ## Recent Changes
 
+- July 11, 2025: Site-wide Date Updates - Updated all registration and exam dates across the project. Registration period changed from "15 de junho de 2025 a 15 de julho de 2025" to "05 de julho de 2025 á 25 de julho de 2025". Exam date changed from "25 de julho de 2025" to "24 de agosto de 2025 - Domingo". Updated dates in index.html and edital_completo.html including publication dates, isenção periods, and document signatures.
+- July 11, 2025: Checkout Page UI Optimization - Removed FGV logo and replaced with text-only "FUNDAÇÃO GETULIO VARGAS" for cleaner interface. Adjusted section heights for better vertical space utilization while maintaining professional appearance.
 - July 1, 2025: Heroku Deploy Preparation COMPLETE - Added all required configuration files for Heroku deployment: Procfile, runtime.txt, app.json, requirements-heroku.txt, .gitignore, README.md with deploy instructions, and automated deploy script (deploy-heroku.sh). Fixed QRCode import error in routes.py. Repository now ready for GitHub push and Heroku deployment with one-click deploy button.
 - July 1, 2025: Dynamic Brazil Time Implementation - Fixed "Data e Hora da Inscrição" field to show real-time Brazil timezone (America/Sao_Paulo) with automatic updates every minute. Format: "DD/MM/YYYY às HH:MM". Integration with localStorage data transmission system.
 - July 1, 2025: User Data Transmission Debug - Enhanced checkout page with comprehensive localStorage debugging, intelligent fallback system to load data from individual sections (ibge_inscricao_secao1, secao3, secao4), and robust data reconstruction for PIX generation. Multiple data sources validation implemented.
