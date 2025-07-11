@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Trabalhe Conosco - IBGE{% endblock %}</title>
-    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.cdnfonts.com/css/rawline" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
@@ -45,110 +45,6 @@
         /* Preload crítico */
         .critical-image {
             content-visibility: auto;
-        }
-        
-        /* MOBILE CONSISTENCY OVERRIDES - iPhone 16 Pro Max Based */
-        @media (max-width: 768px) {
-            /* Force header dimensions */
-            .bg-\[0B2341\] .h-\[42px\] {
-                height: 42px !important;
-                min-height: 42px !important;
-                max-height: 42px !important;
-            }
-            
-            /* Force gov.br logo sizing */
-            .bg-\[0B2341\] img[src*="gov.br"] {
-                height: 20px !important;
-                width: auto !important;
-                min-width: 60px !important;
-                max-width: 100px !important;
-            }
-            
-            /* Force IBGE logo sizing */
-            img[src*="ibge"] {
-                width: 125px !important;
-                height: 24px !important;
-                min-width: 125px !important;
-                max-width: 125px !important;
-            }
-            
-            /* Force header menu sizing */
-            .header-menu {
-                font-size: 0.6875rem !important;
-                height: 42px !important;
-                padding: 0 0.5rem !important;
-                white-space: nowrap !important;
-                overflow: hidden !important;
-                text-overflow: ellipsis !important;
-            }
-            
-            /* Force container margins */
-            .container {
-                margin-left: auto !important;
-                margin-right: auto !important;
-                max-width: 100% !important;
-            }
-            
-            /* Force consistent flex behavior */
-            .flex {
-                display: flex !important;
-                flex-wrap: nowrap !important;
-            }
-            
-            /* Force minimum touch targets */
-            button, 
-            a[role="button"],
-            input[type="button"],
-            input[type="submit"] {
-                min-height: 44px !important;
-                min-width: 44px !important;
-                padding: 0.75rem 1rem !important;
-            }
-            
-            /* Force consistent spacing */
-            .px-4 { padding-left: 1rem !important; padding-right: 1rem !important; }
-            .py-4 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
-            .px-6 { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
-            .py-6 { padding-top: 1.5rem !important; padding-bottom: 1.5rem !important; }
-            
-            /* Force consistent text sizes */
-            .text-xs { font-size: 0.75rem !important; }
-            .text-sm { font-size: 0.875rem !important; }
-            .text-base { font-size: 1rem !important; }
-            .text-lg { font-size: 1.125rem !important; }
-            
-            /* Force consistent margins */
-            .mx-auto { margin-left: auto !important; margin-right: auto !important; }
-            .my-4 { margin-top: 1rem !important; margin-bottom: 1rem !important; }
-            .mb-4 { margin-bottom: 1rem !important; }
-            .mt-4 { margin-top: 1rem !important; }
-            
-            /* Force consistent width and height */
-            .w-full { width: 100% !important; }
-            .h-full { height: 100% !important; }
-            
-            /* Force consistent rounded corners */
-            .rounded { border-radius: 0.25rem !important; }
-            .rounded-lg { border-radius: 0.5rem !important; }
-            .rounded-full { border-radius: 9999px !important; }
-            
-            /* Force consistent shadows */
-            .shadow { box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important; }
-            .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important; }
-            
-            /* Force consistent borders */
-            .border { border-width: 1px !important; }
-            .border-2 { border-width: 2px !important; }
-            
-            /* Prevent overflow issues */
-            body { overflow-x: hidden !important; }
-            .overflow-hidden { overflow: hidden !important; }
-            .overflow-x-auto { overflow-x: auto !important; }
-            
-            /* Force consistent z-index */
-            .z-10 { z-index: 10 !important; }
-            .z-20 { z-index: 20 !important; }
-            .z-50 { z-index: 50 !important; }
         }
     </style>
 </head>
