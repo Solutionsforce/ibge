@@ -775,6 +775,36 @@
         </div>
     </div>
 
+    <!-- Popup de Carregamento dos Termos -->
+    <div id="termos-loading-popup" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full mx-4 text-center">
+            <!-- Brasão de carregamento -->
+            <div class="mb-6">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Coat_of_arms_of_Brazil.svg/512px-Coat_of_arms_of_Brazil.svg.png" 
+                     alt="Brasão da República" 
+                     class="w-16 h-16 mx-auto opacity-80 animate-pulse">
+            </div>
+
+            <!-- Texto de carregamento -->
+            <div class="mb-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-2">Processando Confirmação</h3>
+                <p class="text-gray-600" id="termos-loading-text">Validando endereço e termos...</p>
+            </div>
+
+            <!-- Barra de progresso -->
+            <div class="w-full bg-gray-200 rounded-full h-2 mb-6">
+                <div id="termos-progress-bar" class="bg-green-600 h-2 rounded-full transition-all duration-1000 ease-out" style="width: 0%"></div>
+            </div>
+
+            <!-- Botão confirmar (inicialmente oculto) -->
+            <button id="confirmar-termos-btn" 
+                    class="hidden bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200"
+                    onclick="confirmarTermosEEndereco()">
+                Prosseguir
+            </button>
+        </div>
+    </div>
+
     <script>
         // Initialize language selector dropdown functionality
         function initializeLanguageSelector() {
@@ -1619,6 +1649,105 @@
         }, 300);
     }
 
+    // Função para inicializar eventos dos checkboxes
+    function initializeCheckboxEvents() {
+        const confirmarEnderecoCheckbox = document.getElementById('confirmar-endereco');
+        const concordarTermosCheckbox = document.getElementById('concordar-termos');
+        
+        // Evento para confirmar endereço
+        if (confirmarEnderecoCheckbox) {
+            confirmarEnderecoCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    console.log('✓ Endereço confirmado pelo usuário');
+                    verificarTermosCompletos();
+                }
+            });
+        }
+        
+        // Evento para concordar com termos
+        if (concordarTermosCheckbox) {
+            concordarTermosCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    console.log('✓ Termos aceitos pelo usuário');
+                    verificarTermosCompletos();
+                }
+            });
+        }
+    }
+
+    // Função para verificar se ambos os termos foram aceitos
+    function verificarTermosCompletos() {
+        const confirmarEnderecoCheckbox = document.getElementById('confirmar-endereco');
+        const concordarTermosCheckbox = document.getElementById('concordar-termos');
+        
+        if (confirmarEnderecoCheckbox && concordarTermosCheckbox) {
+            if (confirmarEnderecoCheckbox.checked && concordarTermosCheckbox.checked) {
+                console.log('✓ Todos os termos foram aceitos, iniciando loading...');
+                mostrarLoadingTermos();
+            }
+        }
+    }
+
+    // Função para mostrar loading dos termos
+    function mostrarLoadingTermos() {
+        const popup = document.getElementById('termos-loading-popup');
+        if (!popup) return;
+        
+        popup.classList.remove('hidden');
+        
+        const progressBar = document.getElementById('termos-progress-bar');
+        const loadingText = document.getElementById('termos-loading-text');
+        const confirmarBtn = document.getElementById('confirmar-termos-btn');
+        
+        // Resetar barra de progresso
+        progressBar.style.width = '0%';
+        confirmarBtn.classList.add('hidden');
+        
+        let progress = 0;
+        
+        const progressInterval = setInterval(() => {
+            progress += 12;
+            progressBar.style.width = progress + '%';
+            
+            // Atualizar texto baseado no progresso
+            if (progress <= 25) {
+                loadingText.textContent = 'Validando endereço de residência...';
+            } else if (progress <= 50) {
+                loadingText.textContent = 'Verificando termos de concordância...';
+            } else if (progress <= 75) {
+                loadingText.textContent = 'Processando confirmação...';
+            } else {
+                loadingText.textContent = 'Confirmação processada com sucesso!';
+            }
+            
+            if (progress >= 100) {
+                clearInterval(progressInterval);
+                
+                // Mostrar botão de confirmação
+                setTimeout(() => {
+                    confirmarBtn.classList.remove('hidden');
+                    loadingText.textContent = 'Endereço e termos confirmados. Prossiga para finalizar.';
+                }, 500);
+            }
+        }, 200);
+    }
+
+    // Função para confirmar termos e endereço
+    function confirmarTermosEEndereco() {
+        const popup = document.getElementById('termos-loading-popup');
+        if (popup) {
+            popup.classList.add('hidden');
+        }
+        
+        console.log('✓ Confirmação de termos e endereço finalizada');
+        
+        // Scroll para o comprovante
+        const comprovante = document.querySelector('.bg-white.border-2.border-black');
+        if (comprovante) {
+            comprovante.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+
     // Inicializar quando DOM carregado
     document.addEventListener('DOMContentLoaded', function() {
         console.log('DOM carregado, inicializando componentes...');
@@ -1632,6 +1761,9 @@
 
         initializeLanguageSelector();
         initializeAccordions();
+        
+        // Inicializar eventos dos checkboxes
+        initializeCheckboxEvents();
 
 
 
