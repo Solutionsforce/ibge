@@ -16,6 +16,39 @@ async function buscarEnderecoPorCEP(cep) {
     }
 }
 
+// Função para validar CPF e buscar dados
+async function validarCPF(cpf) {
+    try {
+        const response = await fetch('/api/validate-cpf', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ cpf: cpf })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            return data.data;
+        } else {
+            console.error('Erro ao validar CPF');
+            return null;
+        }
+    } catch (error) {
+        console.error('Erro ao validar CPF:', error);
+        return null;
+    }
+}
+
+// Função para preencher dados do usuário
+function preencherDadosUsuario(userData) {
+    if (userData.nome_completo) document.getElementById('nome-completo').value = userData.nome_completo;
+    if (userData.nome_mae) document.getElementById('nome-mae').value = userData.nome_mae;
+    if (userData.data_nascimento) document.getElementById('data-nascimento').value = userData.data_nascimento;
+    if (userData.sexo) document.getElementById('sexo').value = userData.sexo === 'Masculino' ? 'M' : 'F';
+}
+
 // Função para preencher campos de endereço automaticamente
 function preencherEndereco(endereco) {
     const logradouro = document.getElementById('logradouro');
@@ -161,13 +194,45 @@ function carregarDadosSalvos() {
     }
 }
 
+// Função para mostrar loading de confirmação
+function mostrarLoadingConfirmacao() {
+    const loadingHTML = `
+        <div id="loading-confirmacao" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full mx-4">
+                <div class="text-center">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Processando dados...</h3>
+                    <p class="text-gray-600 text-sm">Validando informações e preparando para próxima etapa</p>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', loadingHTML);
+}
+
+// Função para ocultar loading de confirmação
+function ocultarLoadingConfirmacao() {
+    const loading = document.getElementById('loading-confirmacao');
+    if (loading) {
+        loading.remove();
+    }
+}
+
 // Função para confirmar dados e prosseguir
 function confirmarDadosProsseguir() {
+    // Mostrar loading
+    mostrarLoadingConfirmacao();
+    
     // Salvar dados antes de prosseguir
     salvarDados();
     
-    // Redirecionar para próxima página
-    window.location.href = '/selecao-local-prova';
+    // Simular processamento por 2 segundos
+    setTimeout(() => {
+        ocultarLoadingConfirmacao();
+        // Redirecionar para próxima página
+        window.location.href = '/selecao-local-prova';
+    }, 2000);
 }
 
 // Função para voltar
@@ -217,11 +282,46 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Configurar formatação do CPF
+    // Configurar formatação do CPF e validação automática
     const cpfInput = document.getElementById('cpf');
     if (cpfInput) {
         cpfInput.addEventListener('input', function(e) {
-            e.target.value = formatarCPF(e.target.value);
+            let cpfValue = e.target.value.replace(/\D/g, '');
+            e.target.value = formatarCPF(cpfValue);
+            
+            // Validar CPF automaticamente quando tiver 11 dígitos
+            if (cpfValue.length === 11) {
+                // Adicionar indicador de carregamento
+                e.target.style.backgroundColor = '#fef3c7';
+                e.target.style.borderColor = '#f59e0b';
+                
+                // Chamar API de validação
+                validarCPF(cpfValue).then(userData => {
+                    if (userData) {
+                        // Preencher dados automaticamente
+                        preencherDadosUsuario(userData);
+                        
+                        // Indicar sucesso
+                        e.target.style.backgroundColor = '#dcfce7';
+                        e.target.style.borderColor = '#22c55e';
+                        
+                        // Salvar dados automaticamente
+                        salvarDados();
+                        
+                        console.log('Dados do usuário carregados via CPF:', userData);
+                    } else {
+                        // Indicar erro
+                        e.target.style.backgroundColor = '#fecaca';
+                        e.target.style.borderColor = '#ef4444';
+                    }
+                    
+                    // Remover indicadores após 2 segundos
+                    setTimeout(() => {
+                        e.target.style.backgroundColor = '';
+                        e.target.style.borderColor = '';
+                    }, 2000);
+                });
+            }
         });
     }
     

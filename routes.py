@@ -53,7 +53,7 @@ def register_routes(app):
         user_data = {
             'nome_completo': 'João Silva Santos',
             'nome_mae': 'Maria Silva Santos',
-            'data_nascimento': '15/03/1985',
+            'data_nascimento': '1985-03-15',  # Formato ISO para campo HTML date
             'cpf': cpf,
             'rg': '12.345.678-9',
             'naturalidade': 'São Paulo - SP',
