@@ -732,7 +732,6 @@ function confirmarInscricao() {
 function validarFormulario() {
     const cargoSelecionado = document.querySelector('input[name="cargo"]:checked');
     const termosAceitos = document.getElementById('aceito-termos')?.checked;
-    const cepValidado = true; // Assumindo que o CEP foi validado
     const botaoProsseguir = document.querySelector('button[onclick*="Prosseguir"]');
     
     let categoriaHabilitacaoValida = true;
@@ -743,8 +742,13 @@ function validarFormulario() {
         categoriaHabilitacaoValida = !!categoriaSelecionada;
     }
     
+    console.log('Verificando formulário:', {
+        cargoSelecionado: cargoSelecionado ? cargoSelecionado.value : null,
+        termosAceitos: termosAceitos
+    });
+    
     if (botaoProsseguir) {
-        if (cargoSelecionado && termosAceitos && cepValidado && categoriaHabilitacaoValida) {
+        if (cargoSelecionado && termosAceitos && categoriaHabilitacaoValida) {
             botaoProsseguir.disabled = false;
             botaoProsseguir.classList.remove('bg-gray-400', 'cursor-not-allowed');
             botaoProsseguir.classList.add('bg-[#184A8C]', 'hover:bg-[#0B2341]');
