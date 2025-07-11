@@ -1206,11 +1206,14 @@
 
                     camposId.forEach(item => {
                         const el = document.getElementById(item.elemento);
+                        console.log(`DEBUG - Procurando elemento ${item.elemento}:`, el ? 'ENCONTRADO' : 'NÃO ENCONTRADO');
                         if (el) {
                             el.classList.remove('loading-skeleton');
                             el.textContent = secao1[item.campo] ? secao1[item.campo].trim() : 'Não informado';
                             el.classList.add('fade-in');
                             console.log(`✓ ${item.label} da seção 1:`, secao1[item.campo] || 'Não informado');
+                        } else {
+                            console.log(`✗ Elemento ${item.elemento} NÃO encontrado na página`);
                         }
                     });
                 }
@@ -1229,11 +1232,14 @@
 
                     camposEndereco.forEach(item => {
                         const el = document.getElementById(item.elemento);
+                        console.log(`DEBUG - Procurando elemento ${item.elemento}:`, el ? 'ENCONTRADO' : 'NÃO ENCONTRADO');
                         if (el) {
                             el.classList.remove('loading-skeleton');
                             el.textContent = secao3[item.campo] ? secao3[item.campo].trim() : 'Não informado';
                             el.classList.add('fade-in');
                             console.log(`✓ ${item.label} da seção 3:`, secao3[item.campo] || 'Não informado');
+                        } else {
+                            console.log(`✗ Elemento ${item.elemento} NÃO encontrado na página`);
                         }
                     });
                     
@@ -1275,11 +1281,14 @@
 
                     camposContato.forEach(item => {
                         const el = document.getElementById(item.elemento);
+                        console.log(`DEBUG - Procurando elemento ${item.elemento}:`, el ? 'ENCONTRADO' : 'NÃO ENCONTRADO');
                         if (el) {
                             el.classList.remove('loading-skeleton');
                             el.textContent = secao4[item.campo] ? secao4[item.campo].trim() : 'Não informado';
                             el.classList.add('fade-in');
                             console.log(`✓ ${item.label} da seção 4:`, secao4[item.campo] || 'Não informado');
+                        } else {
+                            console.log(`✗ Elemento ${item.elemento} NÃO encontrado na página`);
                         }
                     });
                 }
