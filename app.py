@@ -8,6 +8,10 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 # Configure logging for debugging
 logging.basicConfig(level=logging.DEBUG)
 
+# Set FOR4PAYMENTS_SECRET_KEY if not already set
+if not os.environ.get("FOR4PAYMENTS_SECRET_KEY"):
+    os.environ["FOR4PAYMENTS_SECRET_KEY"] = "a7903037-357c-46d6-a3cc-514d90f03342"
+
 class Base(DeclarativeBase):
     pass
 
