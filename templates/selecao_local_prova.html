@@ -1263,14 +1263,14 @@
                     }
                 }
 
-                // Carregar seção 4 - Contato
+                // Carregar seção 4 - Contatos
                 if (secao4 && Object.keys(secao4).length > 0) {
                     console.log('✓ Usando dados da seção 4 individual');
                     
                     const camposContato = [
                         { campo: 'telefone', elemento: 'telefone-comprovante', label: 'Telefone' },
                         { campo: 'telefone_alt', elemento: 'telefone-alt-comprovante', label: 'Telefone Alternativo' },
-                        { campo: 'email', elemento: 'email-comprovante', label: 'Email' }
+                        { campo: 'email', elemento: 'email-comprovante', label: 'E-mail' }
                     ];
 
                     camposContato.forEach(item => {
@@ -1284,14 +1284,14 @@
                     });
                 }
 
-                // Carregar cargo
-                const cargo = localStorage.getItem('ibge_cargo_selecionado');
-                const cargoEl = document.getElementById('cargo-comprovante');
-                if (cargoEl) {
-                    cargoEl.classList.remove('loading-skeleton');
-                    cargoEl.textContent = cargo || 'Cargo não informado';
-                    cargoEl.classList.add('fade-in');
-                    console.log('✓ Cargo individual:', cargo);
+                // Carregar cargo pretendido
+                const cargoElement = document.getElementById('cargo-comprovante');
+                if (cargoElement) {
+                    const cargoTexto = dadosCompletos.cargo === 'agente' ? 'Agente de Pesquisas e Mapeamento' : 'Agente de Pesquisas por Telefone';
+                    cargoElement.textContent = cargoTexto;
+                    cargoElement.classList.remove('loading-skeleton');
+                    cargoElement.classList.add('fade-in');
+                    console.log('✓ Cargo pretendido carregado:', cargoTexto);
                 }
 
                 // Fallback para dados completos se necessário
