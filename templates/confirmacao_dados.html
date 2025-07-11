@@ -232,67 +232,39 @@
 
             <!-- SEÇÃO I - DADOS PESSOAIS -->
             <section class="bg-white border border-gray-300 shadow-sm">
-                <div class="bg-gray-100 border-b border-gray-300 px-6 py-3 flex items-center justify-between">
+                <div class="bg-gray-100 border-b border-gray-300 px-6 py-3">
                     <h2 class="text-lg font-bold text-gray-800">SEÇÃO I - IDENTIFICAÇÃO DO CANDIDATO</h2>
-                    <button onclick="toggleEditMode('secao1')" id="btn-edit-secao1" class="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
-                        <i class="fas fa-edit mr-1"></i>Editar
-                    </button>
                 </div>
                 
                 <div class="p-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">CPF</label>
-                            <p class="font-medium text-gray-900 view-mode-secao1">{{ usuario.cpf or '' }}</p>
-                            <input type="text" class="edit-mode-secao1 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
+                            <input type="text" class="w-full p-2 border border-gray-300 rounded text-sm font-medium" 
                                    value="{{ usuario.cpf or '' }}" id="cpf" maxlength="14" placeholder="000.000.000-00">
                         </div>
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Nome Completo</label>
-                            <p class="font-medium text-gray-900 view-mode-secao1">{{ usuario.nome_completo or '' }}</p>
-                            <input type="text" class="edit-mode-secao1 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
-                                   value="{{ usuario.nome_completo or '' }}" id="nome-completo" placeholder="Digite o Nome Completo" readonly>
+                            <input type="text" class="w-full p-2 border border-gray-300 rounded text-sm font-medium" 
+                                   value="{{ usuario.nome_completo or '' }}" id="nome-completo" placeholder="Digite o Nome Completo">
                         </div>
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Data de Nascimento</label>
-                            <p class="font-medium text-gray-900 view-mode-secao1">{{ usuario.data_nascimento or '' }}</p>
-                            <input type="date" class="edit-mode-secao1 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
-                                   value="" id="data-nascimento" readonly>
+                            <input type="date" class="w-full p-2 border border-gray-300 rounded text-sm font-medium" 
+                                   value="" id="data-nascimento">
                         </div>
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Nome da Mãe</label>
-                            <p class="font-medium text-gray-900 view-mode-secao1">{{ usuario.nome_mae or '' }}</p>
-                            <input type="text" class="edit-mode-secao1 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
-                                   value="{{ usuario.nome_mae or '' }}" id="nome-mae" placeholder="Digite o Nome da Mãe" readonly>
+                            <input type="text" class="w-full p-2 border border-gray-300 rounded text-sm font-medium" 
+                                   value="{{ usuario.nome_mae or '' }}" id="nome-mae" placeholder="Digite o Nome da Mãe">
                         </div>
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Sexo</label>
-                            <p class="font-medium text-gray-900 view-mode-secao1">{{ usuario.sexo or '' }}</p>
-                            <select class="edit-mode-secao1 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
-                                    id="sexo" disabled>
+                            <select class="w-full p-2 border border-gray-300 rounded text-sm font-medium" id="sexo">
                                 <option value="">Selecione</option>
                                 <option value="M">Masculino</option>
                                 <option value="F">Feminino</option>
                             </select>
-                        </div>
-
-                    </div>
-                    
-                    <!-- Botões de Confirmação da Seção I -->
-                    <div class="edit-mode-secao1 hidden mt-6 p-4 bg-blue-50 border border-blue-200 rounded">
-                        <div class="flex items-center mb-3">
-                            <input type="checkbox" id="confirm-secao1" class="mr-2">
-                            <label for="confirm-secao1" class="text-sm font-medium text-blue-800">
-                                Confirmo que todas as informações pessoais estão corretas e atualizadas
-                            </label>
-                        </div>
-                        <div class="flex gap-3">
-                            <button onclick="saveSection('secao1')" class="bg-green-600 text-white px-4 py-2 rounded text-sm hover:bg-green-700">
-                                <i class="fas fa-save mr-1"></i>Salvar Alterações
-                            </button>
-                            <button onclick="cancelEdit('secao1')" class="bg-gray-500 text-white px-4 py-2 rounded text-sm hover:bg-gray-600">
-                                <i class="fas fa-times mr-1"></i>Cancelar
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -336,43 +308,35 @@
 
             <!-- SEÇÃO III - ENDEREÇO RESIDENCIAL -->
             <section class="bg-white border border-gray-300 shadow-sm">
-                <div class="bg-gray-100 border-b border-gray-300 px-6 py-3 flex items-center justify-between">
+                <div class="bg-gray-100 border-b border-gray-300 px-6 py-3">
                     <h2 class="text-lg font-bold text-gray-800">SEÇÃO III - ENDEREÇO RESIDENCIAL</h2>
-                    <button onclick="toggleEditMode('secao3')" id="btn-edit-secao3" class="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
-                        <i class="fas fa-edit mr-1"></i>Editar
-                    </button>
                 </div>
                 
                 <div class="p-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">CEP</label>
-                            <p class="font-medium text-gray-900 view-mode-secao3">{{ endereco.cep }}</p>
-                            <input type="text" class="edit-mode-secao3 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
+                            <input type="text" class="w-full p-2 border border-gray-300 rounded text-sm font-medium" 
                                    value="{{ endereco.cep }}" id="cep-endereco" maxlength="9" placeholder="00000-000">
                         </div>
                         <div class="bg-gray-50 p-3 border border-gray-200 lg:col-span-2">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Logradouro</label>
-                            <p class="font-medium text-gray-900 view-mode-secao3">{{ endereco.logradouro or '' }}</p>
-                            <input type="text" class="edit-mode-secao3 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
+                            <input type="text" class="w-full p-2 border border-gray-300 rounded text-sm font-medium" 
                                    value="{{ endereco.logradouro or '' }}" id="logradouro" readonly>
                         </div>
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Bairro</label>
-                            <p class="font-medium text-gray-900 view-mode-secao3">{{ endereco.bairro or '' }}</p>
-                            <input type="text" class="edit-mode-secao3 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
+                            <input type="text" class="w-full p-2 border border-gray-300 rounded text-sm font-medium" 
                                    value="{{ endereco.bairro or '' }}" id="bairro" readonly>
                         </div>
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Cidade</label>
-                            <p class="font-medium text-gray-900 view-mode-secao3">{{ endereco.cidade or '' }}</p>
-                            <input type="text" class="edit-mode-secao3 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
+                            <input type="text" class="w-full p-2 border border-gray-300 rounded text-sm font-medium" 
                                    value="{{ endereco.cidade or '' }}" id="cidade" readonly>
                         </div>
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Estado (UF)</label>
-                            <p class="font-medium text-gray-900 view-mode-secao3">{{ endereco.uf or '' }}</p>
-                            <select class="edit-mode-secao3 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" id="uf" disabled>
+                            <select class="w-full p-2 border border-gray-300 rounded text-sm font-medium" id="uf">
                                 <option value="">Selecione</option>
                                 <option value="AC">AC</option>
                                 <option value="AL">AL</option>
@@ -404,76 +368,34 @@
                             </select>
                         </div>
                     </div>
-                    
-                    <!-- Botões de Confirmação da Seção III -->
-                    <div class="edit-mode-secao3 hidden mt-6 p-4 bg-blue-50 border border-blue-200 rounded">
-                        <div class="flex items-center mb-3">
-                            <input type="checkbox" id="confirm-secao3" class="mr-2">
-                            <label for="confirm-secao3" class="text-sm font-medium text-blue-800">
-                                Confirmo que o endereço residencial está correto e atualizado
-                            </label>
-                        </div>
-                        <div class="flex gap-3">
-                            <button onclick="saveSection('secao3')" class="bg-green-600 text-white px-4 py-2 rounded text-sm hover:bg-green-700">
-                                <i class="fas fa-save mr-1"></i>Salvar Alterações
-                            </button>
-                            <button onclick="cancelEdit('secao3')" class="bg-gray-500 text-white px-4 py-2 rounded text-sm hover:bg-gray-600">
-                                <i class="fas fa-times mr-1"></i>Cancelar
-                            </button>
-                        </div>
-                    </div>
                 </div>
             </section>
 
             <!-- SEÇÃO IV - CONTATO -->
             <section class="bg-white border border-gray-300 shadow-sm">
-                <div class="bg-gray-100 border-b border-gray-300 px-6 py-3 flex items-center justify-between">
+                <div class="bg-gray-100 border-b border-gray-300 px-6 py-3">
                     <h2 class="text-lg font-bold text-gray-800">SEÇÃO IV - DADOS DE CONTATO</h2>
-                    <button onclick="toggleEditMode('secao4')" id="btn-edit-secao4" class="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
-                        <i class="fas fa-edit mr-1"></i>Editar
-                    </button>
                 </div>
                 
                 <div class="p-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Telefone Principal</label>
-                            <p class="font-medium text-gray-900 view-mode-secao4">{{ usuario.telefone or '(11) 9 9999-9999' }}</p>
-                            <input type="tel" class="edit-mode-secao4 hidden w-full p-2 border border-gray-300 rounded font-medium" 
+                            <input type="tel" class="w-full p-2 border border-gray-300 rounded font-medium" 
                                    style="font-size: 16px;" value="" id="telefone" maxlength="16" placeholder="(11) 9 9999-9999">
                         </div>
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Telefone Alternativo</label>
-                            <p class="font-medium text-gray-900 view-mode-secao4">{{ usuario.telefone_alt or '(11) 9 3333-3333' }}</p>
-                            <input type="tel" class="edit-mode-secao4 hidden w-full p-2 border border-gray-300 rounded font-medium" 
+                            <input type="tel" class="w-full p-2 border border-gray-300 rounded font-medium" 
                                    style="font-size: 16px;" value="" id="telefone-alt" maxlength="16" placeholder="(11) 9 9999-9999">
                         </div>
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">E-mail</label>
-                            <p class="font-medium text-gray-900 view-mode-secao4">{{ usuario.email or 'joao.silva@email.com' }}</p>
-                            <div class="edit-mode-secao4 hidden relative">
+                            <div class="relative">
                                 <input type="email" class="w-full p-2 border border-gray-300 rounded font-medium" 
                                        style="font-size: 16px;" value="" id="email" autocomplete="off" placeholder="seuemail@exemplo.com">
                                 <div id="email-suggestions" class="hidden absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-b shadow-lg z-10 max-h-40 overflow-y-auto"></div>
                             </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Botões de Confirmação da Seção IV -->
-                    <div class="edit-mode-secao4 hidden mt-6 p-4 bg-blue-50 border border-blue-200 rounded">
-                        <div class="flex items-center mb-3">
-                            <input type="checkbox" id="confirm-secao4" class="mr-2">
-                            <label for="confirm-secao4" class="text-sm font-medium text-blue-800">
-                                Confirmo que os dados de contato estão corretos e atualizados
-                            </label>
-                        </div>
-                        <div class="flex gap-3">
-                            <button onclick="saveSection('secao4')" class="bg-green-600 text-white px-4 py-2 rounded text-sm hover:bg-green-700">
-                                <i class="fas fa-save mr-1"></i>Salvar Alterações
-                            </button>
-                            <button onclick="cancelEdit('secao4')" class="bg-gray-500 text-white px-4 py-2 rounded text-sm hover:bg-gray-600">
-                                <i class="fas fa-times mr-1"></i>Cancelar
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -747,6 +669,8 @@
             </div>
         </div>
     </footer>
+
+    <script src="{{ url_for('static', filename='js/confirmacao_dados.js') }}"></script>
 
     <script>
         // Initialize language selector dropdown functionality
