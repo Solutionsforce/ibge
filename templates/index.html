@@ -4,23 +4,23 @@
 <!-- Top bar -->
 <div class="bg-[#0B2341] w-full">
     <div class="flex items-center h-[42px]">
-        <div class="flex items-center h-full pl-4 pr-4 min-w-0">
+        <div class="flex items-center h-full pl-4 pr-4 flex-shrink-0">
             <a href="{{ url_for('login') }}" class="flex items-center h-full">
-                <img src="https://www.gov.br/governodigital/pt-br/estrategias-e-governanca-digital/EGD2020/imagens/logo-white.png" alt="gov.br logo, white text on transparent background" style="height: 20px; width: auto; max-width: none;"/>
+                <img src="https://www.gov.br/governodigital/pt-br/estrategias-e-governanca-digital/EGD2020/imagens/logo-white.png" alt="gov.br logo, white text on transparent background" style="height: 20px; width: 65px; object-fit: contain;"/>
             </a>
         </div>
-        <div class="flex-1"></div>
+        <div class="h-4 w-px bg-[#33507A] mx-3 flex-shrink-0"></div>
+        <div class="flex-1 min-w-0"></div>
         <div class="flex items-center h-full pr-2">
-            <div class="h-4 w-px bg-[#33507A] mr-3"></div>
-            <a href="{{ url_for('login') }}" class="header-menu text-white font-bold px-3 h-full flex items-center cursor-pointer hover:bg-[#33507A] transition-colors whitespace-nowrap text-xs">
+            <a href="{{ url_for('login') }}" class="header-menu text-white font-bold px-1 md:px-3 h-full flex items-center cursor-pointer hover:bg-[#33507A] transition-colors whitespace-nowrap text-xs">
                 ACESSO À INFORMAÇÃO
             </a>
             <div class="h-4 w-px bg-[#33507A] mx-1"></div>
-            <a href="{{ url_for('login') }}" class="header-menu text-white font-bold px-3 h-full flex items-center cursor-pointer hover:bg-[#33507A] transition-colors text-xs">
+            <a href="{{ url_for('login') }}" class="header-menu text-white font-bold px-1 md:px-3 h-full flex items-center cursor-pointer hover:bg-[#33507A] transition-colors text-xs">
                 PARTICIPE
             </a>
             <div class="h-4 w-px bg-[#33507A] mx-1"></div>
-            <a href="{{ url_for('login') }}" class="header-menu text-white font-bold px-3 h-full flex items-center cursor-pointer hover:bg-[#33507A] transition-colors text-xs">
+            <a href="{{ url_for('login') }}" class="header-menu text-white font-bold px-1 md:px-3 h-full flex items-center cursor-pointer hover:bg-[#33507A] transition-colors text-xs">
                 LEGISLAÇÃO
             </a>
         </div>
