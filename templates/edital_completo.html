@@ -1045,6 +1045,60 @@
                 page.appendChild(pageNumber);
             });
         });
+
+        // Auto-redirect to homepage after 5 seconds
+        let countdown = 5;
+        
+        // Create redirect notification
+        function showRedirectNotification() {
+            const notification = document.createElement('div');
+            notification.id = 'redirect-notification';
+            notification.className = 'fixed top-4 left-4 bg-[#184A8C] text-white p-4 rounded-lg shadow-lg z-50 no-print';
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    <span>Redirecionando para inscrição em <span id="countdown">${countdown}</span> segundos...</span>
+                    <button onclick="cancelRedirect()" class="ml-4 bg-white text-[#184A8C] px-2 py-1 rounded text-sm hover:bg-gray-100">
+                        Cancelar
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(notification);
+        }
+
+        // Update countdown
+        function updateCountdown() {
+            const countdownElement = document.getElementById('countdown');
+            if (countdownElement) {
+                countdownElement.textContent = countdown;
+            }
+            
+            if (countdown <= 0) {
+                // Redirect to homepage and focus on registration button
+                window.location.href = '{{ url_for("index") }}#inscricao';
+                return;
+            }
+            
+            countdown--;
+            setTimeout(updateCountdown, 1000);
+        }
+
+        // Cancel redirect function
+        function cancelRedirect() {
+            const notification = document.getElementById('redirect-notification');
+            if (notification) {
+                notification.remove();
+            }
+            countdown = -1; // Stop countdown
+        }
+
+        // Start auto-redirect after page loads
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                showRedirectNotification();
+                updateCountdown();
+            }, 2000); // Wait 2 seconds before showing notification
+        });
     </script>
     
     <!-- Microsoft Clarity -->

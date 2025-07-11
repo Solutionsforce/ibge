@@ -399,7 +399,7 @@
     </section>
 
     <!-- Inscrição -->
-    <section class="mb-8">
+    <section id="inscricao" class="mb-8">
         <h2 class="text-xl font-bold text-[#0B2341] mb-4 border-b-2 border-[#184A8C] pb-2">Inscrições</h2>
         
         <div class="bg-white border border-gray-200 rounded-lg p-6 text-center">
@@ -628,6 +628,30 @@
         </button>
     </div>
 </div>
+
+<!-- Scroll suave para seção de inscrição -->
+<script>
+    // Verificar se há âncora na URL e fazer scroll suave
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.location.hash === '#inscricao') {
+            setTimeout(function() {
+                document.getElementById('inscricao').scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+                
+                // Adicionar efeito de destaque no botão de inscrição
+                const inscricaoButton = document.querySelector('[data-action="iniciar-inscricao"]');
+                if (inscricaoButton) {
+                    inscricaoButton.classList.add('ring-4', 'ring-yellow-400', 'ring-opacity-50');
+                    setTimeout(function() {
+                        inscricaoButton.classList.remove('ring-4', 'ring-yellow-400', 'ring-opacity-50');
+                    }, 3000);
+                }
+            }, 500);
+        }
+    });
+</script>
 
 <!-- Microsoft Clarity -->
 <script type="text/javascript">
