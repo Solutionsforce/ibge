@@ -1236,6 +1236,31 @@
                             console.log(`✓ ${item.label} da seção 3:`, secao3[item.campo] || 'Não informado');
                         }
                     });
+                    
+                    // Carregar endereço nas seções de confirmação
+                    console.log('✓ Carregando endereço nas seções de confirmação');
+                    const enderecoTexto = `${secao3.logradouro || ''}, ${secao3.bairro || ''} - ${secao3.cidade || ''}, ${secao3.uf || ''} - CEP: ${secao3.cep || ''}`;
+                    
+                    // Atualizar endereço principal
+                    const enderecoCompleto = document.getElementById('endereco-completo-display');
+                    if (enderecoCompleto) {
+                        enderecoCompleto.textContent = enderecoTexto;
+                        console.log('✓ Endereço principal atualizado');
+                    }
+                    
+                    // Atualizar endereço de confirmação
+                    const enderecoConfirmacao = document.getElementById('endereco-confirmacao-display');
+                    if (enderecoConfirmacao) {
+                        enderecoConfirmacao.textContent = enderecoTexto;
+                        console.log('✓ Endereço de confirmação atualizado');
+                    }
+                    
+                    // Exibir seção de endereço
+                    const secaoEndereco = document.getElementById('endereco-usuario-secao');
+                    if (secaoEndereco) {
+                        secaoEndereco.style.display = 'block';
+                        console.log('✓ Seção de endereço exibida');
+                    }
                 }
 
                 // Carregar seção 4 - Contato
