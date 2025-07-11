@@ -697,7 +697,7 @@ function confirmarEndereco() {
 function prosseguirInscricao() {
     // Capturar dados do formulário
     const cepInput = document.getElementById('cep');
-    const cep = cepInput ? cepInput.value.replace(/\D/g, '') : '01310100';
+    const cep = cepInput ? cepInput.value.replace(/\D/g, '') : '';
     
     // Capturar cargo selecionado
     const cargoRadio = document.querySelector('input[name="cargo"]:checked');
