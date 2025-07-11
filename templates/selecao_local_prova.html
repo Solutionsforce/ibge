@@ -1191,57 +1191,111 @@
                 console.log('DEBUG - Seção 3 individual:', secao3);
                 console.log('DEBUG - Seção 4 individual:', secao4);
 
-                // Priorizar seções individuais (dados mais recentes)
+                // Carregar dados pessoais (Seção 1)
+                console.log('=== CARREGANDO DADOS PESSOAIS ===');
                 if (secao1 && Object.keys(secao1).length > 0) {
                     console.log('✓ Usando dados da seção 1 individual');
                     
-                    // Carregar todos os campos da seção 1
-                    const camposId = [
-                        { campo: 'nome_completo', elemento: 'nome-comprovante', label: 'Nome' },
-                        { campo: 'cpf', elemento: 'cpf-comprovante', label: 'CPF' },
-                        { campo: 'data_nascimento', elemento: 'nascimento-comprovante', label: 'Data de Nascimento', formatter: formatarData },
-                        { campo: 'nome_mae', elemento: 'mae-comprovante', label: 'Nome da Mãe' },
-                        { campo: 'nome_pai', elemento: 'pai-comprovante', label: 'Nome do Pai' }
-                    ];
-
-                    camposId.forEach(item => {
-                        const el = document.getElementById(item.elemento);
-                        console.log(`DEBUG - Procurando elemento ${item.elemento}:`, el ? 'ENCONTRADO' : 'NÃO ENCONTRADO');
-                        if (el) {
-                            el.classList.remove('loading-skeleton');
-                            el.textContent = secao1[item.campo] ? secao1[item.campo].trim() : 'Não informado';
-                            el.classList.add('fade-in');
-                            console.log(`✓ ${item.label} da seção 1:`, secao1[item.campo] || 'Não informado');
+                    // Nome completo
+                    const nomeEl = document.getElementById('nome-comprovante');
+                    if (nomeEl) {
+                        nomeEl.classList.remove('loading-skeleton');
+                        nomeEl.textContent = secao1.nome_completo ? secao1.nome_completo.trim() : 'Não informado';
+                        nomeEl.classList.add('fade-in');
+                        console.log('✓ Nome completo carregado:', secao1.nome_completo);
+                    }
+                    
+                    // CPF
+                    const cpfEl = document.getElementById('cpf-comprovante');
+                    if (cpfEl) {
+                        cpfEl.classList.remove('loading-skeleton');
+                        cpfEl.textContent = secao1.cpf ? secao1.cpf.trim() : 'Não informado';
+                        cpfEl.classList.add('fade-in');
+                        console.log('✓ CPF carregado:', secao1.cpf);
+                    }
+                    
+                    // Data de nascimento
+                    const nascEl = document.getElementById('nascimento-comprovante');
+                    if (nascEl) {
+                        nascEl.classList.remove('loading-skeleton');
+                        if (secao1.data_nascimento) {
+                            const data = new Date(secao1.data_nascimento);
+                            nascEl.textContent = data.toLocaleDateString('pt-BR');
                         } else {
-                            console.log(`✗ Elemento ${item.elemento} NÃO encontrado na página`);
+                            nascEl.textContent = 'Não informado';
                         }
-                    });
+                        nascEl.classList.add('fade-in');
+                        console.log('✓ Data nascimento carregada:', secao1.data_nascimento);
+                    }
+                    
+                    // Nome da mãe
+                    const maeEl = document.getElementById('mae-comprovante');
+                    if (maeEl) {
+                        maeEl.classList.remove('loading-skeleton');
+                        maeEl.textContent = secao1.nome_mae ? secao1.nome_mae.trim() : 'Não informado';
+                        maeEl.classList.add('fade-in');
+                        console.log('✓ Nome da mãe carregado:', secao1.nome_mae);
+                    }
+                    
+                    // Nome do pai
+                    const paiEl = document.getElementById('pai-comprovante');
+                    if (paiEl) {
+                        paiEl.classList.remove('loading-skeleton');
+                        paiEl.textContent = secao1.nome_pai ? secao1.nome_pai.trim() : 'Não informado';
+                        paiEl.classList.add('fade-in');
+                        console.log('✓ Nome do pai carregado:', secao1.nome_pai);
+                    }
                 }
 
-                // Carregar seção 3 - Endereço
+                // Carregar dados de endereço (Seção 3)
+                console.log('=== CARREGANDO DADOS DE ENDEREÇO ===');
                 if (secao3 && Object.keys(secao3).length > 0) {
                     console.log('✓ Usando dados da seção 3 individual');
                     
-                    const camposEndereco = [
-                        { campo: 'cep', elemento: 'cep-comprovante', label: 'CEP' },
-                        { campo: 'logradouro', elemento: 'logradouro-comprovante', label: 'Logradouro' },
-                        { campo: 'bairro', elemento: 'bairro-comprovante', label: 'Bairro' },
-                        { campo: 'cidade', elemento: 'cidade-comprovante', label: 'Cidade' },
-                        { campo: 'uf', elemento: 'uf-comprovante', label: 'UF' }
-                    ];
-
-                    camposEndereco.forEach(item => {
-                        const el = document.getElementById(item.elemento);
-                        console.log(`DEBUG - Procurando elemento ${item.elemento}:`, el ? 'ENCONTRADO' : 'NÃO ENCONTRADO');
-                        if (el) {
-                            el.classList.remove('loading-skeleton');
-                            el.textContent = secao3[item.campo] ? secao3[item.campo].trim() : 'Não informado';
-                            el.classList.add('fade-in');
-                            console.log(`✓ ${item.label} da seção 3:`, secao3[item.campo] || 'Não informado');
-                        } else {
-                            console.log(`✗ Elemento ${item.elemento} NÃO encontrado na página`);
-                        }
-                    });
+                    // CEP
+                    const cepEl = document.getElementById('cep-comprovante');
+                    if (cepEl) {
+                        cepEl.classList.remove('loading-skeleton');
+                        cepEl.textContent = secao3.cep ? secao3.cep.trim() : 'Não informado';
+                        cepEl.classList.add('fade-in');
+                        console.log('✓ CEP carregado:', secao3.cep);
+                    }
+                    
+                    // Logradouro
+                    const logradouroEl = document.getElementById('logradouro-comprovante');
+                    if (logradouroEl) {
+                        logradouroEl.classList.remove('loading-skeleton');
+                        logradouroEl.textContent = secao3.logradouro ? secao3.logradouro.trim() : 'Não informado';
+                        logradouroEl.classList.add('fade-in');
+                        console.log('✓ Logradouro carregado:', secao3.logradouro);
+                    }
+                    
+                    // Bairro
+                    const bairroEl = document.getElementById('bairro-comprovante');
+                    if (bairroEl) {
+                        bairroEl.classList.remove('loading-skeleton');
+                        bairroEl.textContent = secao3.bairro ? secao3.bairro.trim() : 'Não informado';
+                        bairroEl.classList.add('fade-in');
+                        console.log('✓ Bairro carregado:', secao3.bairro);
+                    }
+                    
+                    // Cidade
+                    const cidadeEl = document.getElementById('cidade-comprovante');
+                    if (cidadeEl) {
+                        cidadeEl.classList.remove('loading-skeleton');
+                        cidadeEl.textContent = secao3.cidade ? secao3.cidade.trim() : 'Não informado';
+                        cidadeEl.classList.add('fade-in');
+                        console.log('✓ Cidade carregada:', secao3.cidade);
+                    }
+                    
+                    // UF
+                    const ufEl = document.getElementById('uf-comprovante');
+                    if (ufEl) {
+                        ufEl.classList.remove('loading-skeleton');
+                        ufEl.textContent = secao3.uf ? secao3.uf.trim() : 'Não informado';
+                        ufEl.classList.add('fade-in');
+                        console.log('✓ UF carregado:', secao3.uf);
+                    }
                     
                     // Carregar endereço nas seções de confirmação
                     console.log('✓ Carregando endereço nas seções de confirmação');
@@ -1260,37 +1314,39 @@
                         enderecoConfirmacao.textContent = enderecoTexto;
                         console.log('✓ Endereço de confirmação atualizado');
                     }
-                    
-                    // Exibir seção de endereço
-                    const secaoEndereco = document.getElementById('endereco-usuario-secao');
-                    if (secaoEndereco) {
-                        secaoEndereco.style.display = 'block';
-                        console.log('✓ Seção de endereço exibida');
-                    }
                 }
 
-                // Carregar seção 4 - Contatos
+                // Carregar dados de contato (Seção 4)
+                console.log('=== CARREGANDO DADOS DE CONTATO ===');
                 if (secao4 && Object.keys(secao4).length > 0) {
                     console.log('✓ Usando dados da seção 4 individual');
                     
-                    const camposContato = [
-                        { campo: 'telefone', elemento: 'telefone-comprovante', label: 'Telefone' },
-                        { campo: 'telefone_alt', elemento: 'telefone-alt-comprovante', label: 'Telefone Alternativo' },
-                        { campo: 'email', elemento: 'email-comprovante', label: 'E-mail' }
-                    ];
-
-                    camposContato.forEach(item => {
-                        const el = document.getElementById(item.elemento);
-                        console.log(`DEBUG - Procurando elemento ${item.elemento}:`, el ? 'ENCONTRADO' : 'NÃO ENCONTRADO');
-                        if (el) {
-                            el.classList.remove('loading-skeleton');
-                            el.textContent = secao4[item.campo] ? secao4[item.campo].trim() : 'Não informado';
-                            el.classList.add('fade-in');
-                            console.log(`✓ ${item.label} da seção 4:`, secao4[item.campo] || 'Não informado');
-                        } else {
-                            console.log(`✗ Elemento ${item.elemento} NÃO encontrado na página`);
-                        }
-                    });
+                    // Telefone
+                    const telefoneEl = document.getElementById('telefone-comprovante');
+                    if (telefoneEl) {
+                        telefoneEl.classList.remove('loading-skeleton');
+                        telefoneEl.textContent = secao4.telefone ? secao4.telefone.trim() : 'Não informado';
+                        telefoneEl.classList.add('fade-in');
+                        console.log('✓ Telefone carregado:', secao4.telefone);
+                    }
+                    
+                    // Telefone alternativo
+                    const telefoneAltEl = document.getElementById('telefone-alt-comprovante');
+                    if (telefoneAltEl) {
+                        telefoneAltEl.classList.remove('loading-skeleton');
+                        telefoneAltEl.textContent = secao4.telefone_alt ? secao4.telefone_alt.trim() : 'Não informado';
+                        telefoneAltEl.classList.add('fade-in');
+                        console.log('✓ Telefone alternativo carregado:', secao4.telefone_alt);
+                    }
+                    
+                    // Email
+                    const emailEl = document.getElementById('email-comprovante');
+                    if (emailEl) {
+                        emailEl.classList.remove('loading-skeleton');
+                        emailEl.textContent = secao4.email ? secao4.email.trim() : 'Não informado';
+                        emailEl.classList.add('fade-in');
+                        console.log('✓ Email carregado:', secao4.email);
+                    }
                 }
 
                 // Carregar cargo pretendido
