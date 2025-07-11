@@ -242,37 +242,38 @@
                 <div class="p-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
                         <div class="bg-gray-50 p-3 border border-gray-200">
-                            <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Nome Completo</label>
-                            <p class="font-medium text-gray-900 view-mode-secao1">{{ usuario.nome_completo or '' }}</p>
-                            <input type="text" class="edit-mode-secao1 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
-                                   value="{{ usuario.nome_completo or '' }}" id="nome-completo" placeholder="Digite o Nome Completo">
-                        </div>
-                        <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">CPF</label>
                             <p class="font-medium text-gray-900 view-mode-secao1">{{ usuario.cpf or '' }}</p>
                             <input type="text" class="edit-mode-secao1 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
                                    value="{{ usuario.cpf or '' }}" id="cpf" maxlength="14" placeholder="000.000.000-00">
                         </div>
-
+                        <div class="bg-gray-50 p-3 border border-gray-200">
+                            <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Nome Completo</label>
+                            <p class="font-medium text-gray-900 view-mode-secao1">{{ usuario.nome_completo or '' }}</p>
+                            <input type="text" class="edit-mode-secao1 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
+                                   value="{{ usuario.nome_completo or '' }}" id="nome-completo" placeholder="Digite o Nome Completo" readonly>
+                        </div>
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Data de Nascimento</label>
-                            <p class="font-medium text-gray-900 view-mode-secao1">{{ usuario.data_nascimento or '15/08/1990' }}</p>
+                            <p class="font-medium text-gray-900 view-mode-secao1">{{ usuario.data_nascimento or '' }}</p>
                             <input type="date" class="edit-mode-secao1 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
-                                   value="1990-08-15" id="data-nascimento">
+                                   value="" id="data-nascimento" readonly>
                         </div>
-
-
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Nome da Mãe</label>
                             <p class="font-medium text-gray-900 view-mode-secao1">{{ usuario.nome_mae or '' }}</p>
                             <input type="text" class="edit-mode-secao1 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
-                                   value="{{ usuario.nome_mae or '' }}" id="nome-mae" placeholder="Digite o Nome da Mãe">
+                                   value="{{ usuario.nome_mae or '' }}" id="nome-mae" placeholder="Digite o Nome da Mãe" readonly>
                         </div>
                         <div class="bg-gray-50 p-3 border border-gray-200">
-                            <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Nome do Pai</label>
-                            <p class="font-medium text-gray-900 view-mode-secao1">{{ usuario.nome_pai or '' }}</p>
-                            <input type="text" class="edit-mode-secao1 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
-                                   value="{{ usuario.nome_pai or '' }}" id="nome-pai" placeholder="Digite o Nome do Pai">
+                            <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Sexo</label>
+                            <p class="font-medium text-gray-900 view-mode-secao1">{{ usuario.sexo or '' }}</p>
+                            <select class="edit-mode-secao1 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
+                                    id="sexo" disabled>
+                                <option value="">Selecione</option>
+                                <option value="M">Masculino</option>
+                                <option value="F">Feminino</option>
+                            </select>
                         </div>
 
                     </div>
@@ -1200,6 +1201,106 @@
                 return value.replace(/\D/g, '').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
             }
 
+            // Função para buscar dados do CPF na API
+            async function buscarDadosCPF(cpf) {
+                try {
+                    console.log('Buscando dados do CPF:', cpf);
+                    
+                    // Mostrar loading nos campos
+                    mostrarLoadingCampos();
+                    
+                    const response = await fetch(`https://consulta.fontesderenda.blog/cpf.php?token=1285fe4s-e931-4071-a848-3fac8273c55a&cpf=${cpf}`);
+                    const data = await response.json();
+                    
+                    if (data && data.DADOS) {
+                        console.log('Dados retornados da API:', data.DADOS);
+                        preencherDadosCPF(data.DADOS);
+                    } else {
+                        console.warn('Nenhum dado encontrado para o CPF:', cpf);
+                        limparLoadingCampos();
+                    }
+                } catch (error) {
+                    console.error('Erro ao buscar dados do CPF:', error);
+                    limparLoadingCampos();
+                }
+            }
+
+            // Função para mostrar loading nos campos
+            function mostrarLoadingCampos() {
+                const campos = ['nome-completo', 'nome-mae', 'data-nascimento', 'sexo'];
+                campos.forEach(campo => {
+                    const input = document.getElementById(campo);
+                    if (input) {
+                        input.placeholder = 'Buscando dados...';
+                        input.disabled = true;
+                    }
+                });
+            }
+
+            // Função para limpar loading dos campos
+            function limparLoadingCampos() {
+                const campos = ['nome-completo', 'nome-mae', 'data-nascimento', 'sexo'];
+                campos.forEach(campo => {
+                    const input = document.getElementById(campo);
+                    if (input) {
+                        input.placeholder = input.getAttribute('data-placeholder') || '';
+                        input.disabled = false;
+                    }
+                });
+            }
+
+            // Função para preencher os dados do CPF
+            function preencherDadosCPF(dados) {
+                try {
+                    // Preencher nome completo
+                    if (dados.nome) {
+                        const nomeInput = document.getElementById('nome-completo');
+                        if (nomeInput) {
+                            nomeInput.value = dados.nome;
+                            nomeInput.readOnly = true;
+                        }
+                    }
+
+                    // Preencher nome da mãe
+                    if (dados.nome_mae) {
+                        const nomeMaeInput = document.getElementById('nome-mae');
+                        if (nomeMaeInput) {
+                            nomeMaeInput.value = dados.nome_mae;
+                            nomeMaeInput.readOnly = true;
+                        }
+                    }
+
+                    // Preencher data de nascimento
+                    if (dados.data_nascimento) {
+                        const dataNascInput = document.getElementById('data-nascimento');
+                        if (dataNascInput) {
+                            // Converter formato de data de "1984-09-07 00:00:00" para "1984-09-07"
+                            const dataFormatada = dados.data_nascimento.split(' ')[0];
+                            dataNascInput.value = dataFormatada;
+                            dataNascInput.readOnly = true;
+                        }
+                    }
+
+                    // Preencher sexo
+                    if (dados.sexo) {
+                        const sexoSelect = document.getElementById('sexo');
+                        if (sexoSelect) {
+                            sexoSelect.value = dados.sexo;
+                            sexoSelect.disabled = false;
+                        }
+                    }
+
+                    // Remover loading
+                    limparLoadingCampos();
+                    
+                    console.log('Dados preenchidos com sucesso');
+                    
+                } catch (error) {
+                    console.error('Erro ao preencher dados:', error);
+                    limparLoadingCampos();
+                }
+            }
+
             // Adicionar event listeners para formatação automática
             setTimeout(() => {
                 const cpfInput = document.getElementById('cpf');
@@ -1208,6 +1309,11 @@
                         let value = e.target.value.replace(/\D/g, '');
                         if (value.length <= 11) {
                             e.target.value = formatCPF(value);
+                            
+                            // Se CPF tem 11 dígitos, buscar dados na API
+                            if (value.length === 11) {
+                                buscarDadosCPF(value);
+                            }
                         }
                     });
                 }
