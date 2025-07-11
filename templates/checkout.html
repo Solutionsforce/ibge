@@ -300,15 +300,18 @@
         <!-- Informações do Candidato -->
         <div class="bg-white border border-gray-300 shadow-sm overflow-hidden mb-8 animate-fade-in">
             <!-- Header da seção -->
-            <div class="bg-[#184A8C] text-white px-3 sm:px-6 py-3">
-                <h3 class="text-sm font-bold uppercase tracking-wide flex items-center">
-                    <i class="fas fa-user mr-2"></i>
-                    DADOS DO INSCRITO
+            <div class="bg-[#184A8C] text-white px-3 sm:px-6 py-3 cursor-pointer hover:bg-[#1e4a8a] transition-colors" onclick="toggleDadosInscrito()">
+                <h3 class="text-sm font-bold uppercase tracking-wide flex items-center justify-between">
+                    <div class="flex items-center">
+                        <i class="fas fa-user mr-2"></i>
+                        DADOS DO INSCRITO
+                    </div>
+                    <i id="dados-inscrito-chevron" class="fas fa-chevron-down text-sm transition-transform duration-300"></i>
                 </h3>
             </div>
 
             <!-- Conteúdo da seção -->
-            <div class="p-3 sm:p-6">
+            <div id="dados-inscrito-content" class="p-3 sm:p-6 hidden">
                 <div class="grid md:grid-cols-2 gap-6">
                     <div class="space-y-4">
                         <div class="flex justify-between items-center border-b border-gray-100 pb-2">
@@ -1195,5 +1198,23 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        // Função para abrir/fechar a seção "DADOS DO INSCRITO"
+        function toggleDadosInscrito() {
+            const content = document.getElementById('dados-inscrito-content');
+            const chevron = document.getElementById('dados-inscrito-chevron');
+            
+            if (content.classList.contains('hidden')) {
+                // Abrir seção
+                content.classList.remove('hidden');
+                chevron.classList.add('rotate-180');
+            } else {
+                // Fechar seção
+                content.classList.add('hidden');
+                chevron.classList.remove('rotate-180');
+            }
+        }
+    </script>
 </body>
 </html>
