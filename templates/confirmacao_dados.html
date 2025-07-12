@@ -856,9 +856,13 @@
                     if (logradouroField) logradouroField.value = data.logradouro || '';
                     if (bairroField) bairroField.value = data.bairro || '';
                     if (cidadeField) {
-                        cidadeField.value = data.localidade || '';
-                        // Forçar atualização visual
-                        cidadeField.setAttribute('value', data.localidade || '');
+                        const cidade = data.localidade || '';
+                        cidadeField.value = cidade;
+                        cidadeField.setAttribute('value', cidade);
+                        // Garantir que o valor persista
+                        setTimeout(() => {
+                            cidadeField.value = cidade;
+                        }, 100);
                     }
                     if (ufField && data.uf) ufField.value = data.uf;
                     
