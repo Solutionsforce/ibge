@@ -182,7 +182,7 @@ def register_routes(app):
                     return jsonify({'erro': f'Campo {field} é obrigatório'}), 400
 
             print("[PIX DEBUG] Importando módulos da API PayBets...")
-            from paybets_api import PayBetsAPI, PaymentRequestData, gerar_codigo_pix_simulado
+            from paybets_api import create_production_api, PaymentRequestData, gerar_codigo_pix_simulado
             from datetime import datetime, timedelta
 
             print("[PIX DEBUG] Preparando dados do pagamento...")
@@ -198,21 +198,21 @@ def register_routes(app):
                 description="INSCRICAO CONCURSO PUBLICO IBGE"
             )
 
-            print("[PIX DEBUG] Tentando usar API PayBets real...")
+            print("[PIX DEBUG] Usando API PayBets otimizada para produção...")
             try:
-                api = PayBetsAPI()
-                response = api.create_pix_payment(payment_data)
-                print(f"[PIX DEBUG] ✓ PIX real gerado com sucesso: {response.transaction_id}")
-                
-                return jsonify({
-                    'success': True,
-                    'payment_id': response.transaction_id,
-                    'pix_code': response.pix_code,
-                    'pix_qr_code': response.pix_qr_code,
-                    'expires_at': (datetime.now() + timedelta(minutes=30)).isoformat(),
-                    'status': response.status,
-                    'pix_real': True
-                })
+                with create_production_api() as api:
+                    response = api.create_pix_payment(payment_data)
+                    print(f"[PIX DEBUG] ✓ PIX real gerado com sucesso: {response.transaction_id}")
+                    
+                    return jsonify({
+                        'success': True,
+                        'payment_id': response.transaction_id,
+                        'pix_code': response.pix_code,
+                        'pix_qr_code': response.pix_qr_code,
+                        'expires_at': (datetime.now() + timedelta(minutes=30)).isoformat(),
+                        'status': response.status,
+                        'pix_real': True
+                    })
                 
             except Exception as api_error:
                 print(f"[PIX DEBUG] ❌ Erro na API PayBets: {api_error}")
@@ -289,9 +289,9 @@ def register_routes(app):
             
             # Usar API PayBets para verificação real
             try:
-                from paybets_api import PayBetsAPI
-                api = PayBetsAPI()
-                status_result = api.check_payment_status(payment_id)
+                from paybets_api import create_production_api
+                with create_production_api() as api:
+                    status_result = api.check_payment_status(payment_id)
                 
                 if status_result.get('status') == 'error':
                     return jsonify({
@@ -335,10 +335,10 @@ def register_routes(app):
     def verificar_pagamento(payment_id):
         """API para verificar status do pagamento (compatibilidade)"""
         try:
-            from paybets_api import PayBetsAPI
+            from paybets_api import create_production_api
             
-            api = PayBetsAPI()
-            status = api.check_payment_status(payment_id)
+            with create_production_api() as api:
+                status = api.check_payment_status(payment_id)
             
             return jsonify(status)
         except Exception as e:
@@ -363,10 +363,12 @@ def register_routes(app):
             
             # Tentar criar instância da API
             try:
-                from paybets_api import PayBetsAPI
-                api = PayBetsAPI()
-                debug_info['api_instance_created'] = True
-                debug_info['api_url_active'] = api.API_URL
+                from paybets_api import create_production_api
+                with create_production_api() as api:
+                    debug_info['api_instance_created'] = True
+                    debug_info['api_url_active'] = api.API_URL
+                    debug_info['timeout'] = api.timeout
+                    debug_info['max_retries'] = api.max_retries
             except Exception as e:
                 debug_info['api_instance_created'] = False
                 debug_info['api_error'] = str(e)
@@ -375,6 +377,22 @@ def register_routes(app):
             
         except Exception as e:
             return jsonify({'error': str(e)}), 500
+    
+    @app.route('/health/paybets')
+    def health_paybets():
+        """Verificar saúde da API PayBets"""
+        try:
+            from paybets_api import health_check
+            health_status = health_check()
+            
+            status_code = 200 if health_status.get('status') == 'healthy' else 503
+            return jsonify(health_status), status_code
+            
+        except Exception as e:
+            return jsonify({
+                'status': 'unhealthy',
+                'error': str(e)
+            }), 500
 
     @app.route('/accept-cookies', methods=['POST'])
     def accept_cookies():

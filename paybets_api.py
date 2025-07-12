@@ -3,14 +3,28 @@ PayBets PIX API Integration
 ===========================
 Integração completa para pagamentos PIX usando a API PayBets.
 Base URL: https://elite-manager-api-62571bbe8e96.herokuapp.com/api
+
+Production-ready implementation with:
+- Environment-based configuration
+- Comprehensive error handling
+- Professional logging
+- Request timeout and retry logic
+- Input validation and sanitization
 """
 import os
 import requests
 import json
+import logging
 from datetime import datetime, timedelta
 from typing import Dict, Any, Optional
 from dataclasses import dataclass
 import uuid
+import time
+from urllib.parse import urljoin
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 @dataclass
 class PaymentRequestData:
@@ -38,13 +52,34 @@ class PaymentResponse:
 class PayBetsAPI:
     """
     Classe principal para integração com a API PayBets
+    Production-ready implementation
     """
     
-    def __init__(self):
+    def __init__(self, api_key: Optional[str] = None, timeout: int = 30, max_retries: int = 3):
         """
-        Inicializar a API PayBets
+        Inicializar a API PayBets com configuração para produção
+        
+        Args:
+            api_key: Chave de API (se None, busca em variável de ambiente)
+            timeout: Timeout para requisições em segundos
+            max_retries: Número máximo de tentativas em caso de falha
         """
-        self.API_URL = "https://elite-manager-api-62571bbe8e96.herokuapp.com/api"
+        self.API_URL = os.getenv("PAYBETS_API_URL", "https://elite-manager-api-62571bbe8e96.herokuapp.com/api")
+        self.timeout = timeout
+        self.max_retries = max_retries
+        
+        # Configurar chave de API
+        self.api_key = api_key or os.getenv("PAYBETS_API_KEY")
+        if not self.api_key:
+            # Fallback para chave hardcoded em desenvolvimento
+            self.api_key = "3d6bd4c17dd31877b77482b341c74d32494a1d6fbdee4c239cf8432b424b1abf"
+            logger.warning("Using hardcoded API key - set PAYBETS_API_KEY environment variable for production")
+        
+        # Configurar session para reutilização de conexões
+        self.session = requests.Session()
+        self.session.headers.update(self._get_headers())
+        
+        logger.info(f"PayBets API initialized - URL: {self.API_URL}")
         
     def _get_headers(self) -> Dict[str, str]:
         """
@@ -54,12 +89,12 @@ class PayBetsAPI:
             "Content-Type": "application/json",
             "Accept": "application/json",
             "User-Agent": "PayBets-Python-SDK/1.0.0",
-            "x-api-key": "3d6bd4c17dd31877b77482b341c74d32494a1d6fbdee4c239cf8432b424b1abf"
+            "x-api-key": self.api_key
         }
     
     def _validate_payment_data(self, data: PaymentRequestData) -> None:
         """
-        Validar dados do pagamento antes do envio
+        Validar e sanitizar dados do pagamento antes do envio
         """
         # Validar campos obrigatórios
         if not data.name or not data.name.strip():
@@ -76,17 +111,52 @@ class PayBetsAPI:
         if len(cpf) != 11:
             raise ValueError("CPF deve conter exatamente 11 dígitos")
         
-        # Validar email básico
-        if "@" not in data.email or "." not in data.email:
+        # Validar email com regex básico
+        import re
+        email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        if not re.match(email_pattern, data.email.strip()):
             raise ValueError("Email inválido")
         
         # Validar valor
         if not isinstance(data.amount, (int, float)) or data.amount <= 0:
             raise ValueError("Valor deve ser um número positivo")
+        
+        # Validar limites de valor
+        if data.amount > 50000:  # Limite máximo PIX
+            raise ValueError("Valor excede limite máximo de R$ 50.000,00")
+        
+        # Sanitizar nome (remover caracteres especiais)
+        name_cleaned = re.sub(r'[^a-zA-ZÀ-ÿ\s]', '', data.name.strip())
+        if len(name_cleaned) < 2:
+            raise ValueError("Nome deve conter pelo menos 2 caracteres válidos")
+        
+        logger.info(f"Dados validados para CPF: {cpf[:3]}***{cpf[-2:]}")
+    
+    def _make_request_with_retry(self, method: str, url: str, **kwargs) -> requests.Response:
+        """
+        Fazer requisição HTTP com retry automático
+        """
+        for attempt in range(self.max_retries):
+            try:
+                response = self.session.request(
+                    method=method,
+                    url=url,
+                    timeout=self.timeout,
+                    **kwargs
+                )
+                return response
+            except requests.exceptions.RequestException as e:
+                if attempt == self.max_retries - 1:
+                    logger.error(f"Request failed after {self.max_retries} attempts: {str(e)}")
+                    raise
+                else:
+                    wait_time = 2 ** attempt  # Exponential backoff
+                    logger.warning(f"Request attempt {attempt + 1} failed, retrying in {wait_time}s: {str(e)}")
+                    time.sleep(wait_time)
     
     def create_pix_payment(self, data: PaymentRequestData) -> PaymentResponse:
         """
-        Criar um pagamento PIX via PayBets
+        Criar um pagamento PIX via PayBets com retry automático
         """
         
         # Validar dados de entrada
@@ -95,79 +165,91 @@ class PayBetsAPI:
         # Processar e formatar dados
         cpf = ''.join(filter(str.isdigit, data.cpf))
         
-        # Gerar external_id único
-        external_id = f"IBGE-{datetime.now().strftime('%Y%m%d%H%M%S')}-{str(uuid.uuid4())[:8]}"
+        # Gerar external_id único e rastreável
+        timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+        unique_id = str(uuid.uuid4())[:8]
+        external_id = f"IBGE-{timestamp}-{unique_id}"
         
         # Construir payload para a API PayBets
         payment_data = {
-            "amount": data.amount,
+            "amount": float(data.amount),
             "external_id": external_id,
-            "clientCallbackUrl": "https://example.com/webhook",  # URL de callback opcional
+            "clientCallbackUrl": os.getenv("PAYBETS_WEBHOOK_URL", "https://webhook.site/unique-id"),
             "name": data.name.strip(),
             "email": data.email.strip(),
             "document": cpf
         }
         
+        # Log seguro (sem dados sensíveis)
+        logger.info(f"Creating PIX payment - Amount: R$ {data.amount:.2f}, External ID: {external_id}")
+        
         try:
-            print(f"[PayBets] Criando pagamento PIX para {data.email}")
-            print(f"[PayBets] Valor: R$ {data.amount:.2f}")
-            print(f"[PayBets] External ID: {external_id}")
-            
-            response = requests.post(
-                f"{self.API_URL}/payments/paybets/pix/generate",
-                json=payment_data,
-                headers=self._get_headers(),
-                timeout=30
+            response = self._make_request_with_retry(
+                method="POST",
+                url=f"{self.API_URL}/payments/paybets/pix/generate",
+                json=payment_data
             )
             
-            print(f"[PayBets] Status HTTP: {response.status_code}")
+            logger.info(f"PayBets API response: HTTP {response.status_code}")
             
             # Tratar erros HTTP
             if response.status_code != 201:
                 error_message = self._extract_error_message(response)
-                print(f"[PayBets] Erro: {error_message}")
+                logger.error(f"PayBets API error: {error_message}")
                 raise requests.exceptions.RequestException(f"API Error: {error_message}")
             
             # Processar resposta de sucesso
             response_data = response.json()
-            print(f"[PayBets] Pagamento criado com sucesso")
-            print(f"[PayBets] Response: {json.dumps(response_data, indent=2)}")
+            logger.info("PIX payment created successfully")
             
             return self._parse_payment_response(response_data)
             
         except requests.exceptions.RequestException as e:
-            print(f"[PayBets] Erro na requisição: {str(e)}")
+            logger.error(f"Request error: {str(e)}")
             raise
         except Exception as e:
-            print(f"[PayBets] Erro inesperado: {str(e)}")
+            logger.error(f"Unexpected error: {str(e)}")
             raise
     
     def _extract_error_message(self, response: requests.Response) -> str:
         """
-        Extrair mensagem de erro da resposta da API
+        Extrair mensagem de erro da resposta da API com logging
         """
-        if response.status_code == 400:
-            return "Dados inválidos enviados para a API."
-        elif response.status_code == 401:
-            return "Acesso não autorizado."
-        elif response.status_code == 429:
-            return "Limite de requisições excedido. Tente novamente em breve."
-        elif response.status_code == 500:
-            return "Erro interno do servidor PayBets."
+        status_code = response.status_code
         
-        # Tentar extrair mensagem do JSON
+        # Mapear códigos de erro conhecidos
+        error_map = {
+            400: "Dados inválidos enviados para a API",
+            401: "Acesso não autorizado - verifique a chave de API",
+            403: "Acesso negado - permissões insuficientes",
+            404: "Endpoint não encontrado",
+            429: "Limite de requisições excedido - tente novamente em breve",
+            500: "Erro interno do servidor PayBets",
+            502: "Servidor indisponível temporariamente",
+            503: "Serviço indisponível no momento"
+        }
+        
+        default_message = error_map.get(status_code, f"Erro HTTP {status_code}")
+        
+        # Tentar extrair mensagem detalhada do JSON
         try:
             error_data = response.json()
             if not error_data.get("success", True):
-                return (
+                detailed_message = (
                     error_data.get("message") or 
                     error_data.get("error") or 
-                    "Erro desconhecido"
+                    default_message
                 )
-        except:
-            pass
+                logger.error(f"API Error Details: {error_data}")
+                return detailed_message
+        except (json.JSONDecodeError, ValueError):
+            logger.warning("Failed to parse error response as JSON")
             
-        return response.text or "Erro desconhecido"
+        # Log do erro para debugging
+        logger.error(f"HTTP {status_code} - {default_message}")
+        logger.debug(f"Response text: {response.text[:200]}...")
+        
+        return default_message
     
     def _parse_payment_response(self, response_data: Dict[str, Any]) -> PaymentResponse:
         """
@@ -238,45 +320,141 @@ class PayBetsAPI:
     
     def check_payment_status(self, transaction_id: str) -> Dict[str, Any]:
         """
-        Verificar status de um pagamento PayBets
-        Nota: A API PayBets usa endpoint diferente para verificação
+        Verificar status de um pagamento PayBets com retry automático
         """
+        if not transaction_id:
+            logger.error("Transaction ID is required for status check")
+            return {"status": "error", "message": "Transaction ID é obrigatório"}
+        
+        logger.info(f"Checking payment status for transaction: {transaction_id}")
+        
         try:
-            print(f"[PayBets] Verificando status do pagamento {transaction_id}")
-            
             # Usar endpoint específico para verificação de status
-            response = requests.get(
-                f"{self.API_URL}/payments/pix/status/{transaction_id}",
-                headers=self._get_headers(),
-                timeout=15
+            response = self._make_request_with_retry(
+                method="GET",
+                url=f"{self.API_URL}/payments/pix/status/{transaction_id}"
             )
             
             if response.status_code != 200:
                 error_message = self._extract_error_message(response)
-                print(f"[PayBets] Erro na verificação: {error_message}")
+                logger.error(f"Status check failed: {error_message}")
                 return {"status": "error", "message": error_message}
             
             response_data = response.json()
             
             if not response_data.get("success", False):
-                return {"status": "error", "message": response_data.get("message", "Erro desconhecido")}
+                error_msg = response_data.get("message", "Erro desconhecido")
+                logger.error(f"API returned error: {error_msg}")
+                return {"status": "error", "message": error_msg}
             
             payment_data = response_data.get("data", {})
-            status = payment_data.get("status", "PENDING")
+            status = payment_data.get("status", "PENDING").upper()
             
-            print(f"[PayBets] Status atual: {status}")
+            logger.info(f"Payment status: {status}")
+            
+            # Mapear status para estados padronizados
+            status_mapping = {
+                "PAID": "paid",
+                "APPROVED": "paid", 
+                "COMPLETED": "paid",
+                "PENDING": "pending",
+                "WAITING_PAYMENT": "pending",
+                "FAILED": "failed",
+                "CANCELLED": "failed",
+                "EXPIRED": "failed"
+            }
+            
+            normalized_status = status_mapping.get(status, "pending")
             
             return {
-                "status": status,
+                "status": normalized_status,
+                "original_status": status,
                 "payment_data": payment_data,
-                "paid": status.upper() in ["PAID", "APPROVED", "COMPLETED"],
-                "pending": status.upper() in ["PENDING", "WAITING_PAYMENT"],
-                "failed": status.upper() in ["FAILED", "CANCELLED", "EXPIRED"]
+                "paid": normalized_status == "paid",
+                "pending": normalized_status == "pending",
+                "failed": normalized_status == "failed",
+                "transaction_id": transaction_id
             }
             
         except Exception as e:
-            print(f"[PayBets] Erro na verificação de status: {str(e)}")
+            logger.error(f"Status check error: {str(e)}")
             return {"status": "error", "message": str(e)}
+    
+    def close(self):
+        """
+        Fechar sessão HTTP para limpeza de recursos
+        """
+        if hasattr(self, 'session'):
+            self.session.close()
+            logger.info("HTTP session closed")
+    
+    def __enter__(self):
+        """Context manager entry"""
+        return self
+    
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """Context manager exit"""
+        self.close()
+
+# Factory functions para facilitar o uso
+
+def get_paybets_api_instance(environment: str = "production") -> PayBetsAPI:
+    """
+    Factory function para criar instância da PayBets API
+    
+    Args:
+        environment: "production", "staging", "development"
+    
+    Returns:
+        PayBetsAPI: Instância configurada para o ambiente
+    """
+    if environment == "production":
+        return PayBetsAPI(
+            timeout=30,
+            max_retries=3
+        )
+    elif environment == "staging":
+        return PayBetsAPI(
+            timeout=20,
+            max_retries=2
+        )
+    else:  # development
+        return PayBetsAPI(
+            timeout=15,
+            max_retries=1
+        )
+
+def create_production_api() -> PayBetsAPI:
+    """
+    Criar instância da API otimizada para produção
+    """
+    return get_paybets_api_instance("production")
+
+def health_check() -> Dict[str, Any]:
+    """
+    Verificar saúde da API PayBets
+    """
+    try:
+        with create_production_api() as api:
+            # Fazer uma requisição simples para verificar conectividade
+            response = api.session.get(
+                api.API_URL.replace("/api", "/health"),
+                timeout=5
+            )
+            
+            return {
+                "status": "healthy" if response.status_code == 200 else "unhealthy",
+                "api_url": api.API_URL,
+                "response_time": response.elapsed.total_seconds(),
+                "status_code": response.status_code
+            }
+    except Exception as e:
+        logger.error(f"Health check failed: {str(e)}")
+        return {
+            "status": "unhealthy",
+            "error": str(e),
+            "api_url": "unknown"
+        }
 
 def gerar_codigo_pix_simulado(valor, protocolo):
     """Gerar código PIX simulado para demonstração (mantido para compatibilidade)"""

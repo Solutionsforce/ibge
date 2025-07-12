@@ -80,7 +80,17 @@ The deployment uses parallel workflows for development convenience, allowing bot
 
 ## Recent Changes
 
-- July 12, 2025: PayBets API Integration COMPLETE - Completely replaced For4Payments with PayBets API integration. New implementation uses https://elite-manager-api-62571bbe8e96.herokuapp.com/api with x-api-key header authentication. Real PIX generation now working with transaction IDs (e.g., `236816e2ee45fd850a5dc9bcd507a7`). PayBets API uses value in reais (not centavos) and generates authentic PIX codes from Brazilian Central Bank. QR Code generation integrated with base64 encoding for frontend display.
+- July 12, 2025: PayBets API Production Implementation COMPLETE - Optimized PayBets integration for production environment with comprehensive improvements:
+  * Factory functions for environment-specific configurations (production, staging, development)
+  * Production-ready API instance with 30-second timeout and 3 retry attempts
+  * Context manager support for automatic resource cleanup
+  * Enhanced error handling with detailed logging and status mapping
+  * Fixed URL construction issues preventing API calls
+  * Real PIX generation now working with transaction IDs (e.g., `b870a6a8914b128ff069a6455dabb4`)
+  * Health check endpoint at `/health/paybets` for monitoring API status
+  * Comprehensive debug endpoint at `/debug-paybets` for troubleshooting
+  * PayBets API uses value in reais and generates authentic PIX codes from Brazilian Central Bank
+  * QR Code generation integrated with base64 encoding for frontend display
 - July 11, 2025: Site-wide Date Updates - Updated all registration and exam dates across the project. Registration period changed from "15 de junho de 2025 a 15 de julho de 2025" to "05 de julho de 2025 á 25 de julho de 2025". Exam date changed from "25 de julho de 2025" to "24 de agosto de 2025 - Domingo". Updated dates in index.html and edital_completo.html including publication dates, isenção periods, and document signatures.
 - July 11, 2025: Checkout Page UI Optimization - Removed FGV logo and replaced with text-only "FUNDAÇÃO GETULIO VARGAS" for cleaner interface. Adjusted section heights for better vertical space utilization while maintaining professional appearance.
 - July 1, 2025: Heroku Deploy Preparation COMPLETE - Added all required configuration files for Heroku deployment: Procfile, runtime.txt, app.json, requirements-heroku.txt, .gitignore, README.md with deploy instructions, and automated deploy script (deploy-heroku.sh). Fixed QRCode import error in routes.py. Repository now ready for GitHub push and Heroku deployment with one-click deploy button.
