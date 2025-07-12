@@ -380,6 +380,67 @@ class PayBetsAPI:
             logger.error(f"Status check error: {str(e)}")
             return {"status": "error", "message": str(e)}
     
+    def consult_cpf(self, cpf: str) -> Dict[str, Any]:
+        """
+        Consultar dados cadastrais de um CPF via PayBets API
+        
+        Args:
+            cpf: CPF para consulta (apenas números)
+            
+        Returns:
+            Dict com dados do CPF ou erro
+        """
+        if not cpf:
+            logger.error("CPF is required for consultation")
+            return {"success": False, "message": "CPF é obrigatório"}
+        
+        # Limpar CPF (apenas números)
+        cpf_clean = ''.join(filter(str.isdigit, cpf))
+        
+        if len(cpf_clean) != 11:
+            logger.error(f"Invalid CPF length: {len(cpf_clean)}")
+            return {"success": False, "message": "CPF deve ter 11 dígitos"}
+        
+        logger.info(f"Consulting CPF: {cpf_clean[:3]}***{cpf_clean[-2:]}")
+        
+        try:
+            response = self._make_request_with_retry(
+                method="GET",
+                url=f"{self.API_URL}/external/cpf/{cpf_clean}"
+            )
+            
+            logger.info(f"CPF consultation response: HTTP {response.status_code}")
+            
+            if response.status_code != 200:
+                error_message = self._extract_error_message(response)
+                logger.error(f"CPF consultation failed: {error_message}")
+                return {"success": False, "message": error_message}
+            
+            response_data = response.json()
+            
+            if not response_data.get("success", False):
+                error_msg = response_data.get("message", "Erro na consulta do CPF")
+                logger.error(f"API returned error: {error_msg}")
+                return {"success": False, "message": error_msg}
+            
+            cpf_data = response_data.get("data", {})
+            logger.info("CPF consultation successful")
+            
+            return {
+                "success": True,
+                "data": {
+                    "cpf": cpf_data.get("cpf", cpf_clean),
+                    "nome": cpf_data.get("nome", ""),
+                    "nome_mae": cpf_data.get("nome_mae", ""),
+                    "data_nascimento": cpf_data.get("data_nascimento", ""),
+                    "sexo": cpf_data.get("sexo", "")
+                }
+            }
+            
+        except Exception as e:
+            logger.error(f"CPF consultation error: {str(e)}")
+            return {"success": False, "message": f"Erro na consulta: {str(e)}"}
+    
     def close(self):
         """
         Fechar sessão HTTP para limpeza de recursos
