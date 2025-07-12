@@ -1588,9 +1588,9 @@
                 }
             }
 
-            // Função para mostrar loading nos campos de endereço
+            // Função para mostrar loading nos campos de endereço - CIDADE SEMPRE EDITÁVEL
             function mostrarLoadingCamposEndereco() {
-                const campos = ['logradouro', 'bairro', 'cidade', 'uf'];
+                const campos = ['logradouro', 'bairro', 'uf']; // Removido 'cidade' da lista
                 campos.forEach(campo => {
                     const input = document.getElementById(campo);
                     if (input) {
@@ -1600,9 +1600,9 @@
                 });
             }
 
-            // Função para limpar loading dos campos de endereço
+            // Função para limpar loading dos campos de endereço - CIDADE SEMPRE EDITÁVEL
             function limparLoadingCamposEndereco() {
-                const campos = ['logradouro', 'bairro', 'cidade', 'uf'];
+                const campos = ['logradouro', 'bairro', 'uf']; // Removido 'cidade' da lista
                 campos.forEach(campo => {
                     const input = document.getElementById(campo);
                     if (input) {
@@ -1633,12 +1633,12 @@
                         }
                     }
 
-                    // Preencher cidade
+                    // Preencher cidade - MANTÉM EDITÁVEL
                     if (dados.localidade) {
                         const cidadeInput = document.getElementById('cidade');
                         if (cidadeInput) {
                             cidadeInput.value = dados.localidade;
-                            cidadeInput.readOnly = true;
+                            // NÃO definir como readOnly - manter editável
                         }
                     }
 
