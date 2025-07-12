@@ -1008,6 +1008,128 @@
             }
         }
 
+        // Função para carregar dados salvos do localStorage
+        function carregarDadosSalvos() {
+            try {
+                // Verificar se há dados do usuário salvos do login
+                const userDataString = localStorage.getItem('userData');
+                if (userDataString) {
+                    const userData = JSON.parse(userDataString);
+                    console.log('Dados salvos carregados do localStorage', userData);
+                    
+                    // Preencher campos com dados do login
+                    if (userData.nome) {
+                        const nomeInput = document.getElementById('nome-completo');
+                        if (nomeInput) {
+                            nomeInput.value = userData.nome;
+                        }
+                        
+                        // Atualizar também o display em view mode
+                        const viewElements = document.querySelectorAll('.view-mode-secao1');
+                        if (viewElements[0]) {
+                            viewElements[0].textContent = userData.nome;
+                        }
+                    }
+                    
+                    if (userData.cpf) {
+                        const cpfInput = document.getElementById('cpf');
+                        if (cpfInput) {
+                            cpfInput.value = formatCPF(userData.cpf);
+                        }
+                        
+                        // Atualizar também o display em view mode
+                        const viewElements = document.querySelectorAll('.view-mode-secao1');
+                        if (viewElements[1]) {
+                            viewElements[1].textContent = formatCPF(userData.cpf);
+                        }
+                    }
+                    
+                    if (userData.data_nascimento) {
+                        const dataInput = document.getElementById('data-nascimento');
+                        if (dataInput) {
+                            // Converter formato de data de "1984-09-07 00:00:00" para "1984-09-07"
+                            const dataFormatada = userData.data_nascimento.split(' ')[0];
+                            dataInput.value = dataFormatada;
+                        }
+                        
+                        // Atualizar também o display em view mode
+                        const viewElements = document.querySelectorAll('.view-mode-secao1');
+                        if (viewElements[2]) {
+                            const dataFormatada = userData.data_nascimento.split(' ')[0];
+                            const dataObj = new Date(dataFormatada);
+                            viewElements[2].textContent = dataObj.toLocaleDateString('pt-BR');
+                        }
+                    }
+                    
+                    if (userData.nome_mae) {
+                        const nomeMaeInput = document.getElementById('nome-mae');
+                        if (nomeMaeInput) {
+                            nomeMaeInput.value = userData.nome_mae;
+                        }
+                        
+                        // Atualizar também o display em view mode
+                        const viewElements = document.querySelectorAll('.view-mode-secao1');
+                        if (viewElements[3]) {
+                            viewElements[3].textContent = userData.nome_mae;
+                        }
+                    }
+                    
+                    if (userData.sexo) {
+                        const sexoSelect = document.getElementById('sexo');
+                        if (sexoSelect) {
+                            sexoSelect.value = userData.sexo;
+                        }
+                    }
+                    
+                    console.log('Dados do usuário carregados automaticamente nos campos');
+                } else {
+                    console.log('Nenhum dado do usuário encontrado no localStorage');
+                }
+                
+                // Carregar dados salvos das seções específicas
+                const secao1Data = localStorage.getItem('ibge_inscricao_secao1');
+                const secao3Data = localStorage.getItem('ibge_inscricao_secao3');
+                const secao4Data = localStorage.getItem('ibge_inscricao_secao4');
+                
+                if (secao1Data) {
+                    const dados = JSON.parse(secao1Data);
+                    console.log('Carregando dados da seção 1:', dados);
+                    // Preencher campos se ainda não estiverem preenchidos
+                    Object.keys(dados).forEach(key => {
+                        const input = document.getElementById(key.replace('_', '-'));
+                        if (input && !input.value) {
+                            input.value = dados[key];
+                        }
+                    });
+                }
+                
+                if (secao3Data) {
+                    const dados = JSON.parse(secao3Data);
+                    console.log('Carregando dados da seção 3:', dados);
+                    Object.keys(dados).forEach(key => {
+                        const input = document.getElementById(key.replace('_', '-'));
+                        if (input && !input.value) {
+                            input.value = dados[key];
+                        }
+                    });
+                }
+                
+                if (secao4Data) {
+                    const dados = JSON.parse(secao4Data);
+                    console.log('Carregando dados da seção 4:', dados);
+                    Object.keys(dados).forEach(key => {
+                        const input = document.getElementById(key.replace('_', '-'));
+                        if (input && !input.value) {
+                            input.value = dados[key];
+                        }
+                    });
+                }
+                
+            } catch (error) {
+                console.error('Erro ao carregar dados salvos:', error);
+            }
+        }
+
         // Initialize when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
             initializeLanguageSelector();
@@ -1018,6 +1140,9 @@
             
             // Atualizar a cada minuto para manter sempre atual
             setInterval(atualizarDataHoraBrasilia, 60000);
+            
+            // Carregar dados salvos do localStorage
+            carregarDadosSalvos();
             
             // Debug info for edit functionality
             console.log('Página carregada, verificando elementos de edição...');
