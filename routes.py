@@ -287,42 +287,13 @@ def register_routes(app):
                     'message': 'Pagamento em demonstração - sempre pendente'
                 })
             
-            # Usar API PayBets para verificação real
-            try:
-                from paybets_api import create_production_api
-                with create_production_api() as api:
-                    status_result = api.check_payment_status(payment_id)
-                
-                if status_result.get('status') == 'error':
-                    return jsonify({
-                        'sucesso': False,
-                        'erro': status_result.get('message', 'Erro na verificação')
-                    })
-                
-                # Determinar status final
-                if status_result.get('paid'):
-                    return jsonify({
-                        'sucesso': True,
-                        'status': 'aprovado',
-                        'redirecionar': '/sucesso'
-                    })
-                elif status_result.get('failed'):
-                    return jsonify({
-                        'sucesso': True,
-                        'status': 'rejeitado'
-                    })
-                else:
-                    return jsonify({
-                        'sucesso': True,
-                        'status': 'pendente'
-                    })
-                    
-            except Exception as api_error:
-                print(f"[PIX DEBUG] Erro na API PayBets: {str(api_error)}")
-                return jsonify({
-                    'sucesso': False,
-                    'erro': 'Erro na verificação do pagamento'
-                })
+            # Para PayBets, sempre retornar pendente já que não precisamos verificar
+            print(f"[PIX DEBUG] Verificando pagamento PayBets (sempre pendente): {payment_id}")
+            return jsonify({
+                'sucesso': True,
+                'status': 'pendente',
+                'message': 'Pagamento PayBets - aguardando confirmação manual'
+            })
                 
         except Exception as e:
             print(f"[PIX DEBUG] Erro na verificação de pagamento: {str(e)}")
@@ -333,14 +304,24 @@ def register_routes(app):
 
     @app.route('/verificar-pagamento/<payment_id>')
     def verificar_pagamento(payment_id):
-        """API para verificar status do pagamento (compatibilidade)"""
+        """API para verificar status do pagamento (compatibilidade) - PayBets sempre pendente"""
         try:
-            from paybets_api import create_production_api
+            # Para PayBets, sempre retornar pendente
+            if payment_id.startswith('demo_'):
+                status = 'pending'
+                message = 'Pagamento de demonstração'
+            else:
+                status = 'pending'
+                message = 'Pagamento PayBets aguardando confirmação'
             
-            with create_production_api() as api:
-                status = api.check_payment_status(payment_id)
-            
-            return jsonify(status)
+            return jsonify({
+                'status': status,
+                'message': message,
+                'payment_id': payment_id,
+                'paid': False,
+                'pending': True,
+                'failed': False
+            })
         except Exception as e:
             print(f"Erro ao verificar pagamento: {str(e)}")
             return jsonify({'erro': 'Erro ao verificar pagamento'}), 500

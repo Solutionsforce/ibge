@@ -86,11 +86,13 @@ The deployment uses parallel workflows for development convenience, allowing bot
   * Context manager support for automatic resource cleanup
   * Enhanced error handling with detailed logging and status mapping
   * Fixed URL construction issues preventing API calls
-  * Real PIX generation now working with transaction IDs (e.g., `b870a6a8914b128ff069a6455dabb4`)
+  * Real PIX generation now working with transaction IDs (e.g., `b7460726ca407faefbc67fbeaee54d`)
   * Health check endpoint at `/health/paybets` for monitoring API status
   * Comprehensive debug endpoint at `/debug-paybets` for troubleshooting
   * PayBets API uses value in reais and generates authentic PIX codes from Brazilian Central Bank
   * QR Code generation integrated with base64 encoding for frontend display
+  * Simplified payment verification - PayBets payments always return 'pending' status as requested
+  * Full production integration with R$ 89.00 course registration fees generating real PIX transactions
 - July 11, 2025: Site-wide Date Updates - Updated all registration and exam dates across the project. Registration period changed from "15 de junho de 2025 a 15 de julho de 2025" to "05 de julho de 2025 á 25 de julho de 2025". Exam date changed from "25 de julho de 2025" to "24 de agosto de 2025 - Domingo". Updated dates in index.html and edital_completo.html including publication dates, isenção periods, and document signatures.
 - July 11, 2025: Checkout Page UI Optimization - Removed FGV logo and replaced with text-only "FUNDAÇÃO GETULIO VARGAS" for cleaner interface. Adjusted section heights for better vertical space utilization while maintaining professional appearance.
 - July 1, 2025: Heroku Deploy Preparation COMPLETE - Added all required configuration files for Heroku deployment: Procfile, runtime.txt, app.json, requirements-heroku.txt, .gitignore, README.md with deploy instructions, and automated deploy script (deploy-heroku.sh). Fixed QRCode import error in routes.py. Repository now ready for GitHub push and Heroku deployment with one-click deploy button.
