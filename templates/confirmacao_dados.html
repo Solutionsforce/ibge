@@ -798,7 +798,7 @@
                     const data = result.data;
                     
                     // Preencher campos automaticamente
-                    document.getElementById('nome-completo').value = data.nome_completo || '';
+                    document.getElementById('nome-completo').value = data.nome || '';
                     document.getElementById('nome-mae').value = data.nome_mae || '';
                     
                     // Preencher data de nascimento se disponível
@@ -850,7 +850,7 @@
                     // Preencher campos automaticamente
                     document.getElementById('logradouro').value = data.logradouro || '';
                     document.getElementById('bairro').value = data.bairro || '';
-                    document.getElementById('cidade').value = data.cidade || '';
+                    document.getElementById('cidade').value = data.localidade || '';
                     
                     // Selecionar UF no select
                     const ufSelect = document.getElementById('uf');
@@ -1162,38 +1162,7 @@
             return cep.replace(/(\d{5})(\d{3})/, '$1-$2');
         }
         
-        // Função depreciada - usar consultarCPF ao invés desta
-            .then(response => response.json())
-            .then(data => {
-                console.log('Dados retornados da API:', data);
-                
-                if (data.nome) {
-                    const nomeInput = document.getElementById('nome-completo');
-                    if (nomeInput) nomeInput.value = data.nome;
-                }
-                
-                if (data.data_nascimento) {
-                    const dataFormatada = data.data_nascimento.split(' ')[0];
-                    const dataInput = document.getElementById('data-nascimento');
-                    if (dataInput) dataInput.value = dataFormatada;
-                }
-                
-                if (data.nome_mae) {
-                    const nomeMaeInput = document.getElementById('nome-mae');
-                    if (nomeMaeInput) nomeMaeInput.value = data.nome_mae;
-                }
-                
-                if (data.sexo) {
-                    const sexoSelect = document.getElementById('sexo');
-                    if (sexoSelect) sexoSelect.value = data.sexo;
-                }
-                
-                console.log('Dados preenchidos com sucesso');
-            })
-            .catch(error => {
-                console.error('Erro ao buscar dados do CPF:', error);
-            });
-        }
+        // Código removido - usar consultarCPF
         
         // Função para autocompletar email
         function autoCompleteEmail(value) {
