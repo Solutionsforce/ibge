@@ -53,7 +53,8 @@ class PayBetsAPI:
         return {
             "Content-Type": "application/json",
             "Accept": "application/json",
-            "User-Agent": "PayBets-Python-SDK/1.0.0"
+            "User-Agent": "PayBets-Python-SDK/1.0.0",
+            "x-api-key": "3d6bd4c17dd31877b77482b341c74d32494a1d6fbdee4c239cf8432b424b1abf"
         }
     
     def _validate_payment_data(self, data: PaymentRequestData) -> None:

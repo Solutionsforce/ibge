@@ -183,6 +183,7 @@ def register_routes(app):
 
             print("[PIX DEBUG] Importando módulos da API PayBets...")
             from paybets_api import PayBetsAPI, PaymentRequestData, gerar_codigo_pix_simulado
+            from datetime import datetime, timedelta
 
             print("[PIX DEBUG] Preparando dados do pagamento...")
             # Converter valor de centavos para reais para a API PayBets
