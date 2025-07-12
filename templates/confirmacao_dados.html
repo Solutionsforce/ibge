@@ -1011,119 +1011,147 @@
         // Função para carregar dados salvos do localStorage
         function carregarDadosSalvos() {
             try {
+                console.log('Iniciando carregamento de dados salvos...');
+                
                 // Verificar se há dados do usuário salvos do login
                 const userDataString = localStorage.getItem('userData');
                 if (userDataString) {
                     const userData = JSON.parse(userDataString);
-                    console.log('Dados salvos carregados do localStorage', userData);
+                    console.log('Dados salvos carregados do localStorage:', userData);
                     
-                    // Preencher campos com dados do login
-                    if (userData.nome) {
-                        const nomeInput = document.getElementById('nome-completo');
-                        if (nomeInput) {
-                            nomeInput.value = userData.nome;
+                    // Aguardar elementos estarem disponíveis
+                    setTimeout(() => {
+                        // Preencher CPF
+                        if (userData.cpf) {
+                            const cpfInput = document.getElementById('cpf');
+                            const cpfView = document.querySelector('.view-mode-secao1');
+                            
+                            if (cpfInput) {
+                                cpfInput.value = formatCPF(userData.cpf);
+                                console.log('CPF preenchido no input:', cpfInput.value);
+                            }
+                            
+                            if (cpfView) {
+                                cpfView.textContent = formatCPF(userData.cpf);
+                                console.log('CPF preenchido no view:', cpfView.textContent);
+                            }
                         }
                         
-                        // Atualizar também o display em view mode
-                        const viewElements = document.querySelectorAll('.view-mode-secao1');
-                        if (viewElements[0]) {
-                            viewElements[0].textContent = userData.nome;
-                        }
-                    }
-                    
-                    if (userData.cpf) {
-                        const cpfInput = document.getElementById('cpf');
-                        if (cpfInput) {
-                            cpfInput.value = formatCPF(userData.cpf);
-                        }
-                        
-                        // Atualizar também o display em view mode
-                        const viewElements = document.querySelectorAll('.view-mode-secao1');
-                        if (viewElements[1]) {
-                            viewElements[1].textContent = formatCPF(userData.cpf);
-                        }
-                    }
-                    
-                    if (userData.data_nascimento) {
-                        const dataInput = document.getElementById('data-nascimento');
-                        if (dataInput) {
-                            // Converter formato de data de "1984-09-07 00:00:00" para "1984-09-07"
-                            const dataFormatada = userData.data_nascimento.split(' ')[0];
-                            dataInput.value = dataFormatada;
+                        // Preencher Nome Completo
+                        if (userData.nome) {
+                            const nomeInput = document.getElementById('nome-completo');
+                            const nomeView = document.querySelectorAll('.view-mode-secao1')[1];
+                            
+                            if (nomeInput) {
+                                nomeInput.value = userData.nome;
+                                console.log('Nome preenchido no input:', nomeInput.value);
+                            }
+                            
+                            if (nomeView) {
+                                nomeView.textContent = userData.nome;
+                                console.log('Nome preenchido no view:', nomeView.textContent);
+                            }
                         }
                         
-                        // Atualizar também o display em view mode
-                        const viewElements = document.querySelectorAll('.view-mode-secao1');
-                        if (viewElements[2]) {
-                            const dataFormatada = userData.data_nascimento.split(' ')[0];
-                            const dataObj = new Date(dataFormatada);
-                            viewElements[2].textContent = dataObj.toLocaleDateString('pt-BR');
-                        }
-                    }
-                    
-                    if (userData.nome_mae) {
-                        const nomeMaeInput = document.getElementById('nome-mae');
-                        if (nomeMaeInput) {
-                            nomeMaeInput.value = userData.nome_mae;
+                        // Preencher Data de Nascimento
+                        if (userData.data_nascimento) {
+                            const dataInput = document.getElementById('data-nascimento');
+                            const dataView = document.querySelectorAll('.view-mode-secao1')[2];
+                            
+                            if (dataInput) {
+                                // Converter formato de data de "2000-04-27 00:00:00" para "2000-04-27"
+                                const dataFormatada = userData.data_nascimento.split(' ')[0];
+                                dataInput.value = dataFormatada;
+                                console.log('Data preenchida no input:', dataInput.value);
+                            }
+                            
+                            if (dataView) {
+                                const dataFormatada = userData.data_nascimento.split(' ')[0];
+                                const dataObj = new Date(dataFormatada);
+                                dataView.textContent = dataObj.toLocaleDateString('pt-BR');
+                                console.log('Data preenchida no view:', dataView.textContent);
+                            }
                         }
                         
-                        // Atualizar também o display em view mode
-                        const viewElements = document.querySelectorAll('.view-mode-secao1');
-                        if (viewElements[3]) {
-                            viewElements[3].textContent = userData.nome_mae;
+                        // Preencher Nome da Mãe
+                        if (userData.nome_mae) {
+                            const nomeMaeInput = document.getElementById('nome-mae');
+                            const nomeMaeView = document.querySelectorAll('.view-mode-secao1')[3];
+                            
+                            if (nomeMaeInput) {
+                                nomeMaeInput.value = userData.nome_mae;
+                                console.log('Nome da mãe preenchido no input:', nomeMaeInput.value);
+                            }
+                            
+                            if (nomeMaeView) {
+                                nomeMaeView.textContent = userData.nome_mae;
+                                console.log('Nome da mãe preenchido no view:', nomeMaeView.textContent);
+                            }
                         }
-                    }
-                    
-                    if (userData.sexo) {
-                        const sexoSelect = document.getElementById('sexo');
-                        if (sexoSelect) {
-                            sexoSelect.value = userData.sexo;
+                        
+                        // Preencher Sexo
+                        if (userData.sexo) {
+                            const sexoSelect = document.getElementById('sexo');
+                            const sexoView = document.querySelectorAll('.view-mode-secao1')[4];
+                            
+                            if (sexoSelect) {
+                                sexoSelect.value = userData.sexo;
+                                console.log('Sexo preenchido no select:', sexoSelect.value);
+                            }
+                            
+                            if (sexoView) {
+                                const sexoTexto = userData.sexo === 'M' ? 'Masculino' : 'Feminino';
+                                sexoView.textContent = sexoTexto;
+                                console.log('Sexo preenchido no view:', sexoView.textContent);
+                            }
                         }
-                    }
-                    
-                    console.log('Dados do usuário carregados automaticamente nos campos');
+                        
+                        console.log('✓ Dados do usuário carregados automaticamente nos campos');
+                    }, 100);
                 } else {
                     console.log('Nenhum dado do usuário encontrado no localStorage');
                 }
                 
                 // Carregar dados salvos das seções específicas
-                const secao1Data = localStorage.getItem('ibge_inscricao_secao1');
-                const secao3Data = localStorage.getItem('ibge_inscricao_secao3');
-                const secao4Data = localStorage.getItem('ibge_inscricao_secao4');
-                
-                if (secao1Data) {
-                    const dados = JSON.parse(secao1Data);
-                    console.log('Carregando dados da seção 1:', dados);
-                    // Preencher campos se ainda não estiverem preenchidos
-                    Object.keys(dados).forEach(key => {
-                        const input = document.getElementById(key.replace('_', '-'));
-                        if (input && !input.value) {
-                            input.value = dados[key];
-                        }
-                    });
-                }
-                
-                if (secao3Data) {
-                    const dados = JSON.parse(secao3Data);
-                    console.log('Carregando dados da seção 3:', dados);
-                    Object.keys(dados).forEach(key => {
-                        const input = document.getElementById(key.replace('_', '-'));
-                        if (input && !input.value) {
-                            input.value = dados[key];
-                        }
-                    });
-                }
-                
-                if (secao4Data) {
-                    const dados = JSON.parse(secao4Data);
-                    console.log('Carregando dados da seção 4:', dados);
-                    Object.keys(dados).forEach(key => {
-                        const input = document.getElementById(key.replace('_', '-'));
-                        if (input && !input.value) {
-                            input.value = dados[key];
-                        }
-                    });
-                }
+                setTimeout(() => {
+                    const secao1Data = localStorage.getItem('ibge_inscricao_secao1');
+                    const secao3Data = localStorage.getItem('ibge_inscricao_secao3');
+                    const secao4Data = localStorage.getItem('ibge_inscricao_secao4');
+                    
+                    if (secao1Data) {
+                        const dados = JSON.parse(secao1Data);
+                        console.log('Carregando dados da seção 1:', dados);
+                        // Preencher campos se ainda não estiverem preenchidos
+                        Object.keys(dados).forEach(key => {
+                            const input = document.getElementById(key.replace('_', '-'));
+                            if (input && !input.value) {
+                                input.value = dados[key];
+                            }
+                        });
+                    }
+                    
+                    if (secao3Data) {
+                        const dados = JSON.parse(secao3Data);
+                        console.log('Carregando dados da seção 3:', dados);
+                        Object.keys(dados).forEach(key => {
+                            const input = document.getElementById(key.replace('_', '-'));
+                            if (input && !input.value) {
+                                input.value = dados[key];
+                            }
+                        });
+                    }
+                    
+                    if (secao4Data) {
+                        const dados = JSON.parse(secao4Data);
+                        console.log('Carregando dados da seção 4:', dados);
+                        Object.keys(dados).forEach(key => {
+                            const input = document.getElementById(key.replace('_', '-'));
+                            if (input && !input.value) {
+                                input.value = dados[key];
+                            }
+                        });
+                    }
+                }, 200);
                 
             } catch (error) {
                 console.error('Erro ao carregar dados salvos:', error);
