@@ -829,7 +829,7 @@
             }
         }
 
-        // Função para consultar CEP automaticamente
+        // Função SIMPLES para consultar CEP automaticamente
         async function consultarCEP(cep) {
             try {
                 console.log('Consultando CEP:', cep);
@@ -847,18 +847,29 @@
                 if (result.success && result.data) {
                     const data = result.data;
                     
-                    // Preencher campos automaticamente
-                    document.getElementById('logradouro').value = data.logradouro || '';
-                    document.getElementById('bairro').value = data.bairro || '';
-                    document.getElementById('cidade').value = data.localidade || '';
+                    // Preencher campos automaticamente - SIMPLES E DIRETO
+                    const logradouroField = document.getElementById('logradouro');
+                    const bairroField = document.getElementById('bairro');
+                    const cidadeField = document.getElementById('cidade');
+                    const ufField = document.getElementById('uf');
                     
-                    // Selecionar UF no select
-                    const ufSelect = document.getElementById('uf');
-                    if (ufSelect && data.uf) {
-                        ufSelect.value = data.uf;
+                    if (logradouroField) logradouroField.value = data.logradouro || '';
+                    if (bairroField) bairroField.value = data.bairro || '';
+                    if (cidadeField) {
+                        cidadeField.value = data.localidade || '';
+                        // Forçar atualização visual
+                        cidadeField.setAttribute('value', data.localidade || '');
                     }
+                    if (ufField && data.uf) ufField.value = data.uf;
                     
-                    console.log('✓ Endereço preenchido automaticamente:', data);
+                    console.log('✓ Endereço preenchido automaticamente:', {
+                        logradouro: data.logradouro,
+                        bairro: data.bairro,
+                        cidade: data.localidade,
+                        uf: data.uf
+                    });
+                    
+                    console.log('Dados do CEP preenchidos com sucesso');
                 } else {
                     console.log('CEP não encontrado ou inválido');
                 }
@@ -957,7 +968,7 @@
             window.location.href = '/selecao-local-prova';
         }
 
-        // Initialize footer accordion functionality
+        // Accordion SIMPLES para footer
         function initializeFooterAccordion() {
             const accordionTriggers = document.querySelectorAll('.accordion-trigger');
             
@@ -970,13 +981,11 @@
                     const chevron = this.querySelector('.accordion-chevron');
                     
                     if (content && chevron) {
-                        const isHidden = content.classList.contains('hidden');
-                        
-                        if (isHidden) {
-                            content.classList.remove('hidden');
+                        if (content.style.display === 'none') {
+                            content.style.display = 'block';
                             chevron.style.transform = 'rotate(180deg)';
                         } else {
-                            content.classList.add('hidden');
+                            content.style.display = 'none';
                             chevron.style.transform = 'rotate(0deg)';
                         }
                     }
