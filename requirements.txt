@@ -13,3 +13,5 @@ werkzeug
 qrcode[pil]
 qrcode[pil]
 qrcode[pil]
+pillow
+qrcode

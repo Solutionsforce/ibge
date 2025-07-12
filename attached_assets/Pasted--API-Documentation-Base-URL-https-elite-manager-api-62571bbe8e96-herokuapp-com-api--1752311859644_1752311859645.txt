@@ -1,0 +1,299 @@
+# API Documentation
+
+## Base URL
+
+```
+https://elite-manager-api-62571bbe8e96.herokuapp.com/api
+```
+
+---
+
+## HTTP Codes
+
+- `200 OK` → Requisição concluída com sucesso.
+- `201 Created` → Recurso criado com sucesso.
+- `400 Bad Request` → Requisição inválida.
+- `401 Unauthorized` → Acesso não autorizado ou token inválido.
+- `429 Too Many Requests` → Limite de requisições atingido.
+- `500 Internal Server Error` → Erro inesperado no servidor.
+
+---
+
+## Padrão de Respostas
+
+### Sucesso
+
+```json
+{
+  "success": true,
+  "message": "Mensagem de sucesso",
+  "data": { "..." }
+}
+```
+
+### Erro
+
+```json
+{
+  "success": false,
+  "message": "Mensagem de erro",
+  "error": "Detalhes do erro"
+}
+```
+
+---
+
+## Exemplos Específicos
+
+### 429 - Rate Limit
+
+```json
+{
+  "success": false,
+  "message": "⚠️ Limite de requisições excedido. Tente novamente em breve."
+}
+```
+
+### 404 - Not Found
+
+```json
+{
+  "success": false,
+  "message": "Rota não encontrada"
+}
+```
+
+---
+
+# Endpoints
+
+## 🔍 Consultas
+
+### GET /external/cpf/:cpf
+
+Consulta dados cadastrais de um CPF.
+
+**Parâmetro:** `cpf` (string) — obrigatório, apenas números (ex: 12345678909)
+
+**Sucesso 200:**
+
+```json
+{
+  "success": true,
+  "message": "Consulta realizada com sucesso",
+  "data": {
+    "cpf": "12345678909",
+    "nome": "DAIANA LASSOLLI",
+    "nome_mae": "",
+    "data_nascimento": "2000-04-27 00:00:00",
+    "sexo": "F"
+  }
+}
+```
+
+**Erros:** 400 (CPF inválido), 500 (Erro interno)
+
+---
+
+### GET /external/cep/:cep
+
+Consulta dados de um CEP.
+
+**Parâmetro:** `cep` (string) — obrigatório, apenas números (ex: 01001000)
+
+**Sucesso 200:**
+
+```json
+{
+  "success": true,
+  "message": "Consulta realizada com sucesso",
+  "data": {
+    "cep": "01001-000",
+    "logradouro": "Praça da Sé",
+    "complemento": "lado ímpar",
+    "unidade": "",
+    "bairro": "Sé",
+    "localidade": "São Paulo",
+    "uf": "SP",
+    "estado": "São Paulo",
+    "regiao": "Sudeste",
+    "ibge": "3550308",
+    "gia": "1004",
+    "ddd": "11",
+    "siafi": "7107"
+  }
+}
+```
+
+**Erros:** 400 (CEP inválido), 500 (Erro interno)
+
+---
+
+## ✉️ Comunicações
+
+### POST /communications/email
+
+Envia um e-mail com conteúdo HTML.
+
+**Body:**
+
+```json
+{
+  "recipient": "usuario@dominio.com",
+  "subject": "Assunto do E-mail",
+  "htmlContent": "<p>Conteúdo em HTML</p>"
+}
+```
+
+**Sucesso 200:**
+
+```json
+{
+  "success": true,
+  "message": "Email enviado com sucesso"
+}
+```
+
+**Erros:** 400 (Campos obrigatórios), 500 (Erro interno)
+
+---
+
+### POST /communications/sms
+
+Envia SMS para um número de telefone.
+
+**Body:**
+
+```json
+{
+  "phoneNumber": "5511999999999",
+  "message": "Seu código é 123456"
+}
+```
+
+**Sucesso 200:**
+
+```json
+{
+  "success": true,
+  "message": "SMS enviado com sucesso",
+  "data": {
+    "message": "Message sent to queue",
+    "sms": {
+      "id": 208126,
+      "userId": 7,
+      "phoneNumber": "5563992954536",
+      "message": "Hello World4",
+      "status": "pending",
+      "scheduledFor": null,
+      "sentAt": null,
+      "createdAt": "2025-07-12T05:46:19.162Z",
+      "updatedAt": "2025-07-12T05:46:19.162Z",
+      "externalId": null,
+      "errorMessage": null,
+      "cost": null
+    }
+  }
+}
+```
+
+**Erros:** 400 (Campos obrigatórios), 500 (Erro interno)
+
+---
+
+## 💸 Pagamentos
+
+### POST /payments/pix/generate
+
+Gera pagamento Pix via For4Payments.
+
+**Body:**
+
+```json
+{
+  "name": "João da Silva",
+  "email": "joao@email.com",
+  "cpf": "12345678900",
+  "phone": "11999999999",
+  "amount": 87.49,
+  "description": "opcional"
+}
+```
+
+**Sucesso 201:**
+
+```json
+{
+  "success": true,
+  "message": "Pagamento PIX gerado com sucesso",
+  "data": {
+    "paymentId": "7365846...",
+    "pixCode": "000....",
+    "pixQrCode": "data:image/png;base64,iVBOR..."
+  }
+}
+```
+
+**Erros:** 400 (Campos inválidos), 500 (Erro interno)
+
+---
+
+### GET /payments/pix/status/:paymentId
+
+Consulta status do pagamento Pix.
+
+**Parâmetro:** `paymentId` (string) — obrigatório
+
+**Sucesso 200:**
+
+```json
+{
+  "success": true,
+  "message": "Status do pagamento consultado com sucesso",
+  "data": {
+    "paymentId": "737a....",
+    "status": "PENDING"
+  }
+}
+```
+
+**Erros:** 400 (Parâmetro ausente), 500 (Erro interno)
+
+---
+
+### POST /payments/paybets/pix/generate
+
+Gera Pix via PayBets.
+
+**Body:**
+
+```json
+{
+  "amount": 1,
+  "external_id": "ABC123aa4",
+  "clientCallbackUrl": "https://example.com/webhook",
+  "name": "joao",
+  "email": "joao@live.com",
+  "document": "12345678909"
+}
+```
+
+**Sucesso 201:**
+
+```json
+{
+  "success": true,
+  "message": "Pix gerado com sucesso",
+  "data": {
+    "message": "Deposit created successfully.",
+    "qrCodeResponse": {
+      "transactionId": "388813....",
+      "status": "PENDING",
+      "qrcode": "00020126...",
+      "amount": 1
+    }
+  }
+}
+```
+
+**Erros:** 400 (Campos obrigatórios), 500 (Erro interno)

@@ -181,37 +181,40 @@ def register_routes(app):
                     print(f"[PIX DEBUG] Campo obrigatório ausente: {field}")
                     return jsonify({'erro': f'Campo {field} é obrigatório'}), 400
 
-            print("[PIX DEBUG] Importando módulos da nova implementação...")
-            from for4_payments import For4PaymentsAPI, PaymentRequestData, gerar_codigo_pix_simulado
+            print("[PIX DEBUG] Importando módulos da API PayBets...")
+            from paybets_api import PayBetsAPI, PaymentRequestData, gerar_codigo_pix_simulado
 
             print("[PIX DEBUG] Preparando dados do pagamento...")
+            # Converter valor de centavos para reais para a API PayBets
+            valor_reais = data['amount'] / 100 if isinstance(data['amount'], int) else data['amount']
+            
             payment_data = PaymentRequestData(
                 name=data['name'],
                 email=data['email'],
                 cpf=data['cpf'],
-                amount=int(data['amount']),  # Valor em centavos
+                amount=valor_reais,  # Valor em reais
                 phone=data.get('phone'),
-                description="CURSO TECNICO FOTOGRAFO AVANCE"
+                description="INSCRICAO CONCURSO PUBLICO IBGE"
             )
 
-            print("[PIX DEBUG] Tentando usar API For4Payments real...")
+            print("[PIX DEBUG] Tentando usar API PayBets real...")
             try:
-                api = For4PaymentsAPI.from_env()
+                api = PayBetsAPI()
                 response = api.create_pix_payment(payment_data)
-                print(f"[PIX DEBUG] ✓ PIX real gerado com sucesso: {response.id}")
+                print(f"[PIX DEBUG] ✓ PIX real gerado com sucesso: {response.transaction_id}")
                 
                 return jsonify({
                     'success': True,
-                    'payment_id': response.id,
+                    'payment_id': response.transaction_id,
                     'pix_code': response.pix_code,
                     'pix_qr_code': response.pix_qr_code,
-                    'expires_at': response.expires_at,
+                    'expires_at': (datetime.now() + timedelta(minutes=30)).isoformat(),
                     'status': response.status,
                     'pix_real': True
                 })
                 
             except Exception as api_error:
-                print(f"[PIX DEBUG] ❌ Erro na API For4Payments: {api_error}")
+                print(f"[PIX DEBUG] ❌ Erro na API PayBets: {api_error}")
                 print("[PIX DEBUG] Gerando PIX de demonstração como fallback...")
                 
                 # PIX de demonstração usando nova implementação
@@ -283,10 +286,10 @@ def register_routes(app):
                     'message': 'Pagamento em demonstração - sempre pendente'
                 })
             
-            # Usar API For4Payments para verificação real
+            # Usar API PayBets para verificação real
             try:
-                from for4_payments import For4PaymentsAPI
-                api = For4PaymentsAPI.from_env()
+                from paybets_api import PayBetsAPI
+                api = PayBetsAPI()
                 status_result = api.check_payment_status(payment_id)
                 
                 if status_result.get('status') == 'error':
@@ -314,7 +317,7 @@ def register_routes(app):
                     })
                     
             except Exception as api_error:
-                print(f"[PIX DEBUG] Erro na API For4Payments: {str(api_error)}")
+                print(f"[PIX DEBUG] Erro na API PayBets: {str(api_error)}")
                 return jsonify({
                     'sucesso': False,
                     'erro': 'Erro na verificação do pagamento'
@@ -331,9 +334,9 @@ def register_routes(app):
     def verificar_pagamento(payment_id):
         """API para verificar status do pagamento (compatibilidade)"""
         try:
-            from for4_payments import For4PaymentsAPI
+            from paybets_api import PayBetsAPI
             
-            api = For4PaymentsAPI.from_env()
+            api = PayBetsAPI()
             status = api.check_payment_status(payment_id)
             
             return jsonify(status)
@@ -341,27 +344,28 @@ def register_routes(app):
             print(f"Erro ao verificar pagamento: {str(e)}")
             return jsonify({'erro': 'Erro ao verificar pagamento'}), 500
 
-    @app.route('/debug-for4payments')
-    def debug_for4payments():
-        """Debug da configuração For4Payments"""
+    @app.route('/debug-paybets')
+    def debug_paybets():
+        """Debug da configuração PayBets"""
         import os
         try:
-            # Verificar se a chave existe
-            secret_key = os.getenv("FOR4PAYMENTS_SECRET_KEY")
-            
             debug_info = {
-                'api_key_configured': bool(secret_key),
-                'api_key_length': len(secret_key) if secret_key else 0,
-                'api_key_preview': secret_key[:10] + '...' if secret_key and len(secret_key) > 10 else 'Não configurada',
-                'environment_vars': list(os.environ.keys())
+                'api_url': 'https://elite-manager-api-62571bbe8e96.herokuapp.com/api',
+                'api_configured': True,
+                'available_endpoints': [
+                    '/payments/paybets/pix/generate',
+                    '/payments/pix/status/{paymentId}',
+                    '/external/cpf/{cpf}',
+                    '/external/cep/{cep}'
+                ]
             }
             
             # Tentar criar instância da API
             try:
-                from for4_payments import For4PaymentsAPI
-                api = For4PaymentsAPI.from_env()
+                from paybets_api import PayBetsAPI
+                api = PayBetsAPI()
                 debug_info['api_instance_created'] = True
-                debug_info['api_url'] = api.API_URL
+                debug_info['api_url_active'] = api.API_URL
             except Exception as e:
                 debug_info['api_instance_created'] = False
                 debug_info['api_error'] = str(e)
