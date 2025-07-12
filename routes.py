@@ -93,6 +93,64 @@ def register_routes(app):
             print(f"Erro na validação de CPF: {str(e)}")
             return jsonify({'success': False, 'message': 'Erro interno do servidor'})
 
+    @app.route('/api/validate-cep', methods=['POST'])
+    def validate_cep():
+        """API para validar CEP usando CEPConsultationClient"""
+        try:
+            data = request.get_json()
+            cep = data.get('cep', '').replace('-', '').replace(' ', '')
+            
+            if not cep or len(cep) != 8:
+                return jsonify({'success': False, 'message': 'CEP inválido'})
+            
+            # Usar CEPConsultationClient para consultar CEP
+            from cep_client import CEPConsultationClient
+            
+            # Usar a mesma base_url da API PayBets
+            base_url = "https://elite-manager-api-62571bbe8e96.herokuapp.com/api"
+            cep_client = CEPConsultationClient(base_url)
+            
+            cep_result = cep_client.consult(cep)
+            
+            if not cep_result.get('success'):
+                # Se falhar na API, tentar ViaCEP como fallback
+                try:
+                    response = requests.get(f'https://viacep.com.br/ws/{cep}/json/', timeout=5)
+                    if response.status_code == 200:
+                        cep_data = response.json()
+                        if 'erro' not in cep_data:
+                            return jsonify({
+                                'success': True,
+                                'data': {
+                                    'cep': cep,
+                                    'logradouro': cep_data.get('logradouro', ''),
+                                    'bairro': cep_data.get('bairro', ''),
+                                    'cidade': cep_data.get('localidade', ''),
+                                    'uf': cep_data.get('uf', '')
+                                }
+                            })
+                except:
+                    pass
+                
+                return jsonify({'success': False, 'message': 'CEP não encontrado'})
+            
+            # Usar dados da API
+            api_data = cep_result.get('data', {})
+            return jsonify({
+                'success': True,
+                'data': {
+                    'cep': cep,
+                    'logradouro': api_data.get('logradouro', ''),
+                    'bairro': api_data.get('bairro', ''),
+                    'cidade': api_data.get('cidade', ''),
+                    'uf': api_data.get('uf', '')
+                }
+            })
+            
+        except Exception as e:
+            print(f"Erro na validação de CEP: {str(e)}")
+            return jsonify({'success': False, 'message': 'Erro interno do servidor'})
+
 
 
     @app.route('/selecao-cargo')

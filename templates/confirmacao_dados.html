@@ -312,90 +312,76 @@
             <section class="bg-white border border-gray-300 shadow-sm">
                 <div class="bg-gray-100 border-b border-gray-300 px-6 py-3">
                     <h2 class="text-lg font-bold text-gray-800">SEÇÃO III - ENDEREÇO RESIDENCIAL</h2>
-                    <button onclick="toggleEditMode('secao3')" id="btn-edit-secao3" class="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-2 rounded text-sm font-medium transition-colors duration-200 w-full max-w-xs animate-pulse" style="animation-duration: 2s;">
-                        <i class="fas fa-edit mr-2"></i>Clique e Adicione os dados:
-                    </button>
                 </div>
                 
                 <div class="p-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">CEP</label>
-                            <p class="font-medium text-gray-900 view-mode-secao3">{{ endereco.cep }}</p>
-                            <input type="text" class="edit-mode-secao3 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
+                            <input type="text" class="w-full p-2 border border-gray-300 rounded text-sm font-medium" 
                                    value="{{ endereco.cep }}" id="cep-endereco" maxlength="9" placeholder="00000-000">
                         </div>
                         <div class="bg-gray-50 p-3 border border-gray-200 lg:col-span-2">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Logradouro</label>
-                            <p class="font-medium text-gray-900 view-mode-secao3">{{ endereco.logradouro or '' }}</p>
-                            <input type="text" class="edit-mode-secao3 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
-                                   value="{{ endereco.logradouro or '' }}" id="logradouro" readonly>
+                            <input type="text" class="w-full p-2 border border-gray-300 rounded text-sm font-medium" 
+                                   value="{{ endereco.logradouro or '' }}" id="logradouro" placeholder="Rua, Av, etc.">
+                        </div>
+                        <div class="bg-gray-50 p-3 border border-gray-200">
+                            <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Número</label>
+                            <input type="text" class="w-full p-2 border border-gray-300 rounded text-sm font-medium" 
+                                   value="{{ endereco.numero or '' }}" id="numero" placeholder="Número">
                         </div>
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Bairro</label>
-                            <p class="font-medium text-gray-900 view-mode-secao3">{{ endereco.bairro or '' }}</p>
-                            <input type="text" class="edit-mode-secao3 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
-                                   value="{{ endereco.bairro or '' }}" id="bairro" readonly>
+                            <input type="text" class="w-full p-2 border border-gray-300 rounded text-sm font-medium" 
+                                   value="{{ endereco.bairro or '' }}" id="bairro" placeholder="Bairro">
                         </div>
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Cidade</label>
-                            <p class="font-medium text-gray-900 view-mode-secao3">{{ endereco.cidade or '' }}</p>
-                            <input type="text" class="edit-mode-secao3 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" 
-                                   value="{{ endereco.cidade or '' }}" id="cidade" readonly>
+                            <input type="text" class="w-full p-2 border border-gray-300 rounded text-sm font-medium" 
+                                   value="{{ endereco.cidade or '' }}" id="cidade" placeholder="Cidade">
                         </div>
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Estado (UF)</label>
-                            <p class="font-medium text-gray-900 view-mode-secao3">{{ endereco.uf or '' }}</p>
-                            <select class="edit-mode-secao3 hidden w-full p-2 border border-gray-300 rounded text-sm font-medium" id="uf" disabled>
+                            <select class="w-full p-2 border border-gray-300 rounded text-sm font-medium" id="uf">
                                 <option value="">Selecione</option>
-                                <option value="AC">AC</option>
-                                <option value="AL">AL</option>
-                                <option value="AP">AP</option>
-                                <option value="AM">AM</option>
-                                <option value="BA">BA</option>
-                                <option value="CE">CE</option>
-                                <option value="DF">DF</option>
-                                <option value="ES">ES</option>
-                                <option value="GO">GO</option>
-                                <option value="MA">MA</option>
-                                <option value="MT">MT</option>
-                                <option value="MS">MS</option>
-                                <option value="MG">MG</option>
-                                <option value="PA">PA</option>
-                                <option value="PB">PB</option>
-                                <option value="PR">PR</option>
-                                <option value="PE">PE</option>
-                                <option value="PI">PI</option>
-                                <option value="RJ">RJ</option>
-                                <option value="RN">RN</option>
-                                <option value="RS">RS</option>
-                                <option value="RO">RO</option>
-                                <option value="RR">RR</option>
-                                <option value="SC">SC</option>
-                                <option value="SP">SP</option>
-                                <option value="SE">SE</option>
-                                <option value="TO">TO</option>
+                                <option value="AC" {% if endereco.uf == 'AC' %}selected{% endif %}>AC</option>
+                                <option value="AL" {% if endereco.uf == 'AL' %}selected{% endif %}>AL</option>
+                                <option value="AP" {% if endereco.uf == 'AP' %}selected{% endif %}>AP</option>
+                                <option value="AM" {% if endereco.uf == 'AM' %}selected{% endif %}>AM</option>
+                                <option value="BA" {% if endereco.uf == 'BA' %}selected{% endif %}>BA</option>
+                                <option value="CE" {% if endereco.uf == 'CE' %}selected{% endif %}>CE</option>
+                                <option value="DF" {% if endereco.uf == 'DF' %}selected{% endif %}>DF</option>
+                                <option value="ES" {% if endereco.uf == 'ES' %}selected{% endif %}>ES</option>
+                                <option value="GO" {% if endereco.uf == 'GO' %}selected{% endif %}>GO</option>
+                                <option value="MA" {% if endereco.uf == 'MA' %}selected{% endif %}>MA</option>
+                                <option value="MT" {% if endereco.uf == 'MT' %}selected{% endif %}>MT</option>
+                                <option value="MS" {% if endereco.uf == 'MS' %}selected{% endif %}>MS</option>
+                                <option value="MG" {% if endereco.uf == 'MG' %}selected{% endif %}>MG</option>
+                                <option value="PA" {% if endereco.uf == 'PA' %}selected{% endif %}>PA</option>
+                                <option value="PB" {% if endereco.uf == 'PB' %}selected{% endif %}>PB</option>
+                                <option value="PR" {% if endereco.uf == 'PR' %}selected{% endif %}>PR</option>
+                                <option value="PE" {% if endereco.uf == 'PE' %}selected{% endif %}>PE</option>
+                                <option value="PI" {% if endereco.uf == 'PI' %}selected{% endif %}>PI</option>
+                                <option value="RJ" {% if endereco.uf == 'RJ' %}selected{% endif %}>RJ</option>
+                                <option value="RN" {% if endereco.uf == 'RN' %}selected{% endif %}>RN</option>
+                                <option value="RS" {% if endereco.uf == 'RS' %}selected{% endif %}>RS</option>
+                                <option value="RO" {% if endereco.uf == 'RO' %}selected{% endif %}>RO</option>
+                                <option value="RR" {% if endereco.uf == 'RR' %}selected{% endif %}>RR</option>
+                                <option value="SC" {% if endereco.uf == 'SC' %}selected{% endif %}>SC</option>
+                                <option value="SP" {% if endereco.uf == 'SP' %}selected{% endif %}>SP</option>
+                                <option value="SE" {% if endereco.uf == 'SE' %}selected{% endif %}>SE</option>
+                                <option value="TO" {% if endereco.uf == 'TO' %}selected{% endif %}>TO</option>
                             </select>
+                        </div>
+                        <div class="bg-gray-50 p-3 border border-gray-200">
+                            <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Complemento</label>
+                            <input type="text" class="w-full p-2 border border-gray-300 rounded text-sm font-medium" 
+                                   value="{{ endereco.complemento or '' }}" id="complemento" placeholder="Apt, Bloco, etc.">
                         </div>
                     </div>
                     
-                    <!-- Botões de Confirmação da Seção III -->
-                    <div class="edit-mode-secao3 hidden mt-6 p-4 bg-blue-50 border border-blue-200 rounded">
-                        <div class="flex items-center mb-3">
-                            <input type="checkbox" id="confirm-secao3" class="mr-2">
-                            <label for="confirm-secao3" class="text-sm font-medium text-blue-800">
-                                Confirmo que o endereço residencial está correto e atualizado
-                            </label>
-                        </div>
-                        <div class="flex gap-3">
-                            <button onclick="saveSection('secao3')" class="bg-green-600 text-white px-4 py-2 rounded text-sm hover:bg-green-700">
-                                <i class="fas fa-save mr-1"></i>Salvar Alterações
-                            </button>
-                            <button onclick="cancelEdit('secao3')" class="bg-gray-500 text-white px-4 py-2 rounded text-sm hover:bg-gray-600">
-                                <i class="fas fa-times mr-1"></i>Cancelar
-                            </button>
-                        </div>
-                    </div>
+
                 </div>
             </section>
 
@@ -403,53 +389,28 @@
             <section class="bg-white border border-gray-300 shadow-sm">
                 <div class="bg-gray-100 border-b border-gray-300 px-6 py-3">
                     <h2 class="text-lg font-bold text-gray-800">SEÇÃO IV - DADOS DE CONTATO</h2>
-                    <button onclick="toggleEditMode('secao4')" id="btn-edit-secao4" class="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-2 rounded text-sm font-medium transition-colors duration-200 w-full max-w-xs animate-pulse" style="animation-duration: 2s;">
-                        <i class="fas fa-edit mr-2"></i>Clique e Adicione os dados:
-                    </button>
                 </div>
                 
                 <div class="p-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Telefone Principal</label>
-                            <p class="font-medium text-gray-900 view-mode-secao4">{{ usuario.telefone or '(11) 9 9999-9999' }}</p>
-                            <input type="tel" class="edit-mode-secao4 hidden w-full p-2 border border-gray-300 rounded font-medium" 
-                                   style="font-size: 16px;" value="" id="telefone" maxlength="16" placeholder="(11) 9 9999-9999">
+                            <input type="tel" class="w-full p-2 border border-gray-300 rounded text-sm font-medium" 
+                                   value="{{ contato.telefone or '' }}" id="telefone" maxlength="15" placeholder="(11) 99999-9999">
                         </div>
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Telefone Alternativo</label>
-                            <p class="font-medium text-gray-900 view-mode-secao4">{{ usuario.telefone_alt or '(11) 9 3333-3333' }}</p>
-                            <input type="tel" class="edit-mode-secao4 hidden w-full p-2 border border-gray-300 rounded font-medium" 
-                                   style="font-size: 16px;" value="" id="telefone-alt" maxlength="16" placeholder="(11) 9 9999-9999">
+                            <input type="tel" class="w-full p-2 border border-gray-300 rounded text-sm font-medium" 
+                                   value="{{ contato.telefone_alt or '' }}" id="telefone-alt" maxlength="15" placeholder="(11) 99999-9999">
                         </div>
                         <div class="bg-gray-50 p-3 border border-gray-200">
-                            <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">E-mail</label>
-                            <p class="font-medium text-gray-900 view-mode-secao4">{{ usuario.email or 'joao.silva@email.com' }}</p>
-                            <div class="edit-mode-secao4 hidden relative">
-                                <input type="email" class="w-full p-2 border border-gray-300 rounded font-medium" 
-                                       style="font-size: 16px;" value="" id="email" autocomplete="off" placeholder="seuemail@exemplo.com">
-                                <div id="email-suggestions" class="hidden absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-b shadow-lg z-10 max-h-40 overflow-y-auto"></div>
-                            </div>
+                            <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Email</label>
+                            <input type="email" class="w-full p-2 border border-gray-300 rounded text-sm font-medium" 
+                                   value="{{ contato.email or '' }}" id="email" placeholder="seu@email.com">
                         </div>
                     </div>
                     
-                    <!-- Botões de Confirmação da Seção IV -->
-                    <div class="edit-mode-secao4 hidden mt-6 p-4 bg-blue-50 border border-blue-200 rounded">
-                        <div class="flex items-center mb-3">
-                            <input type="checkbox" id="confirm-secao4" class="mr-2">
-                            <label for="confirm-secao4" class="text-sm font-medium text-blue-800">
-                                Confirmo que os dados de contato estão corretos e atualizados
-                            </label>
-                        </div>
-                        <div class="flex gap-3">
-                            <button onclick="saveSection('secao4')" class="bg-green-600 text-white px-4 py-2 rounded text-sm hover:bg-green-700">
-                                <i class="fas fa-save mr-1"></i>Salvar Alterações
-                            </button>
-                            <button onclick="cancelEdit('secao4')" class="bg-gray-500 text-white px-4 py-2 rounded text-sm hover:bg-gray-600">
-                                <i class="fas fa-times mr-1"></i>Cancelar
-                            </button>
-                        </div>
-                    </div>
+
                 </div>
             </section>
 
@@ -815,6 +776,44 @@
                 // Fallback em caso de erro
                 return new Date().toLocaleDateString('pt-BR') + ' às ' + 
                        new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            }
+        }
+
+        // Função para consultar CEP automaticamente
+        async function consultarCEP(cep) {
+            try {
+                console.log('Consultando CEP:', cep);
+                
+                const response = await fetch('/api/validate-cep', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ cep: cep })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success && result.data) {
+                    const data = result.data;
+                    
+                    // Preencher campos automaticamente
+                    document.getElementById('logradouro').value = data.logradouro || '';
+                    document.getElementById('bairro').value = data.bairro || '';
+                    document.getElementById('cidade').value = data.cidade || '';
+                    
+                    // Selecionar UF no select
+                    const ufSelect = document.getElementById('uf');
+                    if (ufSelect && data.uf) {
+                        ufSelect.value = data.uf;
+                    }
+                    
+                    console.log('✓ Endereço preenchido automaticamente:', data);
+                } else {
+                    console.log('CEP não encontrado ou inválido');
+                }
+            } catch (error) {
+                console.error('Erro na consulta de CEP:', error);
             }
         }
 
@@ -1250,6 +1249,24 @@
                 }
                 
                 console.log('✓ Event listeners adicionados com sucesso');
+            
+            // Adicionar listener para consulta automática de CEP
+            const cepInput = document.getElementById('cep-endereco');
+            if (cepInput) {
+                cepInput.addEventListener('input', function(e) {
+                    const cep = e.target.value.replace(/\D/g, '');
+                    
+                    // Formatação automática do CEP
+                    if (cep.length <= 8) {
+                        e.target.value = cep.replace(/(\d{5})(\d{1,3})/, '$1-$2');
+                    }
+                    
+                    // Consultar CEP quando tiver 8 dígitos
+                    if (cep.length === 8) {
+                        consultarCEP(cep);
+                    }
+                });
+            }
             }, 300);
             
             // Make edit functions available globally
