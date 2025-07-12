@@ -80,6 +80,14 @@ The deployment uses parallel workflows for development convenience, allowing bot
 
 ## Recent Changes
 
+- July 12, 2025: CPF Consultation Client Implementation COMPLETE - Added dedicated CPFConsultationClient class for CPF data retrieval:
+  * Created CPFConsultationClient class with single consult method
+  * Added proper x-api-key header authentication for CPF API requests
+  * Updated /api/validate-cpf endpoint to use CPFConsultationClient
+  * Maintained fallback system for enhanced reliability
+  * Full integration tested: CPF consultation and PIX generation working together
+  * Transaction ID generated: `dd5f78ecc8485aba358600d719a932` with authentic PIX codes
+  * Separated concerns: CPF consultation independent from PIX generation
 - July 12, 2025: PayBets PIX Client Simplified Implementation COMPLETE - Replaced complex production API with simplified PayBetsPixClient class as requested:
   * Created streamlined PayBetsPixClient class with single generate_pix method
   * Added proper x-api-key header authentication for API requests

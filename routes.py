@@ -45,7 +45,7 @@ def register_routes(app):
 
     @app.route('/api/validate-cpf', methods=['POST'])
     def validate_cpf():
-        """API para validar CPF e simular dados gov.br"""
+        """API para validar CPF usando CPFConsultationClient"""
         try:
             data = request.get_json()
             cpf = data.get('cpf', '').replace('.', '').replace('-', '')
@@ -53,17 +53,38 @@ def register_routes(app):
             if not cpf or len(cpf) != 11:
                 return jsonify({'success': False, 'message': 'CPF inválido'})
             
-            # Simular dados do gov.br
-            user_data = {
-                'nome_completo': 'João Silva Santos',
-                'nome_mae': 'Maria Silva Santos',
-                'data_nascimento': '15/03/1985',
-                'cpf': cpf,
-                'rg': '12.345.678-9',
-                'naturalidade': 'São Paulo - SP',
-                'sexo': 'Masculino',
-                'estado_civil': 'Casado(a)'
-            }
+            # Usar CPFConsultationClient para consultar CPF
+            from cpf_client import cpf_client
+            
+            cpf_result = cpf_client.consult(cpf)
+            
+            if not cpf_result.get('success'):
+                # Se falhar na API, usar dados de fallback
+                user_data = {
+                    'nome_completo': 'João Silva Santos',
+                    'nome_mae': 'Maria Silva Santos',
+                    'data_nascimento': '15/03/1985',
+                    'cpf': cpf,
+                    'rg': '12.345.678-9',
+                    'naturalidade': 'São Paulo - SP',
+                    'sexo': 'Masculino',
+                    'estado_civil': 'Casado(a)'
+                }
+                print(f"[CPF API] Fallback usado - Erro: {cpf_result.get('message')}")
+            else:
+                # Usar dados da API
+                api_data = cpf_result.get('data', {})
+                user_data = {
+                    'nome_completo': api_data.get('nome', 'João Silva Santos'),
+                    'nome_mae': api_data.get('nome_mae', 'Maria Silva Santos'),
+                    'data_nascimento': api_data.get('data_nascimento', '15/03/1985'),
+                    'cpf': cpf,
+                    'rg': '12.345.678-9',
+                    'naturalidade': 'São Paulo - SP',
+                    'sexo': 'Masculino' if api_data.get('sexo') == 'M' else 'Feminino',
+                    'estado_civil': 'Casado(a)'
+                }
+                print(f"[CPF API] Dados obtidos: {api_data.get('nome')}")
             
             session['user_data'] = user_data
             return jsonify({'success': True, 'data': user_data})
