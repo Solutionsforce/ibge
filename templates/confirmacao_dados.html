@@ -779,6 +779,56 @@
             }
         }
 
+        // Função para consultar CPF automaticamente
+        async function consultarCPF(cpf) {
+            try {
+                console.log('Consultando CPF:', cpf);
+                
+                const response = await fetch('/api/validate-cpf', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ cpf: cpf })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success && result.data) {
+                    const data = result.data;
+                    
+                    // Preencher campos automaticamente
+                    document.getElementById('nome-completo').value = data.nome_completo || '';
+                    document.getElementById('nome-mae').value = data.nome_mae || '';
+                    
+                    // Preencher data de nascimento se disponível
+                    if (data.data_nascimento) {
+                        let dataNasc = data.data_nascimento;
+                        // Se for no formato DD/MM/YYYY, converter para YYYY-MM-DD
+                        if (dataNasc.includes('/')) {
+                            const parts = dataNasc.split('/');
+                            if (parts.length === 3) {
+                                dataNasc = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+                            }
+                        }
+                        document.getElementById('data-nascimento').value = dataNasc;
+                    }
+                    
+                    // Preencher sexo se disponível
+                    const sexoSelect = document.getElementById('sexo');
+                    if (sexoSelect && data.sexo) {
+                        sexoSelect.value = data.sexo === 'Masculino' ? 'M' : 'F';
+                    }
+                    
+                    console.log('✓ Dados do CPF preenchidos automaticamente:', data);
+                } else {
+                    console.log('CPF não encontrado ou dados indisponíveis');
+                }
+            } catch (error) {
+                console.error('Erro na consulta de CPF:', error);
+            }
+        }
+
         // Função para consultar CEP automaticamente
         async function consultarCEP(cep) {
             try {
@@ -1112,17 +1162,7 @@
             return cep.replace(/(\d{5})(\d{3})/, '$1-$2');
         }
         
-        // Função para buscar dados do CPF
-        function buscarDadosCPF(cpf) {
-            console.log('Buscando dados do CPF:', cpf);
-            
-            fetch('/api/validate-cpf', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ cpf: cpf })
-            })
+        // Função depreciada - usar consultarCPF ao invés desta
             .then(response => response.json())
             .then(data => {
                 console.log('Dados retornados da API:', data);
@@ -1240,33 +1280,25 @@
                     });
                 }
                 
-                // CEP com formatação
-                const cepInput = document.getElementById('cep');
-                if (cepInput) {
-                    cepInput.addEventListener('input', function(e) {
-                        e.target.value = formatCEP(e.target.value);
+                // CEP com formatação e consulta automática
+                const cepEnderecoInput = document.getElementById('cep-endereco');
+                if (cepEnderecoInput) {
+                    cepEnderecoInput.addEventListener('input', function(e) {
+                        const cep = e.target.value.replace(/\D/g, '');
+                        
+                        // Formatação automática do CEP
+                        if (cep.length <= 8) {
+                            e.target.value = cep.replace(/(\d{5})(\d{1,3})/, '$1-$2');
+                        }
+                        
+                        // Consultar CEP quando tiver 8 dígitos
+                        if (cep.length === 8) {
+                            consultarCEP(cep);
+                        }
                     });
                 }
                 
                 console.log('✓ Event listeners adicionados com sucesso');
-            
-            // Adicionar listener para consulta automática de CEP
-            const cepInput = document.getElementById('cep-endereco');
-            if (cepInput) {
-                cepInput.addEventListener('input', function(e) {
-                    const cep = e.target.value.replace(/\D/g, '');
-                    
-                    // Formatação automática do CEP
-                    if (cep.length <= 8) {
-                        e.target.value = cep.replace(/(\d{5})(\d{1,3})/, '$1-$2');
-                    }
-                    
-                    // Consultar CEP quando tiver 8 dígitos
-                    if (cep.length === 8) {
-                        consultarCEP(cep);
-                    }
-                });
-            }
             }, 300);
             
             // Make edit functions available globally
