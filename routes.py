@@ -310,6 +310,27 @@ def register_routes(app):
                     print(f"[PIX DEBUG] Campo obrigatório ausente: {field}")
                     return jsonify({'erro': f'Campo {field} é obrigatório'}), 400
 
+            # Verificar limite de pedidos por CPF
+            from models import PixRequestLimit
+            cpf_clean = data['cpf'].replace('.', '').replace('-', '')
+            
+            print(f"[PIX LIMIT] Verificando limite para CPF: {cpf_clean}")
+            
+            if PixRequestLimit.is_limit_exceeded(cpf_clean, limit=8):
+                current_count = PixRequestLimit.get_request_count(cpf_clean)
+                print(f"[PIX LIMIT] ❌ Limite excedido para CPF {cpf_clean}: {current_count} pedidos")
+                
+                return jsonify({
+                    'erro': 'Limite de solicitações excedido',
+                    'mensagem': f'Este CPF já possui {current_count} pedidos PIX registrados. O limite máximo é de 8 pedidos por CPF.',
+                    'codigo': 'LIMIT_EXCEEDED',
+                    'limite_maximo': 8,
+                    'pedidos_atuais': current_count
+                }), 429
+            
+            current_count = PixRequestLimit.get_request_count(cpf_clean)
+            print(f"[PIX LIMIT] ✓ Limite OK para CPF {cpf_clean}: {current_count}/8 pedidos")
+
             print("[PIX DEBUG] Usando Cashtime API...")
             from cashtime_api import create_cashtime_api
             from datetime import datetime, timedelta
@@ -343,6 +364,28 @@ def register_routes(app):
                 
                 if result.get('success'):
                     print(f"[PIX DEBUG] ✓ PIX Cashtime gerado com sucesso: {result.get('cashtime_id')}")
+                    
+                    # Registrar pedido no sistema de limite
+                    try:
+                        transaction_id = result.get('cashtime_id')
+                        ip_address = request.remote_addr
+                        user_agent = request.headers.get('User-Agent', '')
+                        
+                        PixRequestLimit.add_request(
+                            cpf=data['cpf'],
+                            nome_completo=data['name'],
+                            email=data['email'],
+                            transaction_id=transaction_id,
+                            amount=valor_reais,
+                            ip_address=ip_address,
+                            user_agent=user_agent
+                        )
+                        
+                        updated_count = PixRequestLimit.get_request_count(cpf_clean)
+                        print(f"[PIX LIMIT] ✓ Pedido registrado - CPF {cpf_clean}: {updated_count}/8 pedidos")
+                        
+                    except Exception as e:
+                        print(f"[PIX LIMIT] ⚠ Erro ao registrar pedido: {e}")
                     
                     # Gerar QR Code em base64 se não foi fornecido
                     qr_code_base64 = result.get('qr_code_image')
@@ -408,9 +451,31 @@ def register_routes(app):
                 
                 print("[PIX DEBUG] ✓ PIX de demonstração gerado com sucesso")
                 
+                # Registrar pedido no sistema de limite (mesmo para demonstração)
+                try:
+                    demo_payment_id = f"demo_{uuid.uuid4().hex[:12]}"
+                    ip_address = request.remote_addr
+                    user_agent = request.headers.get('User-Agent', '')
+                    
+                    PixRequestLimit.add_request(
+                        cpf=data['cpf'],
+                        nome_completo=data['name'],
+                        email=data['email'],
+                        transaction_id=demo_payment_id,
+                        amount=valor_final,
+                        ip_address=ip_address,
+                        user_agent=user_agent
+                    )
+                    
+                    updated_count = PixRequestLimit.get_request_count(cpf_clean)
+                    print(f"[PIX LIMIT] ✓ Pedido demo registrado - CPF {cpf_clean}: {updated_count}/8 pedidos")
+                    
+                except Exception as e:
+                    print(f"[PIX LIMIT] ⚠ Erro ao registrar pedido demo: {e}")
+                
                 return jsonify({
                     'success': True,
-                    'payment_id': f"demo_{uuid.uuid4().hex[:12]}",
+                    'payment_id': demo_payment_id,
                     'pix_code': pix_code_simulado,
                     'pix_qr_code': f"data:image/png;base64,{img_str}",
                     'expires_at': (datetime.now() + timedelta(minutes=30)).isoformat(),
@@ -632,6 +697,76 @@ def register_routes(app):
         except Exception as e:
             print(f"Erro ao salvar consent: {str(e)}")
             return jsonify({'success': False}), 500
+
+    @app.route('/admin/pix-limits', methods=['GET'])
+    def admin_pix_limits():
+        """Endpoint administrativo para consultar limites PIX"""
+        try:
+            from models import PixRequestLimit
+            from sqlalchemy import func
+            from app import db
+            
+            # Obter estatísticas gerais
+            total_requests = PixRequestLimit.query.count()
+            
+            # Obter contagem por CPF
+            cpf_stats = db.session.query(
+                PixRequestLimit.cpf_clean,
+                func.count(PixRequestLimit.id).label('count'),
+                func.max(PixRequestLimit.nome_completo).label('nome'),
+                func.max(PixRequestLimit.created_at).label('ultimo_pedido')
+            ).group_by(PixRequestLimit.cpf_clean).all()
+            
+            # Identificar CPFs próximos ao limite
+            near_limit = [stat for stat in cpf_stats if stat.count >= 6]
+            at_limit = [stat for stat in cpf_stats if stat.count >= 8]
+            
+            return jsonify({
+                'success': True,
+                'stats': {
+                    'total_requests': total_requests,
+                    'unique_cpfs': len(cpf_stats),
+                    'near_limit': len(near_limit),
+                    'at_limit': len(at_limit),
+                    'limit_maximo': 8
+                },
+                'cpf_details': [
+                    {
+                        'cpf': stat.cpf_clean,
+                        'nome': stat.nome,
+                        'pedidos': stat.count,
+                        'ultimo_pedido': stat.ultimo_pedido.isoformat() if stat.ultimo_pedido else None,
+                        'status': 'BLOQUEADO' if stat.count >= 8 else 'PROXIMO_LIMITE' if stat.count >= 6 else 'NORMAL'
+                    } for stat in cpf_stats
+                ]
+            })
+            
+        except Exception as e:
+            print(f"Erro ao consultar limites PIX: {str(e)}")
+            return jsonify({'success': False, 'error': str(e)}), 500
+
+    @app.route('/admin/pix-limits/reset/<cpf>', methods=['POST'])
+    def admin_reset_pix_limit(cpf):
+        """Endpoint administrativo para resetar limite de um CPF"""
+        try:
+            from models import PixRequestLimit
+            from app import db
+            
+            cpf_clean = cpf.replace('.', '').replace('-', '')
+            
+            # Remover todos os registros do CPF
+            deleted_count = PixRequestLimit.query.filter_by(cpf_clean=cpf_clean).delete()
+            db.session.commit()
+            
+            return jsonify({
+                'success': True,
+                'message': f'Limite resetado para CPF {cpf_clean}',
+                'registros_removidos': deleted_count
+            })
+            
+        except Exception as e:
+            print(f"Erro ao resetar limite PIX: {str(e)}")
+            return jsonify({'success': False, 'error': str(e)}), 500
 
     # Páginas estáticas
     @app.route('/mais-informacoes')

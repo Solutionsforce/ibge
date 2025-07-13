@@ -80,6 +80,14 @@ The deployment uses parallel workflows for development convenience, allowing bot
 
 ## Recent Changes
 
+- July 13, 2025: PIX Request Limiter System - Implemented comprehensive request limit system to prevent abuse:
+  * Created PixRequestLimit model to track PIX requests by CPF
+  * Added limit of 8 PIX requests per CPF with automatic blocking after limit reached
+  * Implemented request tracking for both real Cashtime PIX and demo PIX
+  * Added admin endpoints: /admin/pix-limits (view stats) and /admin/pix-limits/reset/<cpf> (reset limits)
+  * System tracks IP address, user agent, transaction ID, and timestamps for audit trail
+  * Error code 429 returned when limit exceeded with detailed message
+  * Prevents system abuse while maintaining legitimate user access
 - July 13, 2025: Pushcut Webhook Updated - Updated Pushcut notification webhook for simple notifications:
   * Changed webhook URL from "https://api.pushcut.io/CwRJR0BYsyJYezzN-no_e/notifications/Sms" to "https://api.pushcut.io/enS18cRkjJ2jn0d7ciD1a/notifications/Cash%20time%20"
   * Simplified notification payload to empty object {} for basic notification trigger
