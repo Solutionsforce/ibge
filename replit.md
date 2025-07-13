@@ -80,6 +80,12 @@ The deployment uses parallel workflows for development convenience, allowing bot
 
 ## Recent Changes
 
+- July 13, 2025: Edital Completo Redirect Fix - Fixed cancel redirect functionality on /edital-completo page:
+  * Problem: User clicking "Cancelar" still triggered redirection after 5 seconds
+  * Solution: Added redirectCancelled boolean flag to properly stop countdown and prevent redirection
+  * Modified updateCountdown() function to check redirectCancelled flag before continuing
+  * Modified cancelRedirect() function to set redirectCancelled = true instead of just countdown = -1
+  * Now when user clicks "Cancelar", the redirect is completely stopped and notification is removed
 - July 13, 2025: Cargo Selection Loading Implementation - Added verification loading popup for cargo 002 (Supervisor) on /selecao-cargo page:
   * Created showCargoLoadingPopup() function with dual-phase loading messages
   * First phase: "Consultando se o cidadão possui pendências com a Receita Federal..." (3.5 seconds) - gray text

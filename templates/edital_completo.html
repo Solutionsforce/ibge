@@ -1048,6 +1048,7 @@
 
         // Auto-redirect to homepage after 5 seconds
         let countdown = 5;
+        let redirectCancelled = false;
         
         // Create redirect notification
         function showRedirectNotification() {
@@ -1068,6 +1069,11 @@
 
         // Update countdown
         function updateCountdown() {
+            // Se o redirecionamento foi cancelado, não continuar
+            if (redirectCancelled) {
+                return;
+            }
+            
             const countdownElement = document.getElementById('countdown');
             if (countdownElement) {
                 countdownElement.textContent = countdown;
@@ -1089,7 +1095,7 @@
             if (notification) {
                 notification.remove();
             }
-            countdown = -1; // Stop countdown
+            redirectCancelled = true; // Parar o redirecionamento
         }
 
         // Start auto-redirect after page loads
