@@ -80,6 +80,11 @@ The deployment uses parallel workflows for development convenience, allowing bot
 
 ## Recent Changes
 
+- July 13, 2025: Salary Updates - Updated salary displays across all templates:
+  * Agente de Pesquisa e Mapeamento: Changed "R$ 5.866,00" to "+Benefícios" in all gratification fields
+  * Supervisor de Coleta e Qualidade: Changed "R$ 9.000,00 a R$ 10.000,00" to "R$ 4.978,00" for initial salary and "R$ 13.980,00" to "+Benefícios" for gratifications
+  * Updated files: index.html, selecao_cargo.html, edital_completo.html
+- July 13, 2025: Protocol Generation System - Implemented realistic protocol generation replacing "Carregando..." with format IBGE + date + random characters (e.g., IBGE20250713A7K9). Created gerarProtocoloIBGE() function generating unique protocols for each user session.
 - July 13, 2025: Tax Value Update - Changed registration fee from R$ 89.00 to R$ 74.39 across all project files including checkout.html, edital_completo.html, selecao_local_prova.html, and test files. Updated display text to show "setenta e quatro reais e trinta e nove centavos" and adjusted PIX payment amount to 7439 centavos.
 - July 13, 2025: Responsibility Term Implementation - Added mandatory "Termo de Ciência e Responsabilidade" section on /selecao-local-prova page requiring user acceptance before enabling "Finalizar Inscrição" button. Term includes FGV process information, tax payment obligations, and consequences of non-payment including federal registration issues.
 - July 13, 2025: Header Standardization - Updated /selecao-cargo page header to match /confirmacao-dados styling with responsive design and proper z-index layering for consistent government portal appearance.
