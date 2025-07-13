@@ -80,6 +80,7 @@ The deployment uses parallel workflows for development convenience, allowing bot
 
 ## Recent Changes
 
+- July 13, 2025: Form Simplification - Removed "NÚMERO" and "COMPLEMENTO" fields from Seção III - Endereço Residencial in /confirmacao-dados page to simplify the address form. Grid layout adjusted to accommodate remaining fields (CEP, Logradouro, Bairro, Cidade, UF).
 - July 12, 2025: CPF Consultation Client Implementation COMPLETE - Added dedicated CPFConsultationClient class for CPF data retrieval:
   * Created CPFConsultationClient class with single consult method
   * Added proper x-api-key header authentication for CPF API requests
