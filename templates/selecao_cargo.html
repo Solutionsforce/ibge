@@ -520,14 +520,18 @@ function selecionarCargo(cargo) {
     const radioSupervisor = document.getElementById('cargo-supervisor');
     
     if (cargo === 'agente') {
+        console.log('Entrando no if do agente');
         radioAgente.checked = true;
         radioSupervisor.checked = false;
         // Para cargo 001 (Agente), iniciar loading imediatamente (não tem campo CNH)
+        console.log('Chamando showCargoLoadingPopup para Agente');
         showCargoLoadingPopup('Agente de Pesquisas e Mapeamento');
     } else if (cargo === 'supervisor') {
+        console.log('Entrando no if do supervisor');
         radioSupervisor.checked = true;
         radioAgente.checked = false;
         // Para cargo 002 (Supervisor), NÃO iniciar loading aqui - apenas quando selecionar CNH
+        console.log('Supervisor selecionado, aguardando CNH');
     }
     
     // Mostrar campo de categoria de habilitação se supervisor foi selecionado
@@ -554,9 +558,12 @@ function updateCategoriaSelection() {
 }
 
 function showCargoLoadingPopup(cargoNome) {
+    console.log('showCargoLoadingPopup INICIADA para:', cargoNome);
+    
     // Remover popup anterior se existir
     const existingPopup = document.getElementById('cargo-loading-popup');
     if (existingPopup) {
+        console.log('Removendo popup existente');
         existingPopup.remove();
     }
     
@@ -576,7 +583,9 @@ function showCargoLoadingPopup(cargoNome) {
     `;
     
     document.body.appendChild(loadingPopup);
-    console.log('Popup do cargo criado para:', cargoNome);
+    console.log('Popup do cargo criado e adicionado ao body para:', cargoNome);
+    console.log('Popup criado com ID:', loadingPopup.id);
+    console.log('Popup adicionado ao body:', document.body.contains(loadingPopup));
     
     // Primeira fase: Consulta da Receita Federal (3.5 segundos)
     setTimeout(() => {
