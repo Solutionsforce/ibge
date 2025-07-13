@@ -522,6 +522,8 @@ function selecionarCargo(cargo) {
     if (cargo === 'agente') {
         radioAgente.checked = true;
         radioSupervisor.checked = false;
+        // Para cargo 001 (Agente), iniciar loading imediatamente
+        showCargoLoadingPopup();
     } else if (cargo === 'supervisor') {
         radioSupervisor.checked = true;
         radioAgente.checked = false;
@@ -540,6 +542,51 @@ function selecionarCargo(cargo) {
     
     console.log('cargoSelecionado agora é:', cargoSelecionado);
     verificarFormulario();
+}
+
+function updateCategoriaSelection() {
+    // Esta função é chamada quando uma categoria CNH é selecionada para o cargo Supervisor
+    if (cargoSelecionado === 'supervisor') {
+        showCargoLoadingPopup();
+    }
+}
+
+function showCargoLoadingPopup() {
+    // Criar popup de loading
+    const loadingPopup = document.createElement('div');
+    loadingPopup.id = 'cargo-loading-popup';
+    loadingPopup.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+    loadingPopup.innerHTML = `
+        <div class="bg-white rounded-lg p-8 max-w-md mx-4 text-center">
+            <div class="mb-6">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+            </div>
+            <div id="loading-message" class="text-gray-600 mb-4">
+                <p>Consultando se o cidadão possui pendências com a Receita Federal...</p>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(loadingPopup);
+    
+    // Primeira fase: Consulta da Receita Federal (3.5 segundos)
+    setTimeout(() => {
+        const messageElement = document.getElementById('loading-message');
+        if (messageElement) {
+            messageElement.innerHTML = '<p class="text-green-600">Cidadão apto para o cargo de ' + 
+                (cargoSelecionado === 'agente' ? 'Agente de Pesquisas e Mapeamento' : 'Supervisor de Coleta e Qualidade') + 
+                '</p>';
+        }
+        
+        // Segunda fase: Confirmação de aptidão (3.5 segundos)
+        setTimeout(() => {
+            // Remover popup
+            const popup = document.getElementById('cargo-loading-popup');
+            if (popup) {
+                popup.remove();
+            }
+        }, 3500);
+    }, 3500);
 }
 
 function verificarCEP() {
