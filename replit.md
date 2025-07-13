@@ -80,16 +80,16 @@ The deployment uses parallel workflows for development convenience, allowing bot
 
 ## Recent Changes
 
-- July 13, 2025: Identical Loading Implementation for Agente - Simplified loading system for cargo selection:
-  * Problem: User requested visually identical loading for both cargo options
-  * Solution: Modified showAgenteLoadingPopup() to call the same showCargoLoadingPopup() function
-  * Both cargo 001 (Agente) and cargo 002 (Supervisor) now use identical visual loading
-  * Agente: Direct onclick triggers showAgenteLoadingPopup() which calls showCargoLoadingPopup()
-  * Supervisor: CNH selection triggers showCargoLoadingPopup() directly
-  * Same popup appearance: black overlay, white dialog, blue spinner, two-phase messages
+- July 13, 2025: Separated Loading Functions for Agente and Supervisor - Created two independent loading functions:
+  * Problem: User requested visually identical but functionally separate loading systems
+  * Solution: Created showAgenteLoadingPopup() and showSupervisorLoadingPopup() as independent functions
+  * Agente: onclick triggers showAgenteLoadingPopup() with unique IDs (agente-loading-popup, agente-loading-message)
+  * Supervisor: CNH selection triggers showSupervisorLoadingPopup() with unique IDs (supervisor-loading-popup, supervisor-loading-message)
+  * Both functions are visually identical: black overlay, white dialog, blue spinner, two-phase messages
   * Same timing: 3.5 seconds per phase, 7 seconds total
   * Same messages: "Consultando se o cidadão possui pendências..." then "Cidadão apto para o cargo de [Nome]"
-  * Removed duplicate loading code and unified the visual experience
+  * Functionally independent: no shared variables or function calls between them
+  * Each manages its own popup lifecycle and cleanup
 - July 13, 2025: Separate Loading Implementation for Agente - Created dedicated loading for Agente field:
   * Problem: Complex unified loading system was not working properly for Agente selection
   * Solution: Created separate showLoadingAgente() function triggered directly by onclick event

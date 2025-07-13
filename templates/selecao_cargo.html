@@ -545,8 +545,53 @@ function showAgenteLoadingPopup() {
     const categoriaDiv = document.getElementById('categoria-habilitacao');
     categoriaDiv.classList.add('hidden');
     
-    // Usar exatamente a mesma função do supervisor
-    showCargoLoadingPopup('Agente de Pesquisas e Mapeamento');
+    // Remover popup anterior se existir
+    const existingPopup = document.getElementById('agente-loading-popup');
+    if (existingPopup) {
+        console.log('Removendo popup existente do agente');
+        existingPopup.remove();
+    }
+    
+    // Criar popup de loading SEPARADO para agente - visualmente idêntico mas funcionalmente independente
+    const loadingPopup = document.createElement('div');
+    loadingPopup.id = 'agente-loading-popup';
+    loadingPopup.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+    loadingPopup.innerHTML = `
+        <div class="bg-white rounded-lg p-8 max-w-md mx-4 text-center">
+            <div class="mb-6">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+            </div>
+            <div id="agente-loading-message" class="text-gray-600 mb-4">
+                <p>Consultando se o cidadão possui pendências com a Receita Federal...</p>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(loadingPopup);
+    console.log('Popup SEPARADO do agente criado e adicionado ao body');
+    
+    // Primeira fase: Consulta da Receita Federal (3.5 segundos)
+    setTimeout(() => {
+        console.log('PRIMEIRA FASE AGENTE EXECUTADA!');
+        const messageElement = document.getElementById('agente-loading-message');
+        if (messageElement) {
+            messageElement.innerHTML = `<p class="text-green-600">Cidadão apto para o cargo de Agente de Pesquisas e Mapeamento</p>`;
+        }
+        
+        // Segunda fase: Confirmação de aptidão (3.5 segundos)
+        setTimeout(() => {
+            console.log('SEGUNDA FASE AGENTE EXECUTADA!');
+            // Remover popup do agente
+            const popup = document.getElementById('agente-loading-popup');
+            if (popup) {
+                popup.remove();
+                console.log('Popup SEPARADO do agente removido automaticamente após 7 segundos');
+            }
+            
+            // Chamar verificarFormulario após o loading do agente
+            verificarFormulario();
+        }, 3500);
+    }, 3500);
 }
 
 
@@ -589,67 +634,57 @@ function updateCategoriaSelection() {
     // Esta função é chamada quando uma categoria CNH é selecionada para o cargo Supervisor
     // Aqui SIM deve mostrar o loading para o supervisor
     if (cargoSelecionado === 'supervisor') {
-        showCargoLoadingPopup('Supervisor de Coleta e Qualidade');
+        showSupervisorLoadingPopup();
     }
 }
 
-function showCargoLoadingPopup(cargoNome) {
-    console.log('showCargoLoadingPopup INICIADA para:', cargoNome);
+function showSupervisorLoadingPopup() {
+    console.log('showSupervisorLoadingPopup INICIADA para: Supervisor de Coleta e Qualidade');
     
     // Remover popup anterior se existir
-    const existingPopup = document.getElementById('cargo-loading-popup');
+    const existingPopup = document.getElementById('supervisor-loading-popup');
     if (existingPopup) {
-        console.log('Removendo popup existente');
+        console.log('Removendo popup existente do supervisor');
         existingPopup.remove();
     }
     
-    // Criar popup de loading único para qualquer cargo
+    // Criar popup de loading SEPARADO para supervisor - visualmente idêntico mas funcionalmente independente
     const loadingPopup = document.createElement('div');
-    loadingPopup.id = 'cargo-loading-popup';
+    loadingPopup.id = 'supervisor-loading-popup';
     loadingPopup.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
     loadingPopup.innerHTML = `
         <div class="bg-white rounded-lg p-8 max-w-md mx-4 text-center">
             <div class="mb-6">
                 <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
             </div>
-            <div id="cargo-loading-message" class="text-gray-600 mb-4">
+            <div id="supervisor-loading-message" class="text-gray-600 mb-4">
                 <p>Consultando se o cidadão possui pendências com a Receita Federal...</p>
             </div>
         </div>
     `;
     
     document.body.appendChild(loadingPopup);
-    console.log('Popup do cargo criado e adicionado ao body para:', cargoNome);
-    console.log('Popup criado com ID:', loadingPopup.id);
-    console.log('Popup adicionado ao body:', document.body.contains(loadingPopup));
+    console.log('Popup SEPARADO do supervisor criado e adicionado ao body');
     
     // Primeira fase: Consulta da Receita Federal (3.5 segundos)
-    console.log('Iniciando setTimeout da primeira fase...');
     setTimeout(() => {
-        console.log('PRIMEIRA FASE EXECUTADA!');
-        const messageElement = document.getElementById('cargo-loading-message');
+        console.log('PRIMEIRA FASE SUPERVISOR EXECUTADA!');
+        const messageElement = document.getElementById('supervisor-loading-message');
         if (messageElement) {
-            messageElement.innerHTML = `<p class="text-green-600">Cidadão apto para o cargo de ${cargoNome}</p>`;
-            console.log('Primeira fase concluída para:', cargoNome);
-        } else {
-            console.log('ERRO: messageElement não encontrado!');
+            messageElement.innerHTML = `<p class="text-green-600">Cidadão apto para o cargo de Supervisor de Coleta e Qualidade</p>`;
         }
         
         // Segunda fase: Confirmação de aptidão (3.5 segundos)
-        console.log('Iniciando setTimeout da segunda fase...');
         setTimeout(() => {
-            console.log('SEGUNDA FASE EXECUTADA!');
-            // Remover popup
-            const popup = document.getElementById('cargo-loading-popup');
+            console.log('SEGUNDA FASE SUPERVISOR EXECUTADA!');
+            // Remover popup do supervisor
+            const popup = document.getElementById('supervisor-loading-popup');
             if (popup) {
                 popup.remove();
-                console.log('Popup do cargo removido automaticamente após 7 segundos');
-            } else {
-                console.log('ERRO: Popup não encontrado para remoção!');
+                console.log('Popup SEPARADO do supervisor removido automaticamente após 7 segundos');
             }
             
-            // Sempre chamar verificarFormulario após o loading
-            console.log('Chamando verificarFormulario...');
+            // Chamar verificarFormulario após o loading do supervisor
             verificarFormulario();
         }, 3500);
     }, 3500);
