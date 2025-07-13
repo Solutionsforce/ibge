@@ -848,11 +848,10 @@
                     if (cidadeField) {
                         const cidade = data.localidade || '';
                         cidadeField.value = cidade;
-                        cidadeField.setAttribute('value', cidade);
-                        // Garantir que o valor persista
-                        setTimeout(() => {
-                            cidadeField.value = cidade;
-                        }, 100);
+                        // Garantir que o valor persista e não seja removido
+                        cidadeField.setAttribute('data-filled', 'true');
+                        cidadeField.setAttribute('readonly', 'false');
+                        console.log('Campo cidade preenchido:', cidade);
                     }
                     if (ufField && data.uf) ufField.value = data.uf;
                     
@@ -1554,29 +1553,9 @@
                 }
             }
 
-            // Função para buscar dados do CEP na API ViaCEP
-            async function buscarDadosCEP(cep) {
-                try {
-                    console.log('Buscando dados do CEP:', cep);
-                    
-                    // Mostrar loading nos campos de endereço
-                    mostrarLoadingCamposEndereco();
-                    
-                    const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-                    const data = await response.json();
-                    
-                    if (data && !data.erro) {
-                        console.log('Dados do CEP retornados:', data);
-                        preencherDadosCEP(data);
-                    } else {
-                        console.warn('CEP não encontrado:', cep);
-                        limparLoadingCamposEndereco();
-                    }
-                } catch (error) {
-                    console.error('Erro ao buscar dados do CEP:', error);
-                    limparLoadingCamposEndereco();
-                }
-            }
+            // Função para buscar dados do CEP - REMOVIDA (duplicada)
+            // Esta função foi removida para evitar conflitos
+            // A implementação principal está em consultarCEP()
 
             // Função para mostrar loading nos campos de endereço - CIDADE SEMPRE EDITÁVEL
             function mostrarLoadingCamposEndereco() {
@@ -1602,55 +1581,9 @@
                 });
             }
 
-            // Função para preencher os dados do CEP
-            function preencherDadosCEP(dados) {
-                try {
-                    // Preencher logradouro
-                    if (dados.logradouro) {
-                        const logradouroInput = document.getElementById('logradouro');
-                        if (logradouroInput) {
-                            logradouroInput.value = dados.logradouro;
-                            logradouroInput.readOnly = true;
-                        }
-                    }
-
-                    // Preencher bairro
-                    if (dados.bairro) {
-                        const bairroInput = document.getElementById('bairro');
-                        if (bairroInput) {
-                            bairroInput.value = dados.bairro;
-                            bairroInput.readOnly = true;
-                        }
-                    }
-
-                    // Preencher cidade - MANTÉM EDITÁVEL
-                    if (dados.localidade) {
-                        const cidadeInput = document.getElementById('cidade');
-                        if (cidadeInput) {
-                            cidadeInput.value = dados.localidade;
-                            // NÃO definir como readOnly - manter editável
-                        }
-                    }
-
-                    // Preencher UF
-                    if (dados.uf) {
-                        const ufSelect = document.getElementById('uf');
-                        if (ufSelect) {
-                            ufSelect.value = dados.uf;
-                            ufSelect.disabled = false;
-                        }
-                    }
-
-                    // Remover loading
-                    limparLoadingCamposEndereco();
-                    
-                    console.log('Dados do CEP preenchidos com sucesso');
-                    
-                } catch (error) {
-                    console.error('Erro ao preencher dados do CEP:', error);
-                    limparLoadingCamposEndereco();
-                }
-            }
+            // Função para preencher os dados do CEP - REMOVIDA (duplicada)
+            // Esta função foi removida para evitar conflitos
+            // A implementação principal está em consultarCEP()
 
             // Adicionar event listeners para formatação automática
             setTimeout(() => {
@@ -1679,7 +1612,7 @@
                             
                             // Se CEP tem 8 dígitos, buscar dados na API
                             if (value.length === 8) {
-                                buscarDadosCEP(value);
+                                consultarCEP(value);
                             }
                         }
                     });
