@@ -212,7 +212,7 @@
                             <div class="border border-gray-300 bg-white hover:border-blue-500 hover:bg-blue-50 transition-all duration-200 rounded-lg">
                                 <div class="p-4">
                                     <div class="flex items-start">
-                                        <input type="radio" name="cargo" value="agente" id="cargo-agente" class="mt-1 mr-4" onchange="selecionarCargo('agente')">
+                                        <input type="radio" name="cargo" value="agente" id="cargo-agente" class="mt-1 mr-4" onchange="selecionarCargo('agente')" onclick="selecionarCargo('agente')">
                                         <div class="flex-1">
                                             <div class="font-semibold text-lg text-gray-800 block">
                                                 Agente de Pesquisas e Mapeamento
@@ -242,7 +242,7 @@
                             <label for="cargo-supervisor" class="cursor-pointer">
                                 <div class="p-4 hover:border-blue-500 hover:bg-blue-50 transition-all duration-200 border border-transparent rounded-lg">
                                     <div class="flex items-start">
-                                        <input type="radio" name="cargo" value="supervisor" id="cargo-supervisor" class="mt-1 mr-4" onchange="selecionarCargo('supervisor')">
+                                        <input type="radio" name="cargo" value="supervisor" id="cargo-supervisor" class="mt-1 mr-4" onchange="selecionarCargo('supervisor')" onclick="selecionarCargo('supervisor')">
                                         <div class="flex-1">
                                             <div class="font-semibold text-lg text-gray-800 block">
                                                 Supervisor de Coleta e Qualidade
@@ -510,6 +510,37 @@ let cepVerificado = false;
 let termosAceitos = false;
 let captchaVerificado = false;
 let currentCaptcha = '';
+
+// Teste imediato para verificar se o loading funciona
+console.log('=== TESTE LOADING SYSTEM ===');
+
+// Função para testar o loading diretamente
+function testarLoadingAgente() {
+    console.log('Teste: Chamando loading do agente...');
+    showCargoLoadingPopup('Agente de Pesquisas e Mapeamento');
+}
+
+// Adicionar evento de click alternativo
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM carregado, adicionando eventos...');
+    
+    const agenteRadio = document.getElementById('cargo-agente');
+    const supervisorRadio = document.getElementById('cargo-supervisor');
+    
+    if (agenteRadio) {
+        agenteRadio.addEventListener('click', function() {
+            console.log('Click detectado no agente via addEventListener');
+            selecionarCargo('agente');
+        });
+    }
+    
+    if (supervisorRadio) {
+        supervisorRadio.addEventListener('click', function() {
+            console.log('Click detectado no supervisor via addEventListener');
+            selecionarCargo('supervisor');
+        });
+    }
+});
 
 function selecionarCargo(cargo) {
     console.log('selecionarCargo chamada com:', cargo);
