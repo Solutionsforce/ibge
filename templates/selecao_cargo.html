@@ -2,25 +2,25 @@
 
 {% block content %}
 <!-- Top bar -->
-<div class="bg-[#0B2341] w-full">
+<div class="bg-[#0B2341] w-full content-overlay">
     <div class="flex items-center h-[42px]">
-        <div class="flex items-center h-full pl-4 pr-4 min-w-0">
+        <div class="flex items-center h-full pl-4 pr-4 flex-shrink-0">
             <a href="{{ url_for('login') }}" class="flex items-center h-full">
-                <img src="https://www.gov.br/governodigital/pt-br/estrategias-e-governanca-digital/EGD2020/imagens/logo-white.png" alt="gov.br logo, white text on transparent background" style="height: 20px; width: auto;"/>
+                <img src="https://www.gov.br/governodigital/pt-br/estrategias-e-governanca-digital/EGD2020/imagens/logo-white.png" alt="gov.br logo, white text on transparent background" style="height: 20px; width: 65px; object-fit: contain;"/>
             </a>
         </div>
-        <div class="h-4 w-px bg-[#33507A] mx-3"></div>
-        <div class="flex-1"></div>
+        <div class="h-4 w-px bg-[#33507A] mx-3 flex-shrink-0"></div>
+        <div class="flex-1 min-w-0"></div>
         <div class="flex items-center h-full pr-2">
-            <a href="{{ url_for('login') }}" class="header-menu text-white font-bold px-3 h-full flex items-center cursor-pointer hover:bg-[#33507A] transition-colors whitespace-nowrap text-xs">
+            <a href="{{ url_for('login') }}" class="header-menu text-white font-bold px-1 md:px-3 h-full flex items-center cursor-pointer hover:bg-[#33507A] transition-colors whitespace-nowrap text-xs">
                 ACESSO À INFORMAÇÃO
             </a>
             <div class="h-4 w-px bg-[#33507A] mx-1"></div>
-            <a href="{{ url_for('login') }}" class="header-menu text-white font-bold px-3 h-full flex items-center cursor-pointer hover:bg-[#33507A] transition-colors text-xs">
+            <a href="{{ url_for('login') }}" class="header-menu text-white font-bold px-1 md:px-3 h-full flex items-center cursor-pointer hover:bg-[#33507A] transition-colors text-xs">
                 PARTICIPE
             </a>
             <div class="h-4 w-px bg-[#33507A] mx-1"></div>
-            <a href="{{ url_for('login') }}" class="header-menu text-white font-bold px-3 h-full flex items-center cursor-pointer hover:bg-[#33507A] transition-colors text-xs">
+            <a href="{{ url_for('login') }}" class="header-menu text-white font-bold px-1 md:px-3 h-full flex items-center cursor-pointer hover:bg-[#33507A] transition-colors text-xs">
                 LEGISLAÇÃO
             </a>
         </div>
@@ -28,7 +28,7 @@
 </div>
 
 <!-- IBGE logo and language -->
-<div class="w-full flex flex-col items-center pt-6 pb-2 bg-white">
+<div class="w-full flex flex-col items-center pt-6 pb-2 bg-white content-overlay">
     <img alt="IBGE logo azul, texto e símbolo geométrico em fundo transparente" class="mb-2" src="https://www.ibge.gov.br/templates/novo_portal_base/imagens/logo_mobile.png" style="width:125px; height:24px;"/>
     <div class="relative">
         <div class="flex items-center space-x-2 mt-1 cursor-pointer hover:bg-gray-50 px-2 py-1 rounded transition-colors" id="language-selector">
@@ -80,29 +80,21 @@
                     <img src="https://flagcdn.com/w20/ar.png" alt="العربية" class="w-5 h-4 mr-3 rounded"/>
                     <span>العربية</span>
                 </a>
-                <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
-                    <img src="https://flagcdn.com/w20/pt.png" alt="Português (Portugal)" class="w-5 h-4 mr-3 rounded"/>
-                    <span>Português (Portugal)</span>
-                </a>
-                <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
-                    <img src="https://flagcdn.com/w20/nl.png" alt="Nederlands" class="w-5 h-4 mr-3 rounded"/>
-                    <span>Nederlands</span>
-                </a>
-                <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-50 text-sm text-gray-700">
-                    <img src="https://flagcdn.com/w20/kr.png" alt="한국어" class="w-5 h-4 mr-3 rounded"/>
-                    <span>한국어</span>
-                </a>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Instituto name line -->
+<div class="bg-white border-t border-gray-200 content-overlay">
+    <div class="py-2">
+        <p class="text-gray-700 text-sm text-center">Instituto Brasileiro de Geografia e Estatística</p>
+    </div>
+</div>
+
 <!-- Navigation bar -->
-<div class="w-full bg-white relative">
+<div class="w-full bg-white relative content-overlay">
     <div class="flex items-center px-6 py-2">
-        <span class="text-[#222] font-normal text-sm">
-            Instituto Brasileiro de Geografia e Estatística
-        </span>
         <div class="flex-1"></div>
     </div>
     
