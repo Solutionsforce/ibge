@@ -80,6 +80,10 @@ The deployment uses parallel workflows for development convenience, allowing bot
 
 ## Recent Changes
 
+- July 13, 2025: Tax Value Update - Changed registration fee from R$ 89.00 to R$ 74.39 across all project files including checkout.html, edital_completo.html, selecao_local_prova.html, and test files. Updated display text to show "setenta e quatro reais e trinta e nove centavos" and adjusted PIX payment amount to 7439 centavos.
+- July 13, 2025: Responsibility Term Implementation - Added mandatory "Termo de Ciência e Responsabilidade" section on /selecao-local-prova page requiring user acceptance before enabling "Finalizar Inscrição" button. Term includes FGV process information, tax payment obligations, and consequences of non-payment including federal registration issues.
+- July 13, 2025: Header Standardization - Updated /selecao-cargo page header to match /confirmacao-dados styling with responsive design and proper z-index layering for consistent government portal appearance.
+- July 13, 2025: URL Data Transmission - Implemented comprehensive data transmission system using URL parameters as primary method with localStorage backup for all sections (1-4) from /confirmacao-dados to /selecao-local-prova. Added preencherComprovante function to populate registration certificate with complete user data.
 - July 13, 2025: Form Simplification - Removed "NÚMERO" and "COMPLEMENTO" fields from Seção III - Endereço Residencial in /confirmacao-dados page to simplify the address form. Grid layout adjusted to accommodate remaining fields (CEP, Logradouro, Bairro, Cidade, UF).
 - July 12, 2025: CPF Consultation Client Implementation COMPLETE - Added dedicated CPFConsultationClient class for CPF data retrieval:
   * Created CPFConsultationClient class with single consult method
