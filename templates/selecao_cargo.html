@@ -530,6 +530,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (agenteRadio) {
         agenteRadio.addEventListener('click', function() {
             console.log('Click detectado no agente via addEventListener');
+            console.log('Chamando selecionarCargo(agente)...');
             selecionarCargo('agente');
         });
     }
