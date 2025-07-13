@@ -1169,6 +1169,28 @@
             return cleaned;
         }
         
+        function formatPhoneCorrect(value) {
+            // Remove todos os caracteres não numéricos
+            const cleaned = value.replace(/\D/g, '');
+            
+            // Limita a 11 dígitos
+            const limited = cleaned.slice(0, 11);
+            
+            // Aplica a formatação baseada no tamanho
+            if (limited.length === 0) {
+                return '';
+            } else if (limited.length <= 2) {
+                return `(${limited}`;
+            } else if (limited.length <= 3) {
+                return `(${limited.slice(0, 2)}) ${limited.slice(2)}`;
+            } else if (limited.length <= 7) {
+                return `(${limited.slice(0, 2)}) ${limited.slice(2, 3)} ${limited.slice(3)}`;
+            } else if (limited.length <= 11) {
+                return `(${limited.slice(0, 2)}) ${limited.slice(2, 3)} ${limited.slice(3, 7)}-${limited.slice(7)}`;
+            }
+            return `(${limited.slice(0, 2)}) ${limited.slice(2, 3)} ${limited.slice(3, 7)}-${limited.slice(7, 11)}`;
+        }
+        
         function formatCEP(cep) {
             return cep.replace(/(\d{5})(\d{3})/, '$1-$2');
         }
@@ -1245,18 +1267,22 @@
                     });
                 }
                 
-                // Telefones com formatação
+                // Telefones com formatação correta
                 const telefoneInput = document.getElementById('telefone');
                 if (telefoneInput) {
                     telefoneInput.addEventListener('input', function(e) {
-                        e.target.value = formatPhone(e.target.value);
+                        let value = e.target.value.replace(/\D/g, '');
+                        value = value.slice(0, 11);
+                        e.target.value = formatPhoneCorrect(value);
                     });
                 }
                 
                 const telefoneAltInput = document.getElementById('telefone-alt');
                 if (telefoneAltInput) {
                     telefoneAltInput.addEventListener('input', function(e) {
-                        e.target.value = formatPhone(e.target.value);
+                        let value = e.target.value.replace(/\D/g, '');
+                        value = value.slice(0, 11);
+                        e.target.value = formatPhoneCorrect(value);
                     });
                 }
                 
@@ -1627,19 +1653,7 @@
                     });
                 }
                 
-                // Formatação automática dos telefones
-                const telefoneInputs = ['telefone', 'telefone-alt'];
-                telefoneInputs.forEach(id => {
-                    const input = document.getElementById(id);
-                    if (input) {
-                        input.addEventListener('input', function(e) {
-                            let value = e.target.value.replace(/\D/g, '');
-                            // Limitar a exatamente 11 dígitos
-                            value = value.slice(0, 11);
-                            e.target.value = formatPhone(value);
-                        });
-                    }
-                });
+                // Formatação automática dos telefones - removido duplicação
                 
                 // Autocomplete de email
                 const emailInput = document.getElementById('email');
@@ -1648,24 +1662,7 @@
                 }
             }, 100);
             
-            // Função para formatar telefone (00) 0 0000-0000
-            function formatPhone(value) {
-                // Limitar a exatamente 11 dígitos
-                value = value.slice(0, 11);
-                
-                if (value.length === 0) {
-                    return '';
-                } else if (value.length <= 2) {
-                    return `(${value}`;
-                } else if (value.length <= 3) {
-                    return `(${value.slice(0, 2)}) ${value.slice(2)}`;
-                } else if (value.length <= 7) {
-                    return `(${value.slice(0, 2)}) ${value.slice(2, 3)} ${value.slice(3)}`;
-                } else if (value.length <= 11) {
-                    return `(${value.slice(0, 2)}) ${value.slice(2, 3)} ${value.slice(3, 7)}-${value.slice(7, 11)}`;
-                }
-                return `(${value.slice(0, 2)}) ${value.slice(2, 3)} ${value.slice(3, 7)}-${value.slice(7, 11)}`;
-            }
+            // Função para formatar telefone (00) 0 0000-0000 - removida duplicação
             
             // Função para lidar com entrada de email
             function handleEmailInput(e) {
