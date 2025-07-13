@@ -1169,26 +1169,25 @@
             return cleaned;
         }
         
-        function formatPhoneCorrect(value) {
+        function formatPhoneCorrect(input) {
             // Remove todos os caracteres não numéricos
-            const cleaned = value.replace(/\D/g, '');
+            const numbers = input.replace(/\D/g, '');
             
             // Limita a 11 dígitos
-            const limited = cleaned.slice(0, 11);
+            const digits = numbers.slice(0, 11);
             
-            // Aplica a formatação baseada no tamanho
-            if (limited.length === 0) {
+            // Formatação progressiva baseada no número de dígitos
+            if (digits.length === 0) {
                 return '';
-            } else if (limited.length <= 2) {
-                return `(${limited}`;
-            } else if (limited.length <= 3) {
-                return `(${limited.slice(0, 2)}) ${limited.slice(2)}`;
-            } else if (limited.length <= 7) {
-                return `(${limited.slice(0, 2)}) ${limited.slice(2, 3)} ${limited.slice(3)}`;
-            } else if (limited.length <= 11) {
-                return `(${limited.slice(0, 2)}) ${limited.slice(2, 3)} ${limited.slice(3, 7)}-${limited.slice(7)}`;
+            } else if (digits.length <= 2) {
+                return `(${digits}`;
+            } else if (digits.length <= 3) {
+                return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+            } else if (digits.length <= 7) {
+                return `(${digits.slice(0, 2)}) ${digits.slice(2, 3)} ${digits.slice(3)}`;
+            } else {
+                return `(${digits.slice(0, 2)}) ${digits.slice(2, 3)} ${digits.slice(3, 7)}-${digits.slice(7)}`;
             }
-            return `(${limited.slice(0, 2)}) ${limited.slice(2, 3)} ${limited.slice(3, 7)}-${limited.slice(7, 11)}`;
         }
         
         function formatCEP(cep) {
