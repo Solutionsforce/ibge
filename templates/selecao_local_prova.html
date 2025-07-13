@@ -1451,7 +1451,11 @@
                 // Carregar cargo pretendido
                 const cargoElement = document.getElementById('cargo-comprovante');
                 if (cargoElement) {
-                    const cargoTexto = dadosCompletos.cargo === 'agente' ? 'Agente de Pesquisas e Mapeamento' : 'Agente de Pesquisas por Telefone';
+                    // Obter cargo dos parâmetros da URL
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const cargoParam = urlParams.get('cargo') || 'agente';
+                    
+                    const cargoTexto = cargoParam === 'supervisor' ? 'Supervisor de Coleta e Qualidade' : 'Agente de Pesquisas e Mapeamento';
                     cargoElement.textContent = cargoTexto;
                     cargoElement.classList.remove('loading-skeleton');
                     cargoElement.classList.add('fade-in');

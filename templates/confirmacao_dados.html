@@ -1010,8 +1010,10 @@
             params.append('telefone_alt', dadosUsuario.telefone_alt);
             params.append('email', dadosUsuario.email);
             
-            // Dados do cargo
-            params.append('cargo', dadosUsuario.cargo_selecionado);
+            // Dados do cargo - obter da URL atual
+            const urlParams = new URLSearchParams(window.location.search);
+            const cargoAtual = urlParams.get('cargo') || 'agente';
+            params.append('cargo', cargoAtual);
             params.append('protocolo', dadosUsuario.protocolo_numero);
             
             // Redirecionar com parâmetros
