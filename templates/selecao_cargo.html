@@ -544,6 +544,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function showLoadingAgente() {
+    console.log('showLoadingAgente CHAMADA!');
+    
     // Marcar o radio button do agente
     document.getElementById('cargo-agente').checked = true;
     document.getElementById('cargo-supervisor').checked = false;
@@ -554,6 +556,7 @@ function showLoadingAgente() {
     categoriaDiv.classList.add('hidden');
     
     // Usar exatamente a mesma função que o supervisor
+    console.log('Chamando showCargoLoadingPopup para Agente...');
     showCargoLoadingPopup('Agente de Pesquisas e Mapeamento');
 }
 
