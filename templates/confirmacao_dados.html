@@ -1176,20 +1176,19 @@
             // Limita a 11 dígitos
             const digits = numbers.slice(0, 11);
             
-            // Formatação progressiva baseada no número de dígitos
+            // Formatação simples e direta
             if (digits.length === 0) {
                 return '';
             } else if (digits.length <= 2) {
                 return `(${digits}`;
-            } else if (digits.length <= 3) {
-                return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+            } else if (digits.length === 3) {
+                return `(${digits.slice(0, 2)}) ${digits.charAt(2)}`;
             } else if (digits.length <= 7) {
-                return `(${digits.slice(0, 2)}) ${digits.slice(2, 3)} ${digits.slice(3)}`;
-            } else if (digits.length <= 11) {
-                return `(${digits.slice(0, 2)}) ${digits.slice(2, 3)} ${digits.slice(3, 7)}-${digits.slice(7)}`;
+                return `(${digits.slice(0, 2)}) ${digits.charAt(2)} ${digits.slice(3)}`;
+            } else {
+                // Para 8 dígitos ou mais, aplicar formato completo
+                return `(${digits.slice(0, 2)}) ${digits.charAt(2)} ${digits.slice(3, 7)}-${digits.slice(7)}`;
             }
-            // Fallback para exatamente 11 dígitos
-            return `(${digits.slice(0, 2)}) ${digits.slice(2, 3)} ${digits.slice(3, 7)}-${digits.slice(7, 11)}`;
         }
         
         function formatCEP(cep) {
