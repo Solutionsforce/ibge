@@ -83,9 +83,9 @@ The deployment uses parallel workflows for development convenience, allowing bot
 - July 13, 2025: Loading Fix and Text Update - Fixed loading functionality and updated comprovante text:
   * Problem: Loading popup only appeared for cargo 002 (Supervisor) when CNH category was selected, not for cargo 001 (Agente)
   * Solution: Created separate loading functions - showAgenteLoadingPopup() and showSupervisorLoadingPopup() with unique IDs
-  * Modified selecionarCargo() to trigger showAgenteLoadingPopup() immediately for cargo 001 (Agente) selection
-  * Enhanced updateCategoriaSelection() to trigger showSupervisorLoadingPopup() for cargo 002 (Supervisor) CNH selection
-  * Loading now appears for both cargo 001 (Agente) - immediate, and cargo 002 (Supervisor) - when CNH category is selected
+  * Modified selecionarCargo() to trigger loading immediately for BOTH cargo selections (no need to wait for CNH category)
+  * Loading now appears for both cargo 001 (Agente) and cargo 002 (Supervisor) immediately upon selection
+  * Removed CNH category dependency - loading triggers on cargo selection, not CNH category selection
   * Updated comprovante text in /selecao-local-prova from "Será selecionado após escolha do local" to "Informado 7 (sete) dias úteis antes da prova"
   * Both changes maintain the 7-second dual-phase loading process with federal verification and green "Cidadão apto" message
   * Added debugging logs to track function execution and popup creation
