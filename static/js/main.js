@@ -438,7 +438,7 @@ async function handleIniciarInscricao() {
         showLoadingPopup('Verificação Necessária');
         
         // Simular delay total
-        await new Promise(resolve => setTimeout(resolve, 5000));
+        await new Promise(resolve => setTimeout(resolve, 3000));
         
         // Redirecionar diretamente sem fechar o popup primeiro
         window.location.href = '/login';
