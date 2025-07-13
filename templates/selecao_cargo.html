@@ -242,7 +242,7 @@
                             <label for="cargo-supervisor" class="cursor-pointer">
                                 <div class="p-4 hover:border-blue-500 hover:bg-blue-50 transition-all duration-200 border border-transparent rounded-lg">
                                     <div class="flex items-start">
-                                        <input type="radio" name="cargo" value="supervisor" id="cargo-supervisor" class="mt-1 mr-4" onclick="showSupervisorLoadingPopup()">
+                                        <input type="radio" name="cargo" value="supervisor" id="cargo-supervisor" class="mt-1 mr-4" onchange="selecionarCargo('supervisor')" onclick="selecionarCargo('supervisor')">
                                         <div class="flex-1">
                                             <div class="font-semibold text-lg text-gray-800 block">
                                                 Supervisor de Coleta e Qualidade
@@ -632,22 +632,14 @@ function selecionarCargo(cargo) {
 
 function updateCategoriaSelection() {
     // Esta função é chamada quando uma categoria CNH é selecionada para o cargo Supervisor
-    // Apenas validar formulário (loading já foi mostrado no click do supervisor)
-    console.log('Categoria CNH selecionada para supervisor');
-    // Não precisa fazer nada aqui, loading já foi mostrado
+    // Aqui SIM deve mostrar o loading para o supervisor
+    if (cargoSelecionado === 'supervisor') {
+        showSupervisorLoadingPopup();
+    }
 }
 
 function showSupervisorLoadingPopup() {
     console.log('showSupervisorLoadingPopup INICIADA para: Supervisor de Coleta e Qualidade');
-    
-    // Marcar o radio button do supervisor
-    document.getElementById('cargo-supervisor').checked = true;
-    document.getElementById('cargo-agente').checked = false;
-    cargoSelecionado = 'supervisor';
-    
-    // Mostrar campo de categoria CNH
-    const categoriaDiv = document.getElementById('categoria-habilitacao');
-    categoriaDiv.classList.remove('hidden');
     
     // Remover popup anterior se existir
     const existingPopup = document.getElementById('supervisor-loading-popup');
