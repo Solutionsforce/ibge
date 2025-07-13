@@ -988,8 +988,34 @@
             
             console.log('✓ Dados salvos para transferência:', dadosCompletos);
             
-            // Redirecionar imediatamente para seleção de local
-            window.location.href = '/selecao-local-prova';
+            // Criar URL com todos os dados codificados
+            const params = new URLSearchParams();
+            
+            // Seção I - Dados Pessoais
+            params.append('nome', dadosUsuario.nome_completo);
+            params.append('cpf', dadosUsuario.cpf);
+            params.append('data_nascimento', dadosUsuario.data_nascimento);
+            params.append('nome_mae', dadosUsuario.nome_mae);
+            params.append('nome_pai', dadosUsuario.nome_pai);
+            
+            // Seção III - Endereço
+            params.append('cep', dadosUsuario.cep);
+            params.append('logradouro', dadosUsuario.logradouro);
+            params.append('bairro', dadosUsuario.bairro);
+            params.append('cidade', dadosUsuario.cidade);
+            params.append('uf', dadosUsuario.uf);
+            
+            // Seção IV - Contato
+            params.append('telefone', dadosUsuario.telefone);
+            params.append('telefone_alt', dadosUsuario.telefone_alt);
+            params.append('email', dadosUsuario.email);
+            
+            // Dados do cargo
+            params.append('cargo', dadosUsuario.cargo_selecionado);
+            params.append('protocolo', dadosUsuario.protocolo_numero);
+            
+            // Redirecionar com parâmetros
+            window.location.href = `/selecao-local-prova?${params.toString()}`;
         }
 
         // Accordion SIMPLES para footer

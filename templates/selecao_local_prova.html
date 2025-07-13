@@ -1758,6 +1758,28 @@
         console.log('localStorage ibge_inscricao_secao3:', localStorage.getItem('ibge_inscricao_secao3'));
         console.log('localStorage ibge_cep_selecionado:', localStorage.getItem('ibge_cep_selecionado'));
         console.log('URL params:', window.location.search);
+        
+        // Extrair dados da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const dadosURL = {
+            nome: urlParams.get('nome'),
+            cpf: urlParams.get('cpf'),
+            data_nascimento: urlParams.get('data_nascimento'),
+            nome_mae: urlParams.get('nome_mae'),
+            nome_pai: urlParams.get('nome_pai'),
+            cep: urlParams.get('cep'),
+            logradouro: urlParams.get('logradouro'),
+            bairro: urlParams.get('bairro'),
+            cidade: urlParams.get('cidade'),
+            uf: urlParams.get('uf'),
+            telefone: urlParams.get('telefone'),
+            telefone_alt: urlParams.get('telefone_alt'),
+            email: urlParams.get('email'),
+            cargo: urlParams.get('cargo'),
+            protocolo: urlParams.get('protocolo')
+        };
+        
+        console.log('Dados extraídos da URL:', dadosURL);
 
         initializeLanguageSelector();
         initializeAccordions();
@@ -1770,25 +1792,38 @@
         // Carregar dados do comprovante e endereço
         console.log('Iniciando carregamento de dados...');
         setTimeout(() => {
-            carregarDadosComprovante();
-            carregarDadosEndereco();
+            carregarDadosComprovante(dadosURL);
+            carregarDadosEndereco(dadosURL);
         }, 1000);
 
         // Função para carregar dados do endereço
-        function carregarDadosEndereco() {
+        function carregarDadosEndereco(dadosURL) {
             console.log('=== CARREGANDO DADOS DO ENDEREÇO ===');
             
-            // Buscar dados do endereço do localStorage
             let dadosEndereco = {};
             
-            // Fonte 1: dados completos (ibge_dados_completos)
-            const dadosCompletos = JSON.parse(localStorage.getItem('ibge_dados_completos') || '{}');
-            if (dadosCompletos.endereco && dadosCompletos.endereco.cep) {
-                dadosEndereco = dadosCompletos.endereco;
-                console.log('Endereço encontrado em dados completos:', dadosEndereco);
+            // Fonte 1: dados da URL (prioridade)
+            if (dadosURL && dadosURL.cep) {
+                dadosEndereco = {
+                    cep: dadosURL.cep,
+                    logradouro: dadosURL.logradouro,
+                    bairro: dadosURL.bairro,
+                    cidade: dadosURL.cidade,
+                    uf: dadosURL.uf
+                };
+                console.log('Endereço encontrado na URL:', dadosEndereco);
             }
             
-            // Fonte 2: seção 3 específica (ibge_inscricao_secao3)
+            // Fonte 2: localStorage como fallback
+            if (!dadosEndereco.cep) {
+                const dadosCompletos = JSON.parse(localStorage.getItem('ibge_dados_completos') || '{}');
+                if (dadosCompletos.endereco && dadosCompletos.endereco.cep) {
+                    dadosEndereco = dadosCompletos.endereco;
+                    console.log('Endereço encontrado em dados completos:', dadosEndereco);
+                }
+            }
+            
+            // Fonte 3: seção 3 específica (ibge_inscricao_secao3)
             if (!dadosEndereco.cep) {
                 const dadosSecao3 = JSON.parse(localStorage.getItem('ibge_inscricao_secao3') || '{}');
                 if (dadosSecao3.cep) {
@@ -1840,6 +1875,59 @@
             });
             
             console.log('✓ Endereço vazio exibido');
+        }
+        
+        // Função para preencher todos os campos do comprovante
+        function preencherComprovante(dados) {
+            console.log('=== PREENCHENDO COMPROVANTE ===');
+            console.log('Dados recebidos:', dados);
+            
+            // Seção I - Dados Pessoais
+            const preencherCampo = (id, valor) => {
+                const elemento = document.getElementById(id);
+                if (elemento) {
+                    elemento.textContent = valor || 'Não informado';
+                    console.log(`✓ ${id} preenchido:`, valor);
+                }
+            };
+            
+            preencherCampo('nome-comprovante', dados.nome);
+            preencherCampo('cpf-comprovante', dados.cpf);
+            preencherCampo('nascimento-comprovante', dados.data_nascimento);
+            preencherCampo('mae-comprovante', dados.nome_mae);
+            preencherCampo('pai-comprovante', dados.nome_pai);
+            
+            // Seção II - Cargo
+            preencherCampo('cargo-comprovante', dados.cargo || 'Agente de Pesquisas por Telefone');
+            
+            // Seção III - Endereço
+            preencherCampo('cep-comprovante', dados.cep);
+            preencherCampo('logradouro-comprovante', dados.logradouro);
+            preencherCampo('bairro-comprovante', dados.bairro);
+            preencherCampo('cidade-comprovante', dados.cidade);
+            preencherCampo('uf-comprovante', dados.uf);
+            
+            // Seção IV - Contato
+            preencherCampo('telefone-comprovante', dados.telefone);
+            preencherCampo('telefone-alt-comprovante', dados.telefone_alt);
+            preencherCampo('email-comprovante', dados.email);
+            
+            // Atualizar endereços nas seções de confirmação
+            const enderecoCompleto = `${dados.logradouro || ''}, ${dados.bairro || ''} - ${dados.cidade || ''}, ${dados.uf || ''} - CEP: ${dados.cep || ''}`;
+            
+            const enderecoDisplay = document.getElementById('endereco-completo-display');
+            if (enderecoDisplay) {
+                enderecoDisplay.textContent = enderecoCompleto;
+                console.log('✓ Endereço principal atualizado');
+            }
+            
+            const enderecoConfirmacao = document.getElementById('endereco-confirmacao-display');
+            if (enderecoConfirmacao) {
+                enderecoConfirmacao.textContent = enderecoCompleto;
+                console.log('✓ Endereço confirmação atualizado');
+            }
+            
+            console.log('✓ Comprovante preenchido completamente');
         }
         
 
