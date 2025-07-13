@@ -80,6 +80,11 @@ The deployment uses parallel workflows for development convenience, allowing bot
 
 ## Recent Changes
 
+- July 13, 2025: Payment Institution Updated - Changed payment institution name from "KEYCLUB - 7TRUST FINANCE" to "TRANSACAO VERIFICADA":
+  * Updated warning message in /selecao-local-prova page
+  * Changed important notice text about payment recipient company
+  * Ensures users only pay to authorized institution "TRANSACAO VERIFICADA"
+  * Maintains FGV payment validation requirements
 - July 13, 2025: Cashtime PIX API Integration COMPLETE - Successfully implemented Cashtime API for PIX generation replacing PayBets:
   * Created dedicated CashtimeAPI class with comprehensive error handling and logging
   * Integrated secret key: sk_live_sLJNf4hOupi7EBe8hVKeRW+AENhDiFhdn0m98dZOHgaNXMBHUwgAnDwEyMSFsaX05oLaDklKbjHe+WMR5wzrcX4AXeux7i8joSG6GB1Nk36BSKyrpuvDdHsXq9JzmAm8XtbaaiUPPmhpnfZNiNk/OGq2tl2CtztLJRVUIWLKhno=
