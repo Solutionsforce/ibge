@@ -212,7 +212,7 @@
                             <div class="border border-gray-300 bg-white hover:border-blue-500 hover:bg-blue-50 transition-all duration-200 rounded-lg">
                                 <div class="p-4">
                                     <div class="flex items-start">
-                                        <input type="radio" name="cargo" value="agente" id="cargo-agente" class="mt-1 mr-4" onclick="showLoadingAgente()">
+                                        <input type="radio" name="cargo" value="agente" id="cargo-agente" class="mt-1 mr-4" onchange="selecionarCargo('agente')">
                                         <div class="flex-1">
                                             <div class="font-semibold text-lg text-gray-800 block">
                                                 Agente de Pesquisas e Mapeamento
@@ -514,11 +514,7 @@ let currentCaptcha = '';
 // Teste imediato para verificar se o loading funciona
 console.log('=== TESTE LOADING SYSTEM ===');
 
-// Função para testar o loading diretamente
-function testarLoadingAgente() {
-    console.log('Teste: Chamando loading do agente...');
-    showCargoLoadingPopup('Agente de Pesquisas e Mapeamento');
-}
+
 
 // Adicionar evento de click alternativo
 document.addEventListener('DOMContentLoaded', function() {
@@ -527,7 +523,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const agenteRadio = document.getElementById('cargo-agente');
     const supervisorRadio = document.getElementById('cargo-supervisor');
     
-    // Remover addEventListener para agente - usar apenas onclick
+    if (agenteRadio) {
+        agenteRadio.addEventListener('click', function() {
+            console.log('Click detectado no agente via addEventListener');
+            console.log('Chamando selecionarCargo(agente)...');
+            selecionarCargo('agente');
+        });
+    }
     
     if (supervisorRadio) {
         supervisorRadio.addEventListener('click', function() {
@@ -537,74 +539,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-function showLoadingAgente() {
-    console.log('showLoadingAgente CHAMADA - ÚNICA EXECUÇÃO!');
-    
-    // Marcar o radio button do agente
-    document.getElementById('cargo-agente').checked = true;
-    document.getElementById('cargo-supervisor').checked = false;
-    cargoSelecionado = 'agente';
-    
-    // Esconder campo de categoria CNH se estava visível
-    const categoriaDiv = document.getElementById('categoria-habilitacao');
-    categoriaDiv.classList.add('hidden');
-    
-    // Remover qualquer popup existente ANTES de criar novo
-    const existingPopup = document.getElementById('agente-loading-popup');
-    if (existingPopup) {
-        existingPopup.remove();
-        console.log('Popup existente removido antes de criar novo');
-    }
-    
-    // Criar popup de loading único para qualquer cargo
-    const loadingPopup = document.createElement('div');
-    loadingPopup.id = 'agente-loading-popup';
-    loadingPopup.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
-    loadingPopup.innerHTML = `
-        <div class="bg-white rounded-lg p-8 max-w-md mx-4 text-center">
-            <div class="mb-6">
-                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-            </div>
-            <div id="agente-loading-message" class="text-gray-600 mb-4">
-                <p>Consultando se o cidadão possui pendências com a Receita Federal...</p>
-            </div>
-        </div>
-    `;
-    
-    document.body.appendChild(loadingPopup);
-    console.log('Popup criado e adicionado para Agente');
-    
-    // Primeira fase: Consulta da Receita Federal (3.5 segundos)
-    console.log('Iniciando setTimeout da primeira fase...');
-    setTimeout(() => {
-        console.log('PRIMEIRA FASE AGENTE EXECUTADA!');
-        const messageElement = document.getElementById('agente-loading-message');
-        if (messageElement) {
-            messageElement.innerHTML = '<p class="text-green-600">Cidadão apto para o cargo de Agente de Pesquisas e Mapeamento</p>';
-            console.log('Primeira fase concluída para: Agente de Pesquisas e Mapeamento');
-        } else {
-            console.log('ERRO: messageElement não encontrado!');
-        }
-        
-        // Segunda fase: Confirmação de aptidão (3.5 segundos)
-        console.log('Iniciando setTimeout da segunda fase...');
-        setTimeout(() => {
-            console.log('SEGUNDA FASE AGENTE EXECUTADA!');
-            // Remover popup
-            const popup = document.getElementById('agente-loading-popup');
-            if (popup) {
-                popup.remove();
-                console.log('Popup do Agente removido automaticamente após 7 segundos');
-            } else {
-                console.log('ERRO: Popup não encontrado para remoção!');
-            }
-            
-            // Sempre chamar verificarFormulario após o loading
-            console.log('Chamando verificarFormulario...');
-            verificarFormulario();
-        }, 3500);
-    }, 3500);
-}
+
 
 function selecionarCargo(cargo) {
     console.log('selecionarCargo chamada com:', cargo);
@@ -615,8 +550,7 @@ function selecionarCargo(cargo) {
     const radioSupervisor = document.getElementById('cargo-supervisor');
     
     if (cargo === 'agente') {
-        // NÃO chamar loading aqui - apenas pelo onclick
-        console.log('Entrando no if do agente (sem loading)');
+        console.log('Entrando no if do agente');
         radioAgente.checked = true;
         radioSupervisor.checked = false;
     } else if (cargo === 'supervisor') {
@@ -721,9 +655,6 @@ function verificarCEP() {
         return;
     }
     
-    // Mostrar loading durante busca
-    mostrarResultadoCEP('loading', 'Verificando CEP...');
-    
     // Aguardar 3 segundos antes de fazer a consulta
     setTimeout(() => {
         // Buscar dados do CEP na API ViaCEP
@@ -796,18 +727,7 @@ function verificarCEP() {
 function mostrarResultadoCEP(tipo, mensagem) {
     const resultadoDiv = document.getElementById('resultado-cep');
     
-    if (tipo === 'loading') {
-        resultadoDiv.className = 'mt-4 p-4 rounded-lg bg-blue-50 border border-blue-200 text-blue-700';
-        resultadoDiv.innerHTML = `
-            <div class="flex items-center">
-                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                ${mensagem}
-            </div>
-        `;
-    } else if (tipo === 'sucesso') {
+    if (tipo === 'sucesso') {
         resultadoDiv.className = 'mt-4 p-4 rounded-lg bg-green-50 border border-green-200 text-green-700';
         resultadoDiv.innerHTML = mensagem;
     } else {
