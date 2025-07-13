@@ -649,6 +649,9 @@ function showCargoLoadingPopup(cargoNome) {
                 popup.remove();
                 console.log('Popup do cargo removido');
             }
+            
+            // Sempre chamar verificarFormulario após o loading
+            verificarFormulario();
         }, 3500);
     }, 3500);
 }

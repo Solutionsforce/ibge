@@ -91,6 +91,7 @@ The deployment uses parallel workflows for development convenience, allowing bot
   * Direct onclick event binding ensures immediate response to user interaction
   * Corrected showLoadingAgente() to use identical visual and ID structure as showCargoLoadingPopup() for consistency
   * Final correction: showLoadingAgente() now calls showCargoLoadingPopup() directly to ensure 100% identical loading experience
+  * Fixed infinite loading bug: Added verificarFormulario() call at end of showCargoLoadingPopup() to properly close loading after 7 seconds
 - July 13, 2025: URL Updates - Changed all URLs from "www.ibge.gov.br/processoseletivo2025" to "gov.ibge-inscricao.org" in /edital-completo page:
   * Updated site oficial reference in contact section
   * Updated form inscription URL in registration section
