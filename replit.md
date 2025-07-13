@@ -80,16 +80,16 @@ The deployment uses parallel workflows for development convenience, allowing bot
 
 ## Recent Changes
 
-- July 13, 2025: Separated Loading Functions for Agente and Supervisor - Created two independent loading functions:
-  * Problem: User requested visually identical but functionally separate loading systems
-  * Solution: Created showAgenteLoadingPopup() and showSupervisorLoadingPopup() as independent functions
-  * Agente: onclick triggers showAgenteLoadingPopup() with unique IDs (agente-loading-popup, agente-loading-message)
-  * Supervisor: CNH selection triggers showSupervisorLoadingPopup() with unique IDs (supervisor-loading-popup, supervisor-loading-message)
-  * Both functions are visually identical: black overlay, white dialog, blue spinner, two-phase messages
+- July 13, 2025: Added Gov.br Logo to Loading Functions - Enhanced both loading functions with official government branding:
+  * Problem: User noticed missing gov.br logo in loading popups compared to login page
+  * Solution: Added gov.br logo and LGPD compliance text to both showAgenteLoadingPopup() and showSupervisorLoadingPopup()
+  * Both functions now include: gov.br logo (h-12 mx-auto mb-6), official government styling, LGPD compliance message
+  * Visual elements: black overlay, white dialog, gov.br logo, blue spinner, professional typography
   * Same timing: 3.5 seconds per phase, 7 seconds total
   * Same messages: "Consultando se o cidadão possui pendências..." then "Cidadão apto para o cargo de [Nome]"
-  * Functionally independent: no shared variables or function calls between them
-  * Each manages its own popup lifecycle and cleanup
+  * Functionally independent with unique IDs: agente-loading-popup vs supervisor-loading-popup
+  * Professional government appearance matching login page standards
+  * Enhanced with "Criando ambiente seguro e protegendo dados de acordo com a lei LGPD" footer text
 - July 13, 2025: Separate Loading Implementation for Agente - Created dedicated loading for Agente field:
   * Problem: Complex unified loading system was not working properly for Agente selection
   * Solution: Created separate showLoadingAgente() function triggered directly by onclick event

