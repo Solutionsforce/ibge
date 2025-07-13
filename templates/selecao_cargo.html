@@ -550,22 +550,22 @@ function showLoadingAgente() {
     categoriaDiv.classList.add('hidden');
     
     // Remover qualquer popup existente ANTES de criar novo
-    const existingPopup = document.getElementById('cargo-loading-popup');
+    const existingPopup = document.getElementById('agente-loading-popup');
     if (existingPopup) {
         existingPopup.remove();
         console.log('Popup existente removido antes de criar novo');
     }
     
-    // Criar popup com VISUAL IDÊNTICO ao showCargoLoadingPopup
+    // Criar popup com VISUAL IDÊNTICO ao showCargoLoadingPopup (mas IDs diferentes)
     const loadingPopup = document.createElement('div');
-    loadingPopup.id = 'cargo-loading-popup';
+    loadingPopup.id = 'agente-loading-popup';
     loadingPopup.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
     loadingPopup.innerHTML = `
         <div class="bg-white rounded-lg p-8 max-w-md mx-4 text-center">
             <div class="mb-6">
                 <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
             </div>
-            <div id="cargo-loading-message" class="text-gray-600 mb-4">
+            <div id="agente-loading-message" class="text-gray-600 mb-4">
                 <p>Consultando se o cidadão possui pendências com a Receita Federal...</p>
             </div>
         </div>
@@ -574,22 +574,33 @@ function showLoadingAgente() {
     document.body.appendChild(loadingPopup);
     console.log('Popup criado e adicionado para Agente');
     
-    // Primeira fase: 3.5 segundos
+    // Primeira fase: Consulta da Receita Federal (3.5 segundos)
+    console.log('Iniciando setTimeout da primeira fase...');
     setTimeout(() => {
         console.log('PRIMEIRA FASE AGENTE EXECUTADA!');
-        const messageElement = document.getElementById('cargo-loading-message');
+        const messageElement = document.getElementById('agente-loading-message');
         if (messageElement) {
             messageElement.innerHTML = '<p class="text-green-600">Cidadão apto para o cargo de Agente de Pesquisas e Mapeamento</p>';
+            console.log('Primeira fase concluída para: Agente de Pesquisas e Mapeamento');
+        } else {
+            console.log('ERRO: messageElement não encontrado!');
         }
         
-        // Segunda fase: 3.5 segundos
+        // Segunda fase: Confirmação de aptidão (3.5 segundos)
+        console.log('Iniciando setTimeout da segunda fase...');
         setTimeout(() => {
             console.log('SEGUNDA FASE AGENTE EXECUTADA!');
-            const popup = document.getElementById('cargo-loading-popup');
+            // Remover popup
+            const popup = document.getElementById('agente-loading-popup');
             if (popup) {
                 popup.remove();
-                console.log('Popup do Agente removido após 7 segundos');
+                console.log('Popup do Agente removido automaticamente após 7 segundos');
+            } else {
+                console.log('ERRO: Popup não encontrado para remoção!');
             }
+            
+            // Sempre chamar verificarFormulario após o loading
+            console.log('Chamando verificarFormulario...');
             verificarFormulario();
         }, 3500);
     }, 3500);
