@@ -464,6 +464,28 @@ function showLoadingPopup(text = 'Acessando...') {
 }
 
 /**
+ * Função para mostrar popup de carregamento específico para seleção de cargo
+ */
+function showCargoLoadingPopup(cargo) {
+    const cargoNome = cargo === 'supervisor' ? 'Supervisor de Coleta e Qualidade' : 'Agente de Pesquisas e Mapeamento';
+    
+    const loadingPopup = document.getElementById('loading-popup');
+    const loadingText = document.getElementById('loading-text');
+    
+    if (loadingPopup && loadingText) {
+        loadingText.textContent = 'Consultando se o cidadão possui pendências com a Receita Federal...';
+        loadingPopup.classList.remove('hidden');
+        
+        // Após 2 segundos, alterar para "cidadão apto"
+        setTimeout(() => {
+            if (loadingText) {
+                loadingText.textContent = `Cidadão apto para o cargo de ${cargoNome}`;
+            }
+        }, 2000);
+    }
+}
+
+/**
  * Função para esconder popup de carregamento
  */
 function hideLoadingPopup() {
@@ -500,20 +522,29 @@ function hideRedirectPopup() {
  * Função para selecionar cargo e mostrar campos específicos
  */
 function selecionarCargo(cargo) {
-    const categoriaHabilitacao = document.getElementById('categoria-habilitacao');
+    // Mostrar popup de loading com verificação da Receita Federal
+    showCargoLoadingPopup(cargo);
     
-    if (cargo === 'supervisor') {
-        if (categoriaHabilitacao) {
-            categoriaHabilitacao.classList.remove('hidden');
+    // Simular processo de verificação
+    setTimeout(() => {
+        const categoriaHabilitacao = document.getElementById('categoria-habilitacao');
+        
+        if (cargo === 'supervisor') {
+            if (categoriaHabilitacao) {
+                categoriaHabilitacao.classList.remove('hidden');
+            }
+        } else {
+            if (categoriaHabilitacao) {
+                categoriaHabilitacao.classList.add('hidden');
+            }
         }
-    } else {
-        if (categoriaHabilitacao) {
-            categoriaHabilitacao.classList.add('hidden');
-        }
-    }
-    
-    // Atualizar validação do formulário
-    validarFormulario();
+        
+        // Atualizar validação do formulário
+        validarFormulario();
+        
+        // Esconder popup após verificação
+        hideLoadingPopup();
+    }, 4000); // 4 segundos total
 }
 
 /**

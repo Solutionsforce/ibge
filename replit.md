@@ -80,6 +80,18 @@ The deployment uses parallel workflows for development convenience, allowing bot
 
 ## Recent Changes
 
+- July 13, 2025: Cargo Selection Loading Implementation - Added verification loading popup for cargo selection on /selecao-cargo page:
+  * Created showCargoLoadingPopup() function with dual-phase loading messages
+  * First phase: "Consultando se o cidadão possui pendências com a Receita Federal..." (2 seconds)
+  * Second phase: "Cidadão apto para o cargo de [Nome do Cargo]" (2 seconds)
+  * Modified selecionarCargo() function to integrate loading process before showing category selection
+  * Total loading time: 4 seconds with smooth message transitions
+  * Maintains existing functionality while adding realistic verification process simulation
+- July 13, 2025: Cargo Field Correction - Fixed "cargo pretendido" field in registration certificate:
+  * Problem: Field was using dadosCompletos.cargo instead of URL parameters from /confirmacao-dados
+  * Solution: Updated to use URLSearchParams to get correct cargo value from URL
+  * Fixed confirmarInscricao() function to properly transmit cargo parameter
+  * Correct mapping: "supervisor" → "Supervisor de Coleta e Qualidade", "agente" → "Agente de Pesquisas e Mapeamento"
 - July 13, 2025: Salary Updates - Updated salary displays across all templates:
   * Agente de Pesquisa e Mapeamento: Changed "R$ 5.866,00" to "+Benefícios" in all gratification fields
   * Supervisor de Coleta e Qualidade: Changed "R$ 9.000,00 a R$ 10.000,00" to "R$ 4.978,00" for initial salary and "R$ 13.980,00" to "+Benefícios" for gratifications
