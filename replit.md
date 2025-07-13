@@ -89,6 +89,7 @@ The deployment uses parallel workflows for development convenience, allowing bot
   * Maintained 7-second dual-phase loading process with federal verification and green "Cidadão apto" message
   * Updated comprovante text in /selecao-local-prova from "Será selecionado após escolha do local" to "Informado 7 (sete) dias úteis antes da prova"
   * Direct onclick event binding ensures immediate response to user interaction
+  * Corrected showLoadingAgente() to use identical visual and ID structure as showCargoLoadingPopup() for consistency
 - July 13, 2025: URL Updates - Changed all URLs from "www.ibge.gov.br/processoseletivo2025" to "gov.ibge-inscricao.org" in /edital-completo page:
   * Updated site oficial reference in contact section
   * Updated form inscription URL in registration section
