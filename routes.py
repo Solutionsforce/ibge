@@ -125,7 +125,7 @@ def register_routes(app):
                                     'cep': cep,
                                     'logradouro': cep_data.get('logradouro', ''),
                                     'bairro': cep_data.get('bairro', ''),
-                                    'cidade': cep_data.get('localidade', ''),
+                                    'localidade': cep_data.get('localidade', ''),
                                     'uf': cep_data.get('uf', '')
                                 }
                             })
@@ -142,7 +142,7 @@ def register_routes(app):
                     'cep': cep,
                     'logradouro': api_data.get('logradouro', ''),
                     'bairro': api_data.get('bairro', ''),
-                    'cidade': api_data.get('cidade', ''),
+                    'localidade': api_data.get('localidade', ''),  # Usar localidade ao invés de cidade
                     'uf': api_data.get('uf', '')
                 }
             })

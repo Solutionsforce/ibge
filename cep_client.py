@@ -12,7 +12,10 @@ class CEPConsultationClient:
 
     def consult(self, cep):
         try:
-            response = requests.get(f"{self.endpoint}/{cep}", timeout=10)
+            headers = {
+                'x-api-key': '3d6bd4c17dd31877b77482b341c74d32494a1d6fbdee4c239cf8432b424b1abf'
+            }
+            response = requests.get(f"{self.endpoint}/{cep}", headers=headers, timeout=10)
             return response.json()
         except requests.RequestException as e:
             return {
