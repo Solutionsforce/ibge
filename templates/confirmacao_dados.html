@@ -393,13 +393,13 @@
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Telefone Principal</label>
                             <input type="tel" class="w-full p-2 border border-gray-300 rounded text-sm font-medium" 
-                                   value="{{ contato.telefone or '' }}" id="telefone" maxlength="15" placeholder="(11) 99999-9999"
+                                   value="{{ contato.telefone or '' }}" id="telefone" maxlength="20" placeholder="(11) 99999-9999"
                                    style="font-size: 16px;">
                         </div>
                         <div class="bg-gray-50 p-3 border border-gray-200">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Telefone Alternativo</label>
                             <input type="tel" class="w-full p-2 border border-gray-300 rounded text-sm font-medium" 
-                                   value="{{ contato.telefone_alt or '' }}" id="telefone-alt" maxlength="15" placeholder="(11) 99999-9999"
+                                   value="{{ contato.telefone_alt or '' }}" id="telefone-alt" maxlength="20" placeholder="(11) 99999-9999"
                                    style="font-size: 16px;">
                         </div>
                         <div class="bg-gray-50 p-3 border border-gray-200">
@@ -1176,19 +1176,19 @@
             // Limita a 11 dígitos
             const digits = numbers.slice(0, 11);
             
-            // Formatação simples e direta
+            // Formatação baseada no comprimento
             if (digits.length === 0) {
                 return '';
             } else if (digits.length <= 2) {
                 return `(${digits}`;
             } else if (digits.length === 3) {
-                return `(${digits.slice(0, 2)}) ${digits.charAt(2)}`;
+                return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
             } else if (digits.length <= 7) {
-                return `(${digits.slice(0, 2)}) ${digits.charAt(2)} ${digits.slice(3)}`;
-            } else {
-                // Para 8 dígitos ou mais, aplicar formato completo
-                return `(${digits.slice(0, 2)}) ${digits.charAt(2)} ${digits.slice(3, 7)}-${digits.slice(7)}`;
+                return `(${digits.slice(0, 2)}) ${digits.slice(2, 3)} ${digits.slice(3)}`;
+            } else if (digits.length <= 11) {
+                return `(${digits.slice(0, 2)}) ${digits.slice(2, 3)} ${digits.slice(3, 7)}-${digits.slice(7)}`;
             }
+            return digits;
         }
         
         function formatCEP(cep) {
@@ -1272,7 +1272,10 @@
                 if (telefoneInput) {
                     telefoneInput.addEventListener('input', function(e) {
                         let value = e.target.value.replace(/\D/g, '');
-                        value = value.slice(0, 11);
+                        // Permitir até 12 dígitos durante a digitação, depois limitar a 11
+                        if (value.length > 11) {
+                            value = value.slice(0, 11);
+                        }
                         e.target.value = formatPhoneCorrect(value);
                     });
                 }
@@ -1281,7 +1284,10 @@
                 if (telefoneAltInput) {
                     telefoneAltInput.addEventListener('input', function(e) {
                         let value = e.target.value.replace(/\D/g, '');
-                        value = value.slice(0, 11);
+                        // Permitir até 12 dígitos durante a digitação, depois limitar a 11
+                        if (value.length > 11) {
+                            value = value.slice(0, 11);
+                        }
                         e.target.value = formatPhoneCorrect(value);
                     });
                 }
