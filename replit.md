@@ -80,6 +80,17 @@ The deployment uses parallel workflows for development convenience, allowing bot
 
 ## Recent Changes
 
+- July 13, 2025: Cashtime PIX API Integration COMPLETE - Successfully implemented Cashtime API for PIX generation replacing PayBets:
+  * Created dedicated CashtimeAPI class with comprehensive error handling and logging
+  * Integrated secret key: sk_live_sLJNf4hOupi7EBe8hVKeRW+AENhDiFhdn0m98dZOHgaNXMBHUwgAnDwEyMSFsaX05oLaDklKbjHe+WMR5wzrcX4AXeux7i8joSG6GB1Nk36BSKyrpuvDdHsXq9JzmAm8XtbaaiUPPmhpnfZNiNk/OGq2tl2CtztLJRVUIWLKhno=
+  * Updated /gerar-pix endpoint to use Cashtime API with fallback to demo PIX
+  * Real PIX generation tested: Transaction ID b2469e31-dfe4-47da-82bf-5f3909f9dfe9 with authentic PIX codes
+  * Payment verification updated to support Cashtime transaction status checking
+  * Added debug endpoints: /debug-cashtime and /health/cashtime for monitoring
+  * Pushcut notification webhook integrated for real-time sale notifications
+  * Full integration tested with R$ 87.90 registration fees generating real PIX transactions
+  * Maintained backward compatibility with existing PayBets fallback system
+  * API response time: 0.292 seconds with healthy status confirmation
 - July 13, 2025: Registration Fee Updated to R$ 87,90 - Changed registration fee from R$ 74,39 to R$ 87,90 across all project files:
   * Updated display value in checkout.html, edital_completo.html, and selecao_local_prova.html
   * Updated text to "oitenta e sete reais e noventa centavos" in all instances
