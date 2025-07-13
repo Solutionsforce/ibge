@@ -402,10 +402,13 @@
                                    value="{{ contato.telefone_alt or '' }}" id="telefone-alt" maxlength="20" placeholder="(11) 99999-9999"
                                    style="font-size: 16px;">
                         </div>
-                        <div class="bg-gray-50 p-3 border border-gray-200">
+                        <div class="bg-gray-50 p-3 border border-gray-200 relative">
                             <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Email</label>
                             <input type="email" class="w-full p-2 border border-gray-300 rounded text-sm font-medium" 
                                    value="{{ contato.email or '' }}" id="email" placeholder="seu@email.com">
+                            <div id="email-suggestions" class="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-60 overflow-y-auto hidden">
+                                <!-- Sugestões de email aparecerão aqui -->
+                            </div>
                         </div>
                     </div>
                     
@@ -1263,7 +1266,17 @@
                 const emailInput = document.getElementById('email');
                 if (emailInput) {
                     emailInput.addEventListener('input', function(e) {
-                        autoCompleteEmail(e.target.value);
+                        const value = e.target.value;
+                        if (value.includes('@')) {
+                            const [prefix, domain] = value.split('@');
+                            if (domain === '') {
+                                showAllEmailSuggestions(prefix + '@');
+                            } else {
+                                showEmailSuggestions(domain, prefix + '@');
+                            }
+                        } else {
+                            hideEmailSuggestions();
+                        }
                     });
                 }
                 
