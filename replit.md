@@ -80,12 +80,12 @@ The deployment uses parallel workflows for development convenience, allowing bot
 
 ## Recent Changes
 
-- July 13, 2025: Loading System Clean Reinstall - Cleaned and reinstalled loading functionality:
-  * Problem: Complex dual-function loading system was causing conflicts and not working properly
-  * Solution: Removed all previous loading functions and implemented single unified showCargoLoadingPopup() function
-  * Created clean, simple loading system that accepts cargo name as parameter
-  * Loading now appears for both cargo 001 (Agente) and cargo 002 (Supervisor) immediately upon selection
-  * Single function handles all cargo types with dynamic message generation
+- July 13, 2025: Loading System Correct Implementation - Fixed loading to appear at different trigger points:
+  * Problem: Loading was appearing at wrong times - should be different for each cargo type
+  * Solution: Implemented correct loading triggers based on cargo workflow differences
+  * Cargo 001 (Agente): Loading appears immediately when cargo is selected (no CNH field)
+  * Cargo 002 (Supervisor): Loading appears only when CNH category is selected (has CNH field)
+  * Single unified showCargoLoadingPopup() function handles both scenarios with dynamic messages
   * Maintained 7-second dual-phase loading process with federal verification and green "Cidadão apto" message
   * Updated comprovante text in /selecao-local-prova from "Será selecionado após escolha do local" to "Informado 7 (sete) dias úteis antes da prova"
   * Added debugging logs to track function execution and popup creation

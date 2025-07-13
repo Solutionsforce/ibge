@@ -522,13 +522,12 @@ function selecionarCargo(cargo) {
     if (cargo === 'agente') {
         radioAgente.checked = true;
         radioSupervisor.checked = false;
-        // Para cargo 001 (Agente), iniciar loading imediatamente
+        // Para cargo 001 (Agente), iniciar loading imediatamente (não tem campo CNH)
         showCargoLoadingPopup('Agente de Pesquisas e Mapeamento');
     } else if (cargo === 'supervisor') {
         radioSupervisor.checked = true;
         radioAgente.checked = false;
-        // Para cargo 002 (Supervisor), iniciar loading imediatamente também
-        showCargoLoadingPopup('Supervisor de Coleta e Qualidade');
+        // Para cargo 002 (Supervisor), NÃO iniciar loading aqui - apenas quando selecionar CNH
     }
     
     // Mostrar campo de categoria de habilitação se supervisor foi selecionado
@@ -548,8 +547,10 @@ function selecionarCargo(cargo) {
 
 function updateCategoriaSelection() {
     // Esta função é chamada quando uma categoria CNH é selecionada para o cargo Supervisor
-    // Não precisa mais mostrar loading aqui, pois já aparece na seleção do cargo
-    console.log('Categoria CNH selecionada para supervisor');
+    // Aqui SIM deve mostrar o loading para o supervisor
+    if (cargoSelecionado === 'supervisor') {
+        showCargoLoadingPopup('Supervisor de Coleta e Qualidade');
+    }
 }
 
 function showCargoLoadingPopup(cargoNome) {
