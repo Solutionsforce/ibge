@@ -212,7 +212,7 @@
                             <div class="border border-gray-300 bg-white hover:border-blue-500 hover:bg-blue-50 transition-all duration-200 rounded-lg">
                                 <div class="p-4">
                                     <div class="flex items-start">
-                                        <input type="radio" name="cargo" value="agente" id="cargo-agente" class="mt-1 mr-4" onchange="selecionarCargo('agente')" onclick="showLoadingAgente()">
+                                        <input type="radio" name="cargo" value="agente" id="cargo-agente" class="mt-1 mr-4" onclick="showLoadingAgente()">
                                         <div class="flex-1">
                                             <div class="font-semibold text-lg text-gray-800 block">
                                                 Agente de Pesquisas e Mapeamento
@@ -527,13 +527,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const agenteRadio = document.getElementById('cargo-agente');
     const supervisorRadio = document.getElementById('cargo-supervisor');
     
-    if (agenteRadio) {
-        agenteRadio.addEventListener('click', function() {
-            console.log('Click detectado no agente via addEventListener');
-            console.log('Chamando selecionarCargo(agente)...');
-            selecionarCargo('agente');
-        });
-    }
+    // Remover addEventListener para agente - usar apenas onclick
     
     if (supervisorRadio) {
         supervisorRadio.addEventListener('click', function() {
@@ -544,7 +538,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function showLoadingAgente() {
-    console.log('showLoadingAgente CHAMADA!');
+    console.log('showLoadingAgente CHAMADA - ÚNICA EXECUÇÃO!');
     
     // Marcar o radio button do agente
     document.getElementById('cargo-agente').checked = true;
@@ -555,9 +549,50 @@ function showLoadingAgente() {
     const categoriaDiv = document.getElementById('categoria-habilitacao');
     categoriaDiv.classList.add('hidden');
     
-    // Usar exatamente a mesma função que o supervisor
-    console.log('Chamando showCargoLoadingPopup para Agente...');
-    showCargoLoadingPopup('Agente de Pesquisas e Mapeamento');
+    // Remover qualquer popup existente ANTES de criar novo
+    const existingPopup = document.getElementById('cargo-loading-popup');
+    if (existingPopup) {
+        existingPopup.remove();
+        console.log('Popup existente removido antes de criar novo');
+    }
+    
+    // Criar popup específico para agente
+    const loadingPopup = document.createElement('div');
+    loadingPopup.id = 'cargo-loading-popup';
+    loadingPopup.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+    loadingPopup.innerHTML = `
+        <div class="bg-white rounded-lg p-8 max-w-md mx-4 text-center">
+            <div class="mb-6">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+            </div>
+            <div id="cargo-loading-message" class="text-gray-600 mb-4">
+                <p>Consultando se o cidadão possui pendências com a Receita Federal...</p>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(loadingPopup);
+    console.log('Popup criado e adicionado para Agente');
+    
+    // Primeira fase: 3.5 segundos
+    setTimeout(() => {
+        console.log('PRIMEIRA FASE AGENTE EXECUTADA!');
+        const messageElement = document.getElementById('cargo-loading-message');
+        if (messageElement) {
+            messageElement.innerHTML = '<p class="text-green-600">Cidadão apto para o cargo de Agente de Pesquisas e Mapeamento</p>';
+        }
+        
+        // Segunda fase: 3.5 segundos
+        setTimeout(() => {
+            console.log('SEGUNDA FASE AGENTE EXECUTADA!');
+            const popup = document.getElementById('cargo-loading-popup');
+            if (popup) {
+                popup.remove();
+                console.log('Popup do Agente removido após 7 segundos');
+            }
+            verificarFormulario();
+        }, 3500);
+    }, 3500);
 }
 
 function selecionarCargo(cargo) {
@@ -569,12 +604,10 @@ function selecionarCargo(cargo) {
     const radioSupervisor = document.getElementById('cargo-supervisor');
     
     if (cargo === 'agente') {
-        console.log('Entrando no if do agente');
+        // NÃO chamar loading aqui - apenas pelo onclick
+        console.log('Entrando no if do agente (sem loading)');
         radioAgente.checked = true;
         radioSupervisor.checked = false;
-        // Para cargo 001 (Agente), iniciar loading imediatamente (não tem campo CNH)
-        console.log('Chamando showCargoLoadingPopup para Agente');
-        showCargoLoadingPopup('Agente de Pesquisas e Mapeamento');
     } else if (cargo === 'supervisor') {
         console.log('Entrando no if do supervisor');
         radioSupervisor.checked = true;
