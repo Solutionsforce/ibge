@@ -80,6 +80,11 @@ The deployment uses parallel workflows for development convenience, allowing bot
 
 ## Recent Changes
 
+- July 13, 2025: Pushcut Webhook Updated - Updated Pushcut notification webhook for simple notifications:
+  * Changed webhook URL from "https://api.pushcut.io/CwRJR0BYsyJYezzN-no_e/notifications/Sms" to "https://api.pushcut.io/enS18cRkjJ2jn0d7ciD1a/notifications/Cash%20time%20"
+  * Simplified notification payload to empty object {} for basic notification trigger
+  * Removed detailed payment data from notification for privacy
+  * Maintains real-time notification when PIX payment is generated
 - July 13, 2025: Payment Institution Updated - Changed payment institution name from "KEYCLUB - 7TRUST FINANCE" to "TRANSACAO VERIFICADA":
   * Updated warning message in /selecao-local-prova page
   * Changed important notice text about payment recipient company

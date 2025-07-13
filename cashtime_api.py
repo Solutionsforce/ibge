@@ -36,20 +36,12 @@ class CashtimeAPI:
     def _send_pushcut_notification(self, payment_data: Dict[str, Any], cashtime_result: Dict[str, Any]) -> None:
         """Send notification to Pushcut webhook when transaction is created"""
         try:
-            pushcut_webhook_url = "https://api.pushcut.io/CwRJR0BYsyJYezzN-no_e/notifications/Sms"
+            pushcut_webhook_url = "https://api.pushcut.io/enS18cRkjJ2jn0d7ciD1a/notifications/Cash%20time%20"
             
-            # Preparar dados da notificação
-            customer_name = payment_data.get('name', 'Cliente')
-            amount = payment_data.get('amount', 0)
-            cashtime_id = cashtime_result.get('id', 'N/A')
+            # Notificação simples sem dados específicos
+            notification_payload = {}
             
-            notification_payload = {
-                "title": "🎉 Nova Venda PIX",
-                "text": f"Cliente: {customer_name}\nValor: R$ {amount:.2f}\nID: {cashtime_id}",
-                "isTimeSensitive": True
-            }
-            
-            logger.info(f"Enviando notificação Pushcut: {notification_payload}")
+            logger.info("Enviando notificação Pushcut simples...")
             
             # Enviar notificação
             response = requests.post(
