@@ -92,13 +92,13 @@ def test_complete_payload():
         "cpf": "12345678901",
         "phone": "11999999999",
         "paymentMethod": "PIX",
-        "amount": 7439,  # R$ 74,39
+        "amount": 8790,  # R$ 87,90
         "traceable": True,
         "items": [
             {
                 "title": "IBGE Concurso Público 2025",
                 "quantity": 1,
-                "unitPrice": 7439,
+                "unitPrice": 8790,
                 "tangible": False
             }
         ],

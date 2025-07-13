@@ -80,6 +80,12 @@ The deployment uses parallel workflows for development convenience, allowing bot
 
 ## Recent Changes
 
+- July 13, 2025: Registration Fee Updated to R$ 87,90 - Changed registration fee from R$ 74,39 to R$ 87,90 across all project files:
+  * Updated display value in checkout.html, edital_completo.html, and selecao_local_prova.html
+  * Updated text to "oitenta e sete reais e noventa centavos" in all instances
+  * Updated PIX payment amount from 7439 to 8790 centavos in checkout.html and test files
+  * Updated all test files (test_paybets_api.py, test_for4_api.py) with new amounts
+  * Maintained consistency across all templates and API integration files
 - July 13, 2025: Added Gov.br Logo to Loading Functions - Enhanced both loading functions with official government branding:
   * Problem: User noticed missing gov.br logo in loading popups compared to login page
   * Solution: Added gov.br logo and LGPD compliance text to both showAgenteLoadingPopup() and showSupervisorLoadingPopup()

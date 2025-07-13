@@ -16,7 +16,7 @@ def test_paybets_pix_generation():
         name="João da Silva",
         email="joao.silva@email.com",
         cpf="12345678900",
-        amount=74.39,  # R$ 74,39 (taxa de inscrição IBGE)
+        amount=87.90,  # R$ 87,90 (taxa de inscrição IBGE)
         phone="11999999999",
         description="Inscrição Concurso Público IBGE"
     )
