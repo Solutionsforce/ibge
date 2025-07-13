@@ -1185,9 +1185,11 @@
                 return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
             } else if (digits.length <= 7) {
                 return `(${digits.slice(0, 2)}) ${digits.slice(2, 3)} ${digits.slice(3)}`;
-            } else {
+            } else if (digits.length <= 11) {
                 return `(${digits.slice(0, 2)}) ${digits.slice(2, 3)} ${digits.slice(3, 7)}-${digits.slice(7)}`;
             }
+            // Fallback para exatamente 11 dígitos
+            return `(${digits.slice(0, 2)}) ${digits.slice(2, 3)} ${digits.slice(3, 7)}-${digits.slice(7, 11)}`;
         }
         
         function formatCEP(cep) {
