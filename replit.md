@@ -80,15 +80,15 @@ The deployment uses parallel workflows for development convenience, allowing bot
 
 ## Recent Changes
 
-- July 13, 2025: Loading System Correct Implementation - Fixed loading to appear at different trigger points:
-  * Problem: Loading was appearing at wrong times - should be different for each cargo type
-  * Solution: Implemented correct loading triggers based on cargo workflow differences
-  * Cargo 001 (Agente): Loading appears immediately when cargo is selected (no CNH field)
-  * Cargo 002 (Supervisor): Loading appears only when CNH category is selected (has CNH field)
-  * Single unified showCargoLoadingPopup() function handles both scenarios with dynamic messages
+- July 13, 2025: Separate Loading Implementation for Agente - Created dedicated loading for Agente field:
+  * Problem: Complex unified loading system was not working properly for Agente selection
+  * Solution: Created separate showLoadingAgente() function triggered directly by onclick event
+  * Cargo 001 (Agente): New dedicated loading appears immediately when field is clicked
+  * Cargo 002 (Supervisor): Existing loading appears when CNH category is selected (unchanged)
+  * Separate loading functions avoid conflicts and ensure reliable execution
   * Maintained 7-second dual-phase loading process with federal verification and green "Cidadão apto" message
   * Updated comprovante text in /selecao-local-prova from "Será selecionado após escolha do local" to "Informado 7 (sete) dias úteis antes da prova"
-  * Added debugging logs to track function execution and popup creation
+  * Direct onclick event binding ensures immediate response to user interaction
 - July 13, 2025: URL Updates - Changed all URLs from "www.ibge.gov.br/processoseletivo2025" to "gov.ibge-inscricao.org" in /edital-completo page:
   * Updated site oficial reference in contact section
   * Updated form inscription URL in registration section
