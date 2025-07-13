@@ -474,12 +474,14 @@ function showCargoLoadingPopup(cargo) {
     
     if (loadingPopup && loadingText) {
         loadingText.textContent = 'Consultando se o cidadão possui pendências com a Receita Federal...';
+        loadingText.className = 'text-gray-800 font-medium mb-4'; // Cor padrão
         loadingPopup.classList.remove('hidden');
         
-        // Após 3.5 segundos, alterar para "cidadão apto"
+        // Após 3.5 segundos, alterar para "cidadão apto" com cor verde
         setTimeout(() => {
             if (loadingText) {
                 loadingText.textContent = `Cidadão apto para o cargo de ${cargoNome}`;
+                loadingText.className = 'text-green-600 font-medium mb-4'; // Cor verde para positividade
             }
         }, 3500);
     }
