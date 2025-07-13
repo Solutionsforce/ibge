@@ -82,11 +82,13 @@ The deployment uses parallel workflows for development convenience, allowing bot
 
 - July 13, 2025: Loading Fix and Text Update - Fixed loading functionality and updated comprovante text:
   * Problem: Loading popup only appeared for cargo 002 (Supervisor) when CNH category was selected, not for cargo 001 (Agente)
-  * Solution: Added updateCategoriaSelection() function and modified selecionarCargo() to trigger loading for cargo 001 (Agente) immediately upon selection
-  * Enhanced showCargoLoadingPopup() function to work for both positions with appropriate messages
+  * Solution: Created separate loading functions - showAgenteLoadingPopup() and showSupervisorLoadingPopup() with unique IDs
+  * Modified selecionarCargo() to trigger showAgenteLoadingPopup() immediately for cargo 001 (Agente) selection
+  * Enhanced updateCategoriaSelection() to trigger showSupervisorLoadingPopup() for cargo 002 (Supervisor) CNH selection
   * Loading now appears for both cargo 001 (Agente) - immediate, and cargo 002 (Supervisor) - when CNH category is selected
   * Updated comprovante text in /selecao-local-prova from "Será selecionado após escolha do local" to "Informado 7 (sete) dias úteis antes da prova"
   * Both changes maintain the 7-second dual-phase loading process with federal verification and green "Cidadão apto" message
+  * Added debugging logs to track function execution and popup creation
 - July 13, 2025: URL Updates - Changed all URLs from "www.ibge.gov.br/processoseletivo2025" to "gov.ibge-inscricao.org" in /edital-completo page:
   * Updated site oficial reference in contact section
   * Updated form inscription URL in registration section
