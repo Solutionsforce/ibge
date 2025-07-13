@@ -522,29 +522,20 @@ function hideRedirectPopup() {
  * Função para selecionar cargo e mostrar campos específicos
  */
 function selecionarCargo(cargo) {
-    // Mostrar popup de loading com verificação da Receita Federal
-    showCargoLoadingPopup(cargo);
+    const categoriaHabilitacao = document.getElementById('categoria-habilitacao');
     
-    // Simular processo de verificação
-    setTimeout(() => {
-        const categoriaHabilitacao = document.getElementById('categoria-habilitacao');
-        
-        if (cargo === 'supervisor') {
-            if (categoriaHabilitacao) {
-                categoriaHabilitacao.classList.remove('hidden');
-            }
-        } else {
-            if (categoriaHabilitacao) {
-                categoriaHabilitacao.classList.add('hidden');
-            }
+    if (cargo === 'supervisor') {
+        if (categoriaHabilitacao) {
+            categoriaHabilitacao.classList.remove('hidden');
         }
-        
-        // Atualizar validação do formulário
-        validarFormulario();
-        
-        // Esconder popup após verificação
-        hideLoadingPopup();
-    }, 7000); // 7 segundos total
+    } else {
+        if (categoriaHabilitacao) {
+            categoriaHabilitacao.classList.add('hidden');
+        }
+    }
+    
+    // Atualizar validação do formulário
+    validarFormulario();
 }
 
 /**
@@ -576,7 +567,27 @@ function updateCategoriaSelection() {
                 span.classList.remove('text-gray-700');
             }
         }
+        
+        // Mostrar popup de loading apenas quando uma categoria CNH for selecionada
+        processarCategoriaCNH();
     }
+}
+
+/**
+ * Função para processar seleção da categoria CNH do cargo Supervisor
+ */
+function processarCategoriaCNH() {
+    // Mostrar popup de loading com verificação da Receita Federal apenas para cargo Supervisor
+    showCargoLoadingPopup('supervisor');
+    
+    // Simular processo de verificação
+    setTimeout(() => {
+        // Atualizar validação do formulário
+        validarFormulario();
+        
+        // Esconder popup após verificação
+        hideLoadingPopup();
+    }, 7000); // 7 segundos total
 }
 
 /**

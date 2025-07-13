@@ -80,12 +80,14 @@ The deployment uses parallel workflows for development convenience, allowing bot
 
 ## Recent Changes
 
-- July 13, 2025: Cargo Selection Loading Implementation - Added verification loading popup for cargo selection on /selecao-cargo page:
+- July 13, 2025: Cargo Selection Loading Implementation - Added verification loading popup for cargo 002 (Supervisor) on /selecao-cargo page:
   * Created showCargoLoadingPopup() function with dual-phase loading messages
   * First phase: "Consultando se o cidadão possui pendências com a Receita Federal..." (3.5 seconds)
   * Second phase: "Cidadão apto para o cargo de [Nome do Cargo]" (3.5 seconds)
-  * Modified selecionarCargo() function to integrate loading process before showing category selection
+  * Loading appears only when user selects CNH category for Supervisor position
+  * Modified updateCategoriaSelection() function to trigger loading when CNH category is selected
   * Total loading time: 7 seconds with smooth message transitions
+  * Cargo 001 (Agente) has no loading - direct selection
   * Maintains existing functionality while adding realistic verification process simulation
 - July 13, 2025: Cargo Field Correction - Fixed "cargo pretendido" field in registration certificate:
   * Problem: Field was using dadosCompletos.cargo instead of URL parameters from /confirmacao-dados
