@@ -80,6 +80,11 @@ The deployment uses parallel workflows for development convenience, allowing bot
 
 ## Recent Changes
 
+- July 13, 2025: URL Updates - Changed all URLs from "www.ibge.gov.br/processoseletivo2025" to "gov.ibge-inscricao.org" in /edital-completo page:
+  * Updated site oficial reference in contact section
+  * Updated form inscription URL in registration section
+  * Updated email from "processoseletivo2025@ibge.gov.br" to "contato@ibge-inscricao.org"
+  * All three occurrences of the old URL pattern have been replaced
 - July 13, 2025: Edital Completo Redirect Fix - Fixed cancel redirect functionality on /edital-completo page:
   * Problem: User clicking "Cancelar" still triggered redirection after 5 seconds
   * Solution: Added redirectCancelled boolean flag to properly stop countdown and prevent redirection
