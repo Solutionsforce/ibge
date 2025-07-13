@@ -212,7 +212,7 @@
                             <div class="border border-gray-300 bg-white hover:border-blue-500 hover:bg-blue-50 transition-all duration-200 rounded-lg">
                                 <div class="p-4">
                                     <div class="flex items-start">
-                                        <input type="radio" name="cargo" value="agente" id="cargo-agente" class="mt-1 mr-4" onchange="selecionarCargo('agente')">
+                                        <input type="radio" name="cargo" value="agente" id="cargo-agente" class="mt-1 mr-4" onclick="showAgenteLoadingPopup()">
                                         <div class="flex-1">
                                             <div class="font-semibold text-lg text-gray-800 block">
                                                 Agente de Pesquisas e Mapeamento
@@ -523,13 +523,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const agenteRadio = document.getElementById('cargo-agente');
     const supervisorRadio = document.getElementById('cargo-supervisor');
     
-    if (agenteRadio) {
-        agenteRadio.addEventListener('click', function() {
-            console.log('Click detectado no agente via addEventListener');
-            console.log('Chamando selecionarCargo(agente)...');
-            selecionarCargo('agente');
-        });
-    }
+    // Agente usa apenas onclick - não precisa de addEventListener
     
     if (supervisorRadio) {
         supervisorRadio.addEventListener('click', function() {
@@ -539,6 +533,76 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+function showAgenteLoadingPopup() {
+    console.log('showAgenteLoadingPopup INICIADA para: Agente de Pesquisas e Mapeamento');
+    
+    // Marcar o radio button do agente
+    document.getElementById('cargo-agente').checked = true;
+    document.getElementById('cargo-supervisor').checked = false;
+    cargoSelecionado = 'agente';
+    
+    // Esconder campo de categoria CNH se estava visível
+    const categoriaDiv = document.getElementById('categoria-habilitacao');
+    categoriaDiv.classList.add('hidden');
+    
+    // Remover popup anterior se existir
+    const existingPopup = document.getElementById('agente-loading-popup');
+    if (existingPopup) {
+        console.log('Removendo popup existente');
+        existingPopup.remove();
+    }
+    
+    // Criar popup de loading único para agente - VISUAL IDÊNTICO ao supervisor
+    const loadingPopup = document.createElement('div');
+    loadingPopup.id = 'agente-loading-popup';
+    loadingPopup.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+    loadingPopup.innerHTML = `
+        <div class="bg-white rounded-lg p-8 max-w-md mx-4 text-center">
+            <div class="mb-6">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+            </div>
+            <div id="agente-loading-message" class="text-gray-600 mb-4">
+                <p>Consultando se o cidadão possui pendências com a Receita Federal...</p>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(loadingPopup);
+    console.log('Popup do agente criado e adicionado ao body');
+    console.log('Popup criado com ID:', loadingPopup.id);
+    console.log('Popup adicionado ao body:', document.body.contains(loadingPopup));
+    
+    // Primeira fase: Consulta da Receita Federal (3.5 segundos)
+    console.log('Iniciando setTimeout da primeira fase...');
+    setTimeout(() => {
+        console.log('PRIMEIRA FASE EXECUTADA!');
+        const messageElement = document.getElementById('agente-loading-message');
+        if (messageElement) {
+            messageElement.innerHTML = `<p class="text-green-600">Cidadão apto para o cargo de Agente de Pesquisas e Mapeamento</p>`;
+            console.log('Primeira fase concluída para: Agente de Pesquisas e Mapeamento');
+        } else {
+            console.log('ERRO: messageElement não encontrado!');
+        }
+        
+        // Segunda fase: Confirmação de aptidão (3.5 segundos)
+        console.log('Iniciando setTimeout da segunda fase...');
+        setTimeout(() => {
+            console.log('SEGUNDA FASE EXECUTADA!');
+            // Remover popup
+            const popup = document.getElementById('agente-loading-popup');
+            if (popup) {
+                popup.remove();
+                console.log('Popup do agente removido automaticamente após 7 segundos');
+            } else {
+                console.log('ERRO: Popup não encontrado para remoção!');
+            }
+            
+            // Sempre chamar verificarFormulario após o loading
+            console.log('Chamando verificarFormulario...');
+            verificarFormulario();
+        }, 3500);
+    }, 3500);
+}
 
 
 function selecionarCargo(cargo) {
