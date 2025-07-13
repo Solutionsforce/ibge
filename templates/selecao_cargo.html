@@ -556,7 +556,7 @@ function showLoadingAgente() {
         console.log('Popup existente removido antes de criar novo');
     }
     
-    // Criar popup com VISUAL IDÊNTICO ao showCargoLoadingPopup (mas IDs diferentes)
+    // Criar popup de loading único para qualquer cargo
     const loadingPopup = document.createElement('div');
     loadingPopup.id = 'agente-loading-popup';
     loadingPopup.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
