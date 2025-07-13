@@ -476,12 +476,12 @@ function showCargoLoadingPopup(cargo) {
         loadingText.textContent = 'Consultando se o cidadão possui pendências com a Receita Federal...';
         loadingPopup.classList.remove('hidden');
         
-        // Após 2 segundos, alterar para "cidadão apto"
+        // Após 3.5 segundos, alterar para "cidadão apto"
         setTimeout(() => {
             if (loadingText) {
                 loadingText.textContent = `Cidadão apto para o cargo de ${cargoNome}`;
             }
-        }, 2000);
+        }, 3500);
     }
 }
 
@@ -544,7 +544,7 @@ function selecionarCargo(cargo) {
         
         // Esconder popup após verificação
         hideLoadingPopup();
-    }, 4000); // 4 segundos total
+    }, 7000); // 7 segundos total
 }
 
 /**
