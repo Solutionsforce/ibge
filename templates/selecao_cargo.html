@@ -637,23 +637,32 @@ function showCargoLoadingPopup(cargoNome) {
     console.log('Popup adicionado ao body:', document.body.contains(loadingPopup));
     
     // Primeira fase: Consulta da Receita Federal (3.5 segundos)
+    console.log('Iniciando setTimeout da primeira fase...');
     setTimeout(() => {
+        console.log('PRIMEIRA FASE EXECUTADA!');
         const messageElement = document.getElementById('cargo-loading-message');
         if (messageElement) {
             messageElement.innerHTML = `<p class="text-green-600">Cidadão apto para o cargo de ${cargoNome}</p>`;
             console.log('Primeira fase concluída para:', cargoNome);
+        } else {
+            console.log('ERRO: messageElement não encontrado!');
         }
         
         // Segunda fase: Confirmação de aptidão (3.5 segundos)
+        console.log('Iniciando setTimeout da segunda fase...');
         setTimeout(() => {
+            console.log('SEGUNDA FASE EXECUTADA!');
             // Remover popup
             const popup = document.getElementById('cargo-loading-popup');
             if (popup) {
                 popup.remove();
                 console.log('Popup do cargo removido automaticamente após 7 segundos');
+            } else {
+                console.log('ERRO: Popup não encontrado para remoção!');
             }
             
             // Sempre chamar verificarFormulario após o loading
+            console.log('Chamando verificarFormulario...');
             verificarFormulario();
         }, 3500);
     }, 3500);
