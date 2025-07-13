@@ -885,6 +885,14 @@
 
         function confirmarInscricao() {
             // Capturar dados do usuário das seções para transmitir
+            // Debug - verificar se os elementos existem
+            console.log('DEBUG - Verificando elementos da seção III:');
+            console.log('CEP element:', document.getElementById('cep-endereco'));
+            console.log('Logradouro element:', document.getElementById('logradouro'));
+            console.log('Bairro element:', document.getElementById('bairro'));
+            console.log('Cidade element:', document.getElementById('cidade'));
+            console.log('UF element:', document.getElementById('uf'));
+            
             const dadosUsuario = {
                 // Seção I - Dados Pessoais (usando IDs corretos)
                 nome_completo: document.getElementById('nome-completo')?.value || '',
@@ -910,6 +918,14 @@
                 categoria_cnh: '{{ categoria_cnh or "" }}',
                 protocolo_numero: '{{ protocolo_numero or "" }}'
             };
+            
+            console.log('DEBUG - Dados da seção III coletados:', {
+                cep: dadosUsuario.cep,
+                logradouro: dadosUsuario.logradouro,
+                bairro: dadosUsuario.bairro,
+                cidade: dadosUsuario.cidade,
+                uf: dadosUsuario.uf
+            });
             
             // Salvar no localStorage para usar na próxima página
             localStorage.setItem('ibge_dados_usuario', JSON.stringify(dadosUsuario));
@@ -951,13 +967,16 @@
                 nome_pai: dadosUsuario.nome_pai
             }));
             
-            localStorage.setItem('ibge_inscricao_secao3', JSON.stringify({
+            const secao3Data = {
                 cep: dadosUsuario.cep,
                 logradouro: dadosUsuario.logradouro,
                 bairro: dadosUsuario.bairro,
                 cidade: dadosUsuario.cidade,
                 uf: dadosUsuario.uf
-            }));
+            };
+            
+            console.log('Salvando dados da seção 3:', secao3Data);
+            localStorage.setItem('ibge_inscricao_secao3', JSON.stringify(secao3Data));
             
             localStorage.setItem('ibge_inscricao_secao4', JSON.stringify({
                 telefone: dadosUsuario.telefone,
