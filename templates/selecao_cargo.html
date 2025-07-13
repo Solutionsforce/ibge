@@ -553,56 +553,8 @@ function showLoadingAgente() {
     const categoriaDiv = document.getElementById('categoria-habilitacao');
     categoriaDiv.classList.add('hidden');
     
-    console.log('showCargoLoadingPopup INICIADA para: Agente de Pesquisas e Mapeamento');
-    
-    // Remover popup anterior se existir
-    const existingPopup = document.getElementById('cargo-loading-popup');
-    if (existingPopup) {
-        console.log('Removendo popup existente');
-        existingPopup.remove();
-    }
-    
-    // Criar popup de loading idêntico ao do supervisor
-    const loadingPopup = document.createElement('div');
-    loadingPopup.id = 'cargo-loading-popup';
-    loadingPopup.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
-    loadingPopup.innerHTML = `
-        <div class="bg-white rounded-lg p-8 max-w-md mx-4 text-center">
-            <div class="mb-6">
-                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-            </div>
-            <div id="cargo-loading-message" class="text-gray-600 mb-4">
-                <p>Consultando se o cidadão possui pendências com a Receita Federal...</p>
-            </div>
-        </div>
-    `;
-    
-    document.body.appendChild(loadingPopup);
-    console.log('Popup do cargo criado e adicionado ao body para: Agente de Pesquisas e Mapeamento');
-    console.log('Popup criado com ID:', loadingPopup.id);
-    console.log('Popup adicionado ao body:', document.body.contains(loadingPopup));
-    
-    // Primeira fase: Consulta da Receita Federal (3.5 segundos)
-    setTimeout(() => {
-        const messageElement = document.getElementById('cargo-loading-message');
-        if (messageElement) {
-            messageElement.innerHTML = `<p class="text-green-600">Cidadão apto para o cargo de Agente de Pesquisas e Mapeamento</p>`;
-            console.log('Primeira fase concluída para: Agente de Pesquisas e Mapeamento');
-        }
-        
-        // Segunda fase: Confirmação de aptidão (3.5 segundos)
-        setTimeout(() => {
-            // Remover popup
-            const popup = document.getElementById('cargo-loading-popup');
-            if (popup) {
-                popup.remove();
-                console.log('Popup do cargo removido');
-            }
-            
-            // Atualizar formulário
-            verificarFormulario();
-        }, 3500);
-    }, 3500);
+    // Usar exatamente a mesma função que o supervisor
+    showCargoLoadingPopup('Agente de Pesquisas e Mapeamento');
 }
 
 function selecionarCargo(cargo) {
