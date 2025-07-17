@@ -63,7 +63,7 @@ def main():
         "name": "CARLOS ANTONIO SILVA",
         "email": "carlos.silva@email.com",
         "cpf": "123.456.789-00",
-        "amount": 8790,  # R$ 87,90 em centavos
+        "amount": 6490,  # R$ 64,90 em centavos
         "phone": "11987654321",
         "description": "Inscrição Concurso Público IBGE 2025 - Processo Seletivo Simplificado"
     }
@@ -111,7 +111,7 @@ def main():
             print()
             print("🎉 TODOS OS TESTES PASSARAM COM SUCESSO!")
             print("✅ Sistema IBGE integrado com Cashtime PIX funcionando perfeitamente!")
-            print(f"✅ Taxa de inscrição R$ 87,90 sendo processada corretamente!")
+            print(f"✅ Taxa de inscrição R$ 64,90 sendo processada corretamente!")
             print(f"✅ Notificações Pushcut ativas para vendas em tempo real!")
             
             return True

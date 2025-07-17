@@ -16,7 +16,7 @@ def test_cashtime_integration():
         "name": "JAIR MESSIAS BOLSONARO",
         "email": "jair@hotmail.com",
         "cpf": "453.178.287-91",
-        "amount": 87.90,  # R$ 87,90 (taxa de inscrição IBGE)
+        "amount": 64.90,  # R$ 64,90 (taxa de inscrição IBGE)
         "phone": "11981410022",
         "description": "Inscrição Concurso Público IBGE 2025 - Processo Seletivo Simplificado"
     }

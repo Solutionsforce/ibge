@@ -106,9 +106,15 @@ The deployment uses parallel workflows for development convenience, allowing bot
   * Payment verification updated to support Cashtime transaction status checking
   * Added debug endpoints: /debug-cashtime and /health/cashtime for monitoring
   * Pushcut notification webhook integrated for real-time sale notifications
-  * Full integration tested with R$ 87.90 registration fees generating real PIX transactions
+  * Full integration tested with R$ 64.90 registration fees generating real PIX transactions
   * Maintained backward compatibility with existing PayBets fallback system
   * API response time: 0.292 seconds with healthy status confirmation
+- July 17, 2025: Registration Fee Updated to R$ 64,90 - Changed registration fee from R$ 87,90 to R$ 64,90 across all project files:
+  * Updated display value in checkout.html, edital_completo.html, and selecao_local_prova.html
+  * Updated text to "sessenta e quatro reais e noventa centavos" in all instances
+  * Updated PIX payment amount from 8790 to 6490 centavos in checkout.html and test files
+  * Updated all test files (test_paybets_api.py, test_for4_api.py, test_cashtime_integration.py, teste_cashtime_completo.py) with new amounts
+  * Maintained consistency across all templates and API integration files
 - July 13, 2025: Registration Fee Updated to R$ 87,90 - Changed registration fee from R$ 74,39 to R$ 87,90 across all project files:
   * Updated display value in checkout.html, edital_completo.html, and selecao_local_prova.html
   * Updated text to "oitenta e sete reais e noventa centavos" in all instances
