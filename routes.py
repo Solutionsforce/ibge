@@ -452,6 +452,7 @@ def register_routes(app):
                 import uuid
                 import io
                 import base64
+                import qrcode
                 import random
                 from datetime import datetime, timedelta
 

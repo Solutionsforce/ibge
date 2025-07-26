@@ -86,10 +86,13 @@ class CashtimeAPI:
             if len(phone) < 10:
                 phone = '11999999999'
             
-            # Clean CPF
-            cpf_clean = data.get('cpf', '').replace('.', '').replace('-', '')
-            if not cpf_clean or len(cpf_clean) != 11:
+            # Clean and validate CPF
+            cpf_clean = data.get('cpf', '').replace('.', '').replace('-', '').replace(' ', '')
+            if not cpf_clean or len(cpf_clean) != 11 or not cpf_clean.isdigit():
                 cpf_clean = '12345678901'  # Fallback CPF
+            
+            # Ensure CPF is valid format for API (11 digits)
+            logger.info(f"CPF processado: {cpf_clean} (original: {data.get('cpf', 'N/A')})")
             
             # Payload seguindo EXATAMENTE a documentação funcional
             cashtime_payload = {
