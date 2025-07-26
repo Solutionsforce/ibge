@@ -396,7 +396,7 @@ def register_routes(app):
 
                 # Registrar pedido no sistema de limite
                 try:
-                    ip_address = request.remote_addr
+                    ip_address = request.remote_addr or "127.0.0.1"
                     user_agent = request.headers.get('User-Agent', '')
 
                     PixRequestLimit.add_request(
@@ -464,9 +464,9 @@ def register_routes(app):
                 print("[PIX DEBUG PayBets] ✓ PIX de demonstração gerado com sucesso")
 
                 # Registrar pedido no sistema de limite (mesmo para demonstração)
+                demo_payment_id = f"paybets_demo_{uuid.uuid4().hex[:12]}"
                 try:
-                    demo_payment_id = f"paybets_demo_{uuid.uuid4().hex[:12]}"
-                    ip_address = request.remote_addr
+                    ip_address = request.remote_addr or "127.0.0.1"
                     user_agent = request.headers.get('User-Agent', '')
 
                     PixRequestLimit.add_request(
