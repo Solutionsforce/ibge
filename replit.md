@@ -109,6 +109,12 @@ The deployment uses parallel workflows for development convenience, allowing bot
   * Full integration tested with R$ 64.90 registration fees generating real PIX transactions
   * Maintained backward compatibility with existing PayBets fallback system
   * API response time: 0.292 seconds with healthy status confirmation
+- July 26, 2025: Heroku Deploy Optimization - Fixed Heroku deployment warnings for better build process:
+  * Replaced deprecated runtime.txt with .python-version file following Heroku best practices
+  * Updated Python version specification from 3.11.10 to 3.11 for automatic patch updates
+  * Added runtime.txt to .gitignore as deprecated file
+  * Confirmed successful deployment at https://ibge-novo-f64ed3a42918.herokuapp.com/ with HTTP 200 status
+  * Eliminated build warnings for cleaner deployment process
 - July 17, 2025: Registration Fee Updated to R$ 64,90 - Changed registration fee from R$ 87,90 to R$ 64,90 across all project files:
   * Updated display value in checkout.html, edital_completo.html, and selecao_local_prova.html
   * Updated text to "sessenta e quatro reais e noventa centavos" in all instances

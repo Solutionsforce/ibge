@@ -189,4 +189,7 @@ temp/
 # Backup files
 *.bak
 *.backup
+
+# Deprecated files
+runtime.txt
 *~
