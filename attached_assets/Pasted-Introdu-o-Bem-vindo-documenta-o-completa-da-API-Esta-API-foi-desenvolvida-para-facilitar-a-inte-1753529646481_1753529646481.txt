@@ -1,0 +1,178 @@
+Introdução
+Bem-vindo à documentação completa da API. Esta API foi desenvolvida para facilitar a integração com nosso sistema de pagamentos e saques utilizando PIX, possibilitando a criação de depósitos e solicitações de saque com callbacks para notificações em tempo real.
+
+URL Base: https://api.paybets.app
+
+A API possui os seguintes módulos:
+
+Autenticação: Geração de token JWT para acesso seguro aos endpoints.
+Depósito: Criação de depósitos com geração de QR Code PIX.
+Saque: Solicitação de saques utilizando chaves PIX e cálculo de taxas.
+Webhooks: Notificações de callback para informar o status das transações.
+
+Autenticação
+O endpoint de autenticação permite que os usuários façam login utilizando suas credenciais, recebendo um token JWT que deverá ser enviado no cabeçalho das requisições protegidas.
+
+Endpoint
+POST /api/auth/login
+Corpo da Requisição
+Envie as seguintes informações no corpo da requisição:
+
+ATRIBUTO	DESCRIÇÃO	TIPO
+client_id	ID do cliente (fornecido durante o cadastro)	string
+client_secret	Chave secreta do cliente para autenticação	string
+Exemplo de Requisição
+{
+  "client_id": "seu_cliente_id",
+  "client_secret": "seu_cliente_secreto"
+}
+          
+Resposta
+Em caso de sucesso, a resposta incluirá o token JWT e informações do usuário:
+
+{
+  "message": "Authentication successful.",
+  "token": "seu_token_jwt",
+  "user": {
+    "id": 1,
+    "name": "Nome do Usuário",
+    "email": "email@exemplo.com",
+    "client_id": "seu_cliente_id"
+  }
+}
+          
+Outros endpoints de autenticação, como o de geração de token adicional (/api/auth/token), estão disponíveis para funcionalidades futuras.
+
+Depósito
+Este endpoint permite criar um depósito e gerar um QR Code PIX para efetuar o pagamento.
+
+Endpoint
+POST /api/payments/deposit
+Autorização
+Para acessar este endpoint é necessário enviar o token JWT no cabeçalho da requisição (Authorization: Bearer seu_token).
+
+Corpo da Requisição
+Envie os seguintes atributos no corpo da requisição:
+
+ATRIBUTO	DESCRIÇÃO	TIPO
+amount	Valor do depósito	number
+external_id	ID único da transação externa (para controle idempotente)	string
+clientCallbackUrl	URL para envio de notificações de status do depósito	string
+payer	Dados do pagador	object
+O objeto payer deve conter os seguintes atributos:
+
+ATRIBUTO	DESCRIÇÃO	TIPO
+name	Nome completo do pagador	string
+email	Email do pagador	string
+document	Documento do pagador (CPF ou CNPJ)	string
+Exemplo de Requisição
+{
+  "amount": 100.00,
+  "external_id": "id_unico_12345",
+  "clientCallbackUrl": "https://seuservidor.com/callback",
+  "payer": {
+    "name": "João da Silva",
+    "email": "joao@example.com",
+    "document": "12345678901"
+  }
+}
+          
+Resposta
+Se o depósito for criado com sucesso, a resposta terá a seguinte estrutura:
+
+{
+  "message": "Deposit created successfully.",
+  "qrCodeResponse": {
+    "transactionId": "id_da_transacao",
+    "status": "PENDING",
+    "qrcode": "codigo_qr_base64",
+    "amount": 100.00
+  }
+}
+          
+O sistema seleciona automaticamente o gateway de pagamento padrão do usuário ou o configurado globalmente nas configurações.
+
+Saque
+O endpoint de saque permite a solicitação de saque através de uma chave PIX, realizando a verificação de saldo, cálculo de taxas e atualização do status da transação.
+
+Endpoint
+POST /api/withdrawals/withdraw
+Autorização
+É obrigatório enviar o token JWT no cabeçalho (Authorization: Bearer seu_token).
+
+Corpo da Requisição
+Os seguintes atributos devem ser enviados:
+
+ATRIBUTO	DESCRIÇÃO	TIPO
+amount	Valor do saque	number
+external_id	ID único da transação externa	string
+pix_key	Chave PIX do destinatário	string
+key_type	Tipo da chave PIX. Valores permitidos: EMAIL, CPF, CNPJ ou PHONE	string
+description	Descrição opcional do saque	string
+clientCallbackUrl	URL para envio de notificações de status do saque	string
+Exemplo de Requisição
+{
+  "amount": 50.00,
+  "external_id": "external-12345",
+  "pix_key": "exemplo@pix.com",
+  "key_type": "EMAIL",
+  "description": "Saque referente ao pedido #123",
+  "clientCallbackUrl": "https://seuservidor.com/callback"
+}
+          
+Resposta
+Em caso de sucesso, a resposta exibirá os dados do saque criado:
+
+{
+  "transaction_id": "transaction-67890",
+  "status": "PENDING",
+  "amount": 50.00,
+  "fee": 2.50
+}
+          
+O endpoint realiza diversas validações, incluindo verificação de IP autorizado, saldo disponível e integridade do external_id para evitar duplicidade de transações.
+
+Webhooks
+Os webhooks permitem que seu sistema receba notificações em tempo real sobre mudanças no status das transações de depósito e saque. Ao criar um depósito ou solicitação de saque, informe uma URL de callback (clientCallbackUrl) onde o sistema enviará atualizações.
+
+Exemplo de Payload de Callback para Depósito
+{
+  "transaction_id": "id_da_transacao",
+  "status": "PENDING",
+  "amount": 100.00,
+  "type": "Deposit"
+}
+          
+{
+  "transaction_id": "id_da_transacao",
+  "status": "COMPLETED",
+  "amount": 100.00,
+  "type": "Deposit"
+}
+          
+Exemplo de Payload de Callback para Saque
+{
+  "transaction_id": "transaction-67890",
+  "status": "PENDING",
+  "amount": 50.00,
+  "type": "Withdraw"
+}
+          
+{
+  "transaction_id": "transaction-67890",
+  "status": "COMPLETED",
+  "amount": 50.00,
+  "type": "Withdraw"
+}
+          
+O campo status pode assumir valores como PENDING, COMPLETED ou FAILED, permitindo que o cliente atualize o fluxo de processamento conforme necessário.
+
+Tratamento de Erros
+A API utiliza códigos de status HTTP para indicar o resultado de cada operação. A seguir, uma lista dos principais códigos de erro e suas descrições:
+
+400 Bad Request: Dados inválidos ou campos obrigatórios ausentes na requisição.
+401 Unauthorized: Credenciais inválidas ou token JWT não enviado.
+403 Forbidden: Acesso negado, como em casos de IP não autorizado ou conta banida.
+404 Not Found: Recurso não encontrado (ex.: rota incorreta, usuário ou carteira inexistente).
+500 Internal Server Error: Erro no servidor durante o processamento da requisição.
+Além disso, o servidor loga as mensagens de erro e utiliza transações para operações críticas, garantindo a integridade dos dados mesmo em caso de falhas durante o processamento.

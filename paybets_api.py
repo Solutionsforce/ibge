@@ -65,23 +65,8 @@ class PayBetsAPI:
             timeout: Timeout para requisições em segundos
             max_retries: Número máximo de tentativas em caso de falha
         """
-        # Tentar URLs alternativos para PayBets
-        possible_urls = [
-            os.getenv("PAYBETS_API_URL"),
-            "https://api.paybets.com.br",
-            "https://paybets.com.br/api",
-            "https://elite-manager-api-62571bbe8e96.herokuapp.com/api",
-            "https://elite-manager-api-62571bbe8e96.herokuapp.com"
-        ]
-        
-        self.API_URL = None
-        for url in possible_urls:
-            if url:
-                self.API_URL = url
-                break
-        
-        if not self.API_URL:
-            self.API_URL = "https://elite-manager-api-62571bbe8e96.herokuapp.com/api"
+        # URL oficial da PayBets conforme documentação
+        self.API_URL = os.getenv("PAYBETS_API_URL", "https://api.paybets.app")
         self.timeout = timeout
         self.max_retries = max_retries
         
@@ -89,13 +74,20 @@ class PayBetsAPI:
         self.client_id = client_id or os.getenv("PAYBETS_CLIENT_ID", "maikonlemos_YI4TQTCD")
         self.client_secret = client_secret or os.getenv("PAYBETS_CLIENT_SECRET", "b33iwEdPT9zCxQGNaMtmfpZTtsi8ng3iSinfdrbF0fWSpkJ3COJR1dM7PVqb9PS0tkm4A9w4N9ApfAfJPXICkeZT4Ki9KRpVyMnT")
         
+        # Token JWT para autenticação
+        self.jwt_token = None
+        
+        # Configurar session para reutilização de conexões primeiro
+        self.session = requests.Session()
+        
         if not self.client_id or not self.client_secret:
             logger.error("PayBets credentials missing - need PAYBETS_CLIENT_ID and PAYBETS_CLIENT_SECRET")
         else:
             logger.info(f"PayBets credentials configured - Client ID: {self.client_id[:10]}***")
+            # Autenticar automaticamente
+            self._authenticate()
         
-        # Configurar session para reutilização de conexões
-        self.session = requests.Session()
+        # Atualizar headers após autenticação
         self.session.headers.update(self._get_headers())
         
         logger.info(f"PayBets API initialized - URL: {self.API_URL}")
@@ -104,13 +96,47 @@ class PayBetsAPI:
         """
         Headers padrão para as requisições HTTP
         """
-        return {
+        headers = {
             "Content-Type": "application/json",
             "Accept": "application/json",
-            "User-Agent": "PayBets-Python-SDK/1.0.0",
-            "x-client-id": self.client_id,
-            "x-client-secret": self.client_secret
+            "User-Agent": "PayBets-Python-SDK/1.0.0"
         }
+        
+        # Adicionar token JWT se disponível
+        if self.jwt_token:
+            headers["Authorization"] = f"Bearer {self.jwt_token}"
+            
+        return headers
+    
+    def _authenticate(self) -> bool:
+        """
+        Autenticar com PayBets API e obter token JWT
+        """
+        try:
+            auth_data = {
+                "client_id": self.client_id,
+                "client_secret": self.client_secret
+            }
+            
+            logger.info("Autenticando com PayBets API...")
+            response = self._make_request_with_retry(
+                method="POST",
+                url=f"{self.API_URL}/api/auth/login",
+                json=auth_data
+            )
+            
+            if response.status_code == 200:
+                response_data = response.json()
+                self.jwt_token = response_data.get("token")
+                logger.info("✓ Autenticação PayBets bem-sucedida")
+                return True
+            else:
+                logger.error(f"Falha na autenticação PayBets: HTTP {response.status_code}")
+                return False
+                
+        except Exception as e:
+            logger.error(f"Erro na autenticação PayBets: {str(e)}")
+            return False
     
     def _validate_payment_data(self, data: PaymentRequestData) -> None:
         """
@@ -190,16 +216,16 @@ class PayBetsAPI:
         unique_id = str(uuid.uuid4())[:8]
         external_id = f"IBGE-{timestamp}-{unique_id}"
         
-        # Construir payload para a API PayBets
+        # Construir payload conforme documentação PayBets
         payment_data = {
             "amount": float(data.amount),
             "external_id": external_id,
             "clientCallbackUrl": os.getenv("PAYBETS_WEBHOOK_URL", "https://webhook.site/unique-id"),
-            "name": data.name.strip(),
-            "email": data.email.strip(),
-            "document": cpf,
-            "client_id": self.client_id,
-            "client_secret": self.client_secret
+            "payer": {
+                "name": data.name.strip(),
+                "email": data.email.strip(),
+                "document": cpf
+            }
         }
         
         # Log seguro (sem dados sensíveis)
@@ -208,14 +234,14 @@ class PayBetsAPI:
         try:
             response = self._make_request_with_retry(
                 method="POST",
-                url=f"{self.API_URL}/payments/paybets/pix/generate",
+                url=f"{self.API_URL}/api/payments/deposit",
                 json=payment_data
             )
             
             logger.info(f"PayBets API response: HTTP {response.status_code}")
             
-            # Tratar erros HTTP
-            if response.status_code != 201:
+            # Tratar erros HTTP (PayBets retorna 201 para criação de depósito)
+            if response.status_code not in [200, 201]:
                 error_message = self._extract_error_message(response)
                 logger.error(f"PayBets API error: {error_message}")
                 raise requests.exceptions.RequestException(f"API Error: {error_message}")
@@ -275,27 +301,23 @@ class PayBetsAPI:
     
     def _parse_payment_response(self, response_data: Dict[str, Any]) -> PaymentResponse:
         """
-        Processar resposta da criação de pagamento PayBets
+        Processar resposta da criação de depósito PayBets conforme documentação
         """
         
-        # Verificar se a resposta é bem-sucedida
-        if not response_data.get("success", False):
-            raise ValueError(f"Erro na API: {response_data.get('message', 'Erro desconhecido')}")
-        
-        # Extrair dados do QR Code da resposta
-        qr_code_response = response_data.get("data", {}).get("qrCodeResponse", {})
+        # Extrair dados conforme documentação PayBets
+        qr_code_response = response_data.get("qrCodeResponse", {})
         
         transaction_id = qr_code_response.get("transactionId", "")
         pix_code = qr_code_response.get("qrcode", "")
         status = qr_code_response.get("status", "PENDING")
         amount = qr_code_response.get("amount", 0)
         
-        print(f"[PayBets] Transaction ID: {transaction_id}")
-        print(f"[PayBets] PIX Code: {pix_code[:50]}...")
-        print(f"[PayBets] Status: {status}")
-        print(f"[PayBets] Amount: R$ {amount:.2f}")
+        logger.info(f"[PayBets] Transaction ID: {transaction_id}")
+        logger.info(f"[PayBets] PIX Code: {pix_code[:50]}...")
+        logger.info(f"[PayBets] Status: {status}")
+        logger.info(f"[PayBets] Amount: R$ {amount:.2f}")
         
-        # Gerar QR Code como base64 (PayBets não retorna imagem, apenas código)
+        # Gerar QR Code como base64
         pix_qr_code = self._generate_qr_code_base64(pix_code)
         
         return PaymentResponse(
