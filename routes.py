@@ -673,6 +673,11 @@ def register_routes(app):
                 'error': str(e)
             }), 500
 
+    @app.route('/teste-pix')
+    def teste_pix():
+        """Página de teste para verificar geração de PIX"""
+        return render_template('teste_pix.html')
+
     @app.route('/accept-cookies', methods=['POST'])
     def accept_cookies():
         """API para aceitar cookies"""

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teste PIX Completo</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Teste PIX com CPF 027.552.248-27</h1>
+    <button onclick="testarPIX()">Gerar PIX de Teste</button>
+    <div id="resultado"></div>
+
+    <script>
+        async function testarPIX() {
+            const dados = {
+                name: "João Silva Santos",
+                cpf: "027.552.248-27", 
+                email: "joao.silva@email.com",
+                phone: "19999887766",
+                amount: 6490,
+                description: "Teste PIX completo - R$ 64,90"
+            };
+
+            try {
+                const response = await fetch('/gerar-pix', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(dados)
+                });
+
+                const result = await response.json();
+                
+                document.getElementById('resultado').innerHTML = `
+                    <h2>Resultado:</h2>
+                    <p><strong>Success:</strong> ${result.success}</p>
+                    <p><strong>Payment ID:</strong> ${result.payment_id}</p>
+                    <p><strong>Status:</strong> ${result.status}</p>
+                    <p><strong>PIX Code:</strong> ${result.pix_code ? result.pix_code.substring(0, 50) + '...' : 'Não gerado'}</p>
+                    <p><strong>QR Code:</strong> ${result.pix_qr_code ? 'Gerado' : 'Não gerado'}</p>
+                    <p><strong>Demo:</strong> ${result.paybets_demo}</p>
+                    ${result.pix_qr_code ? '<img src="' + result.pix_qr_code + '" alt="QR Code PIX" style="max-width: 200px;">' : ''}
+                `;
+            } catch (error) {
+                document.getElementById('resultado').innerHTML = `<p style="color: red;">Erro: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
