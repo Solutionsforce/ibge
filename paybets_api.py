@@ -55,25 +55,44 @@ class PayBetsAPI:
     Production-ready implementation
     """
     
-    def __init__(self, api_key: Optional[str] = None, timeout: int = 30, max_retries: int = 3):
+    def __init__(self, client_id: Optional[str] = None, client_secret: Optional[str] = None, timeout: int = 30, max_retries: int = 3):
         """
         Inicializar a API PayBets com configuração para produção
         
         Args:
-            api_key: Chave de API (se None, busca em variável de ambiente)
+            client_id: Client ID da PayBets (se None, busca em variável de ambiente)
+            client_secret: Client Secret da PayBets (se None, busca em variável de ambiente)
             timeout: Timeout para requisições em segundos
             max_retries: Número máximo de tentativas em caso de falha
         """
-        self.API_URL = os.getenv("PAYBETS_API_URL", "https://elite-manager-api-62571bbe8e96.herokuapp.com/api")
+        # Tentar URLs alternativos para PayBets
+        possible_urls = [
+            os.getenv("PAYBETS_API_URL"),
+            "https://api.paybets.com.br",
+            "https://paybets.com.br/api",
+            "https://elite-manager-api-62571bbe8e96.herokuapp.com/api",
+            "https://elite-manager-api-62571bbe8e96.herokuapp.com"
+        ]
+        
+        self.API_URL = None
+        for url in possible_urls:
+            if url:
+                self.API_URL = url
+                break
+        
+        if not self.API_URL:
+            self.API_URL = "https://elite-manager-api-62571bbe8e96.herokuapp.com/api"
         self.timeout = timeout
         self.max_retries = max_retries
         
-        # Configurar chave de API
-        self.api_key = api_key or os.getenv("PAYBETS_API_KEY")
-        if not self.api_key:
-            # Fallback para chave hardcoded em desenvolvimento
-            self.api_key = "3d6bd4c17dd31877b77482b341c74d32494a1d6fbdee4c239cf8432b424b1abf"
-            logger.warning("Using hardcoded API key - set PAYBETS_API_KEY environment variable for production")
+        # Configurar credenciais PayBets
+        self.client_id = client_id or os.getenv("PAYBETS_CLIENT_ID", "maikonlemos_YI4TQTCD")
+        self.client_secret = client_secret or os.getenv("PAYBETS_CLIENT_SECRET", "b33iwEdPT9zCxQGNaMtmfpZTtsi8ng3iSinfdrbF0fWSpkJ3COJR1dM7PVqb9PS0tkm4A9w4N9ApfAfJPXICkeZT4Ki9KRpVyMnT")
+        
+        if not self.client_id or not self.client_secret:
+            logger.error("PayBets credentials missing - need PAYBETS_CLIENT_ID and PAYBETS_CLIENT_SECRET")
+        else:
+            logger.info(f"PayBets credentials configured - Client ID: {self.client_id[:10]}***")
         
         # Configurar session para reutilização de conexões
         self.session = requests.Session()
@@ -89,7 +108,8 @@ class PayBetsAPI:
             "Content-Type": "application/json",
             "Accept": "application/json",
             "User-Agent": "PayBets-Python-SDK/1.0.0",
-            "x-api-key": self.api_key
+            "x-client-id": self.client_id,
+            "x-client-secret": self.client_secret
         }
     
     def _validate_payment_data(self, data: PaymentRequestData) -> None:
@@ -177,7 +197,9 @@ class PayBetsAPI:
             "clientCallbackUrl": os.getenv("PAYBETS_WEBHOOK_URL", "https://webhook.site/unique-id"),
             "name": data.name.strip(),
             "email": data.email.strip(),
-            "document": cpf
+            "document": cpf,
+            "client_id": self.client_id,
+            "client_secret": self.client_secret
         }
         
         # Log seguro (sem dados sensíveis)
