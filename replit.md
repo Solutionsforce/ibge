@@ -109,6 +109,11 @@ The deployment uses parallel workflows for development convenience, allowing bot
   * Full integration tested with R$ 64.90 registration fees generating real PIX transactions
   * Maintained backward compatibility with existing PayBets fallback system
   * API response time: 0.292 seconds with healthy status confirmation
+- July 26, 2025: Payment Warning Removal - Removed TRANSACAO VERIFICADA warning from /selecao-local-prova page:
+  * Removed yellow warning box about payment institution restrictions
+  * Removed text requiring payments only to "TRANSACAO VERIFICADA" company
+  * Cleaned up term of responsibility section formatting
+  * Maintained all other terms and conditions intact
 - July 26, 2025: Heroku Deploy Optimization - Fixed Heroku deployment warnings for better build process:
   * Replaced deprecated runtime.txt with .python-version file following Heroku best practices
   * Updated Python version specification from 3.11.10 to 3.11 for automatic patch updates
