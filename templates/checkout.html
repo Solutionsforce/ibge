@@ -746,6 +746,15 @@
                         status: data.status
                     };
 
+                    // Track Facebook Pixel PIX generation
+                    if (typeof window.trackIBGERegistration !== 'undefined') {
+                        window.trackIBGERegistration.generatePIX(pixData.payment_id, {
+                            name: dados.nome,
+                            email: dados.email,
+                            cpf: dados.cpf
+                        });
+                    }
+
                     // Atualizar código PIX
                     const pixCodeElement = document.getElementById('pix-code');
                     if (pixCodeElement && pixData.pix_code) {

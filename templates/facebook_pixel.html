@@ -1,0 +1,136 @@
+<!-- Facebook Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+
+fbq('init', '991515346327020');
+fbq('track', 'PageView');
+</script>
+
+<noscript>
+<img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=991515346327020&ev=PageView&noscript=1" />
+</noscript>
+<!-- End Facebook Pixel Code -->
+
+<script>
+// Facebook Pixel Event Tracking Functions
+window.fbqTrackEvent = function(eventName, parameters = {}) {
+    if (typeof fbq !== 'undefined') {
+        console.log(`[FB Pixel] Tracking: ${eventName}`, parameters);
+        fbq('track', eventName, parameters);
+    }
+};
+
+// Track specific IBGE registration events
+window.trackIBGERegistration = {
+    // Track when user starts registration
+    startRegistration: function(userData = {}) {
+        fbqTrackEvent('InitiateCheckout', {
+            content_name: 'IBGE Registration Start',
+            content_category: 'Government Registration',
+            value: 64.90,
+            currency: 'BRL',
+            ...userData
+        });
+    },
+    
+    // Track when user completes form sections
+    completeFormSection: function(section, userData = {}) {
+        fbqTrackEvent('CompleteRegistration', {
+            content_name: `IBGE Registration - ${section} Completed`,
+            content_category: 'Government Registration Form',
+            status: 'completed',
+            ...userData
+        });
+    },
+    
+    // Track when PIX is generated
+    generatePIX: function(transactionId, userData = {}) {
+        fbqTrackEvent('AddPaymentInfo', {
+            content_name: 'IBGE Registration PIX Generated',
+            content_category: 'Government Payment',
+            value: 64.90,
+            currency: 'BRL',
+            transaction_id: transactionId,
+            payment_method: 'PIX',
+            ...userData
+        });
+    },
+    
+    // Track successful payment
+    paymentSuccess: function(transactionId, userData = {}) {
+        fbqTrackEvent('Purchase', {
+            content_name: 'IBGE Registration Payment Success',
+            content_category: 'Government Payment',
+            value: 64.90,
+            currency: 'BRL',
+            transaction_id: transactionId,
+            payment_method: 'PIX',
+            ...userData
+        });
+    },
+    
+    // Track lead generation
+    generateLead: function(position, userData = {}) {
+        fbqTrackEvent('Lead', {
+            content_name: `IBGE Registration Lead - ${position}`,
+            content_category: 'Government Job Application',
+            lead_type: 'job_application',
+            position: position,
+            ...userData
+        });
+    }
+};
+
+// Auto-track page views with enhanced data
+document.addEventListener('DOMContentLoaded', function() {
+    // Get page-specific info
+    const pageName = document.title || 'IBGE Registration';
+    const pageUrl = window.location.pathname;
+    
+    // Track specific page types
+    if (pageUrl.includes('/login')) {
+        fbqTrackEvent('ViewContent', {
+            content_name: 'IBGE Login Page',
+            content_category: 'Government Registration'
+        });
+    } else if (pageUrl.includes('/selecao-cargo')) {
+        fbqTrackEvent('ViewContent', {
+            content_name: 'IBGE Job Selection',
+            content_category: 'Government Job Selection'
+        });
+    } else if (pageUrl.includes('/confirmacao-dados')) {
+        fbqTrackEvent('ViewContent', {
+            content_name: 'IBGE Data Confirmation',
+            content_category: 'Government Registration Form'
+        });
+    } else if (pageUrl.includes('/selecao-local-prova')) {
+        fbqTrackEvent('ViewContent', {
+            content_name: 'IBGE Exam Location Selection',
+            content_category: 'Government Registration'
+        });
+    } else if (pageUrl.includes('/checkout')) {
+        fbqTrackEvent('ViewContent', {
+            content_name: 'IBGE Payment Checkout',
+            content_category: 'Government Payment'
+        });
+        
+        // Also track checkout initiation
+        fbqTrackEvent('InitiateCheckout', {
+            content_name: 'IBGE Payment Checkout',
+            content_category: 'Government Payment',
+            value: 64.90,
+            currency: 'BRL'
+        });
+    }
+    
+    console.log('[FB Pixel] Page tracking initialized for:', pageName);
+});
+</script>
