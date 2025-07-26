@@ -673,6 +673,47 @@ def register_routes(app):
                 'error': str(e)
             }), 500
 
+    @app.route('/debug/paybets-test')
+    def debug_paybets_test():
+        """Endpoint para testar conectividade com PayBets API"""
+        try:
+            import requests
+            
+            # Testar conectividade básica
+            test_urls = [
+                "https://elite-manager-api-62571bbe8e96.herokuapp.com/api",
+                "https://elite-manager-api-62571bbe8e96.herokuapp.com",
+                "https://paybets.com.br/api",
+                "https://api.paybets.com.br"
+            ]
+            
+            results = []
+            for url in test_urls:
+                try:
+                    response = requests.get(url, timeout=10)
+                    results.append({
+                        "url": url,
+                        "status": response.status_code,
+                        "response": response.text[:200] + "..." if len(response.text) > 200 else response.text
+                    })
+                except Exception as e:
+                    results.append({
+                        "url": url,
+                        "error": str(e)
+                    })
+            
+            return jsonify({
+                "test_results": results,
+                "current_config": {
+                    "api_url": os.getenv("PAYBETS_API_URL", "https://elite-manager-api-62571bbe8e96.herokuapp.com/api"),
+                    "has_api_key": bool(os.getenv("PAYBETS_API_KEY")),
+                    "hardcoded_key_in_use": not bool(os.getenv("PAYBETS_API_KEY"))
+                }
+            })
+            
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+
     @app.route('/accept-cookies', methods=['POST'])
     def accept_cookies():
         """API para aceitar cookies"""
