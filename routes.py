@@ -443,7 +443,8 @@ def register_routes(app):
                 protocolo = f"PAYBETS-2025-{random.randint(100000, 999999)}"
                 valor_final = data['amount'] / 100 if isinstance(data['amount'], int) else data['amount']
 
-                # Usar função melhorada de PIX simulado
+                # Usar função melhorada de PIX simulado da nova API
+                from paybets_api import gerar_codigo_pix_simulado
                 pix_code_simulado = gerar_codigo_pix_simulado(valor_final, protocolo)
 
                 # Gerar QR code
